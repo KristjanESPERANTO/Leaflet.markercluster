@@ -1,11 +1,11 @@
-var json = require('rollup-plugin-json');
+import json from 'rollup-plugin-json';
 
 // Karma configuration
-module.exports = function (config) {
+export default function (config) {
 
-	// 	var libSources = require(__dirname + '/../build/build.js').getFiles();
+	// var libSources = require(__dirname + '/../build/build.js').getFiles();
 
-	var files = [
+	let files = [
 		"spec/sinon.js",
 		"spec/expect.js",
 
@@ -81,8 +81,7 @@ module.exports = function (config) {
 		// - Opera
 		// - Safari (only Mac)
 		// - PhantomJS
-		// - IE (only Windows)
-		browsers: ['PhantomJS'],
+		browsers: ['Chrome'],
 
 		// If browser does not capture in given timeout [ms], kill it
 		captureTimeout: 5000,
