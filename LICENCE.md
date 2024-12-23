@@ -1,4 +1,6 @@
-Copyright 2012 David Leaver
+# The MIT License (MIT)
+
+Copyright © 2012 David Leaver
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
