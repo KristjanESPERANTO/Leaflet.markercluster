@@ -2,6 +2,26 @@
 
 (part of repo mgmt responsibilities transferred to [@ykzeng](https://github.com/ykzeng))
 
+## 1.5.5 (2024-12-24)
+
+## Bugfixes
+
+- Avoid crashing with some zoom events (#1048)
+
+### Changed
+
+- Use preferred tile.openstreetmap.org URL (#1072)
+- Adding markers aria-label for accessibility (#1044)
+- Check for finite min and max zoom properties (#991)
+- Cancel zoomOrSpiderfy if default prevented (#1103)
+- Improve performance of addLayers by preallocating array (#988)
+
+### Chore
+
+- Update devDependencies
+- Switch to ESLint from JSHint
+- Fix typos and format
+
 ## 1.5.4 (2021-10-18)
 
 ### Bugfixes
@@ -13,7 +33,7 @@
 ### Bugfixes
 
 - Removing unnecessary files on npm package
-- Inlucding correct versioning on Github repo
+- Including correct versioning on Github repo
 
 ## 1.5.2 (2021-10-18)
 
@@ -134,7 +154,7 @@ Required leaflet version bumped to 1.3.1
 ### Improvements
 
 - Add install and build steps with jake (by [@kazes](https://github.com/kazes)) [#733](https://github.com/Leaflet/Leaflet.markercluster/pull/733)
-- Readme improvements (by [@ghybs](https://github.com/ghybs), [@bertyhell](https://github.com/bertyhell)) [#734](https://github.com/Leaflet/Leaflet.markercluster/pull/738), [#734](https://github.com/Leaflet/Leaflet.markercluster/pull/738
+- Readme improvements (by [@ghybs](https://github.com/ghybs), [@bertyhell](https://github.com/bertyhell)) [#734](https://github.com/Leaflet/Leaflet.markercluster/pull/738), [#734](https://github.com/Leaflet/Leaflet.markercluster/pull/738)
 - Bump all examples to leaflet 1.0.3
 
 ### Bugfixes
