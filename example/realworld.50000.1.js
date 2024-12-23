@@ -1,5 +1,6 @@
 //An extract of address points from the LINZ bulk extract: http://www.linz.govt.nz/survey-titles/landonline-data/landonline-bde
 //Should be this data set: http://data.linz.govt.nz/#/layer/779-nz-street-address-electoral/
+// eslint-disable-next-line no-unused-vars
 var addressPoints = [
 [-37.8133062833, 175.2721598, "3"],
 [-37.8129763667, 175.2714296333, "10"],

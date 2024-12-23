@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /*
 Leaflet.markercluster building, testing and linting scripts.
 
@@ -14,11 +15,11 @@ For a custom build, open build/build.html in the browser and follow the instruct
 
 var path = require('path');
 
-desc('Check Leaflet.markercluster source for errors with JSHint');
+desc('Check Leaflet.markercluster source for errors with ESLint');
 task('lint', {
 	async: true
 }, function(){
-		jake.exec('jshint', {
+		jake.exec('eslint', {
 			printStdout: true
 		}, function () {
 			console.log('\tCheck passed.\n');
@@ -61,9 +62,6 @@ task('test', ['lint'], function() {
 	}
 	if (isArgv('--ff')) {
 		testConfig.browsers.push('Firefox');
-	}
-	if (isArgv('--ie')) {
-		testConfig.browsers.push('IE');
 	}
 
 	if (isArgv('--cov')) {

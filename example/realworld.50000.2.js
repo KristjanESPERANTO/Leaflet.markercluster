@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 var addressPoints2 = [
 [-37.7758314333, 175.2271489333, "20"],
 [-37.78007645, 175.2206278667, "107"],
