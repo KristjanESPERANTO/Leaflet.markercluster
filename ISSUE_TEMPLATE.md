@@ -13,11 +13,11 @@
 - step 1
 - step 2
 
-## What behaviour I'm expecting and which behaviour I'm seeing
+## What behavior I'm expecting and which behavior I'm seeing
 
 ## Minimal example reproducing the issue
 
 - [ ] this example is as simple as possible
 - [ ] this example does not rely on any third party code
 
-Using http://leafletjs.com/edit.html or any other jsfiddle-like site.
+Using <http://leafletjs.com/edit.html> or any other jsfiddle-like site.
