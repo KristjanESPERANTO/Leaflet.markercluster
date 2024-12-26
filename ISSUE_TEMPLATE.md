@@ -2,7 +2,7 @@
 - [ ] I'm sure this is a Leaflet.MarkerCluster code issue, not an issue with my own code nor with the framework I'm using (Cordova, Ionic, Angular, React…)
 - [ ] I've searched through the issues to make sure it's not yet reported
 
-----
+---
 
 ## How to reproduce
 
