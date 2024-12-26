@@ -1,8 +1,9 @@
 
 // Config file for running Rollup in "normal" mode (non-watch)
 
+import json from '@rollup/plugin-json'
 import rollupGitVersion from 'rollup-plugin-git-version'
-import json from 'rollup-plugin-json'
+import terser from "@rollup/plugin-terser";
 import process from 'node:process';
 
 import { readFileSync } from "fs";
@@ -22,24 +23,45 @@ if (process.env.NODE_ENV === 'release') {
 	version += '+' + branch + '.' + rev;
 }
 
-const banner = `/*
- * Leaflet.markercluster ` + version + `,
- * Provides Beautiful Animated Marker Clustering functionality for Leaflet, a JS library for interactive maps.
- * https://github.com/Leaflet/Leaflet.markercluster
- * (c) 2012-2017, Dave Leaver, smartrak
- */`;
+const banner = `/*! *****************************************************************************
+  ${pkg.name}
+  Version ${version}
 
-export default {
-	input: 'src/index.js',
-	output: {
-		banner,
-		file: 'dist/leaflet.markercluster-src.js',
-		format: 'umd',
-		legacy: true, // Needed to create files loadable by IE8
-		name: 'Leaflet.markercluster',
-		sourcemap: true,
+  ${pkg.description}
+  Please submit bugs at ${pkg.bugs.url}
+
+  © Dave Leaver and contributors
+  License: ${pkg.license}
+
+  This file is auto-generated. Do not edit.
+***************************************************************************** */
+`;
+
+export default [
+	{
+		input: 'src/index.js',
+		output: {
+			banner,
+			file: 'dist/leaflet.markercluster-src.js',
+			format: 'umd',
+			name: 'Leaflet.markercluster',
+			sourcemap: true,
+		},
+		plugins: [
+			release ? json() : rollupGitVersion(),
+		],
 	},
-	plugins: [
-		release ? json() : rollupGitVersion(),
-	],
-};
+	{
+		input: 'src/index.js',
+		output: {
+			banner,
+			file: 'dist/leaflet.markercluster-esm.js',
+			format: 'es',
+			name: 'Leaflet.markercluster',
+			sourcemap: true,
+		},
+		plugins: [
+			terser()
+		],
+	}
+];
