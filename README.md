@@ -2,19 +2,11 @@
 
 Provides Beautiful Animated Marker Clustering functionality for [Leaflet](http://leafletjs.com), a JS library for interactive maps.
 
-_Requires Leaflet 1.0.0_
+_Requires Leaflet ≥ 2.0.0._
 
 ![cluster map example](example/map.png)
 
-For a Leaflet 0.7 compatible version, [use the leaflet-0.7 branch](https://github.com/Leaflet/Leaflet.markercluster/tree/leaflet-0.7)<br>
-For a Leaflet 0.5 compatible version, [Download b128e950](https://github.com/Leaflet/Leaflet.markercluster/archive/b128e950d8f5d7da5b60bd0aa9a88f6d3dd17c98.zip)<br>
-For a Leaflet 0.4 compatible version, [Download the 0.2 release](https://github.com/Leaflet/Leaflet.markercluster/archive/0.2.zip)
-
-<!---
-TOC created with gh-md-toc
-https://github.com/ekalinin/github-markdown-toc
-removed link to h1 and indented back 2 spaces all links.
--->
+For a Leaflet 1.x compatible version, use the [upstream project](https://github.com/Leaflet/Leaflet.markercluster/).
 
 ## Table of Contents
 
@@ -49,13 +41,27 @@ removed link to h1 and indented back 2 spaces all links.
 
 ## Using the plugin
 
-Include the plugin CSS and JS files on your page after Leaflet files, using your method of choice:
+### Leaflet 2.x only
 
-- [Download the `v1.4.1` release](https://github.com/Leaflet/Leaflet.markercluster/archive/v1.4.1.zip)
-- Use unpkg CDN: `https://unpkg.com/leaflet.markercluster@1.4.1/dist/`
-- Install with npm: `npm install leaflet.markercluster`
+This plugin targets Leaflet 2.x only. Internals have been migrated away from deprecated Leaflet v1 helpers and factories:
 
-In each case, use files in the `dist` folder:
+- `L.featureGroup()` factory → `new L.FeatureGroup()`
+- `L.extend` → `Object.assign`
+- `L.Util.isArray` → `Array.isArray`
+- `L.bind` → `Function.prototype.bind`
+- `L.DomUtil.hasClass` → `element.classList.contains`
+
+When consuming as ES module, import the built ESM bundle:
+
+```js
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import "leaflet.markercluster/dist/leaflet.markercluster-esm.js";
+```
+
+Include the plugin CSS and JS files on your page after Leaflet files. Use files in the `dist` folder:
 
 - `MarkerCluster.css`
 - `MarkerCluster.Default.css` (not needed if you use your own `iconCreateFunction` instead of the default one)
@@ -160,7 +166,7 @@ var markers = L.markerClusterGroup({
 - **zoomToBoundsOnClick**: When you click a cluster we zoom to its bounds.
 - **spiderfyOnMaxZoom**: When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers. (_Note: the spiderfy occurs at the current zoom level if all items within the cluster are still clustered at the maximum zoom level or at zoom specified by `disableClusteringAtZoom` option_).
 - **removeOutsideVisibleBounds**: Clusters and markers too far from the viewport are removed from the map for performance.
-- **animate**: Smoothly split / merge cluster children when zooming and spiderfying. If `L.DomUtil.TRANSITION` is false, this option has no effect (no animation is possible).
+- **animate**: Smoothly split / merge cluster children when zooming and spiderfying.
 
 #### Other options
 

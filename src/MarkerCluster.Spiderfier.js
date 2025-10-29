@@ -189,7 +189,7 @@ L.MarkerCluster.include({
 			thisLayerLatLng = this._latlng,
 			thisLayerPos = map.latLngToLayerPoint(thisLayerLatLng),
 			svg = L.Path.SVG,
-			legOptions = L.extend({}, this._group.options.spiderLegPolylineOptions), // Copy the options so that we can modify them for animation.
+			legOptions = Object.assign({}, this._group.options.spiderLegPolylineOptions), // Copy the options so that we can modify them for animation.
 			finalLegOpacity = legOptions.opacity,
 			i, m, leg, legPath, legLength, newPos;
 
@@ -432,7 +432,7 @@ L.MarkerClusterGroup.include({
 
 	_unspiderfyZoomAnim: function (zoomDetails) {
 		//Wait until the first zoomanim after the user has finished touch-zooming before running the animation
-		if (L.DomUtil.hasClass(this._map._mapPane, 'leaflet-touching')) {
+		if (this._map._mapPane.classList && this._map._mapPane.classList.contains('leaflet-touching')) {
 			return;
 		}
 

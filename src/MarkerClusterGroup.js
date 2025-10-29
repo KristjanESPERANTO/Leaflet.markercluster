@@ -55,10 +55,10 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 			this.options.iconCreateFunction = this._defaultIconCreateFunction;
 		}
 
-		this._featureGroup = L.featureGroup();
+		this._featureGroup = new L.FeatureGroup();
 		this._featureGroup.addEventParent(this);
 
-		this._nonPointGroup = L.featureGroup();
+		this._nonPointGroup = new L.FeatureGroup();
 		this._nonPointGroup.addEventParent(this);
 
 		this._inZoomAnimation = 0;
@@ -76,8 +76,8 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 		};
 
 		// Hook the appropriate animation methods.
-		var animate = L.DomUtil.TRANSITION && this.options.animate;
-		L.extend(this, animate ? this._withAnimation : this._noAnimation);
+		var animate = this.options.animate;
+		Object.assign(this, animate ? this._withAnimation : this._noAnimation);
 		// Remember which MarkerCluster class to instantiate (animated or not).
 		this._markerCluster = animate ? L.MarkerCluster : L.MarkerClusterNonAnimated;
 	},
@@ -196,7 +196,7 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 	//Takes an array of markers and adds them in bulk
 	addLayers: function (layersArray, skipLayerAddEvent) {
-		if (!L.Util.isArray(layersArray)) {
+		if (!Array.isArray(layersArray)) {
 			return this.addLayer(layersArray);
 		}
 
@@ -212,7 +212,7 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 		if (this._map) {
 			var started = (new Date()).getTime();
-			var process = L.bind(function () {
+			var process = function () {
 				var start = (new Date()).getTime();
 
 				// Make sure to unspiderfy before starting to add some layers
@@ -292,7 +292,7 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 				} else {
 					setTimeout(process, this.options.chunkDelay);
 				}
-			}, this);
+			}.bind(this);
 
 			process();
 		} else {
@@ -809,9 +809,12 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 	//Override L.Evented.fire
 	fire: function (type, data, propagate) {
-		if (data && data.layer instanceof L.MarkerCluster) {
+			// Determine the originating layer (Leaflet 2 uses `sourceTarget`)
+			var srcLayer = data && (data.sourceTarget || data.layer) || null;
+
+		if (srcLayer instanceof L.MarkerCluster) {
 			//Prevent multiple clustermouseover/off events if the icon is made up of stacked divs (Doesn't work in ie <= 8, no relatedTarget)
-			if (data.originalEvent && this._isOrIsParent(data.layer._icon, data.originalEvent.relatedTarget)) {
+			if (data && data.originalEvent && this._isOrIsParent(srcLayer._icon, data.originalEvent.relatedTarget)) {
 				return;
 			}
 			type = 'cluster' + type;
@@ -862,10 +865,12 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 	},
 
 	_zoomOrSpiderfy: function (e) {
-		var cluster = e.layer,
+		var cluster = e.sourceTarget,
 		    bottomCluster = cluster;
 
-		if (e.type === 'clusterkeypress' && e.originalEvent && e.originalEvent.keyCode !== 13 || e.originalEvent.defaultPrevented) {
+		// Ignore non-Enter keypresses and events explicitly prevented, guarding originalEvent in both cases
+		if ((e.type === 'clusterkeypress' && e.originalEvent && e.originalEvent.keyCode !== 13) ||
+			(e.originalEvent && e.originalEvent.defaultPrevented)) {
 			return;
 		}
 
@@ -901,8 +906,8 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 		if (this._shownPolygon) {
 			map.removeLayer(this._shownPolygon);
 		}
-		if (e.layer.getChildCount() > 2 && e.layer !== this._spiderfied) {
-			this._shownPolygon = new L.Polygon(e.layer.getConvexHull(), this.options.polygonOptions);
+		if (e.sourceTarget.getChildCount() > 2 && e.sourceTarget !== this._spiderfied) {
+			this._shownPolygon = new L.Polygon(e.sourceTarget.getConvexHull(), this.options.polygonOptions);
 			map.addLayer(this._shownPolygon);
 		}
 	},
@@ -1073,7 +1078,7 @@ export var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend({
 	_enqueue: function (fn) {
 		this._queue.push(fn);
 		if (!this._queueTimeout) {
-			this._queueTimeout = setTimeout(L.bind(this._processQueue, this), 300);
+			this._queueTimeout = setTimeout(this._processQueue.bind(this), 300);
 		}
 	},
 	_processQueue: function () {
@@ -1404,7 +1409,7 @@ L.MarkerClusterGroup.include({
 		//In my testing this works, infact offsetWidth of any element seems to work.
 		//Could loop all this._layers and do this for each _icon if it stops working
 
-		L.Util.falseFn(document.body.offsetWidth);
+		void document.body.offsetWidth;
 	}
 });
 

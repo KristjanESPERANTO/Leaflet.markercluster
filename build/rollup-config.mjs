@@ -41,7 +41,7 @@ export default [
     input: "src/index.js",
     output: {
       banner,
-      file: "dist/leaflet.markercluster-src.js",
+      file: "dist/leaflet.markercluster-umd.js",
       format: "umd",
       name: "Leaflet.markercluster",
       sourcemap: true
