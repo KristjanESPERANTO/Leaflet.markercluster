@@ -16,8 +16,8 @@ describe('Remember opacity', function () {
 		{latLng: [-1,-1], opts: {opacity: 0.2}}
 	];
 
-	var bounds = L.latLngBounds( L.latLng( -1.1, -1.1),
-	                             L.latLng(  1.1,  1.1) );
+	var bounds = new L.LatLngBounds( new L.LatLng( -1.1, -1.1),
+	                             new L.LatLng(  1.1,  1.1) );
 
 	beforeEach(function () {
 		clock = sinon.useFakeTimers();
@@ -27,11 +27,11 @@ describe('Remember opacity', function () {
 		div.style.height = '200px';
 		document.body.appendChild(div);
 
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 
 		markers = [];
 		for (var i = 0; i < markerDefs.length; i++) {
-			markers.push( L.marker(markerDefs[i].latLng, markerDefs[i].opts ) );
+			markers.push( new L.Marker(markerDefs[i].latLng, markerDefs[i].opts ) );
 		}
 	});
 
@@ -151,7 +151,7 @@ describe('Remember opacity', function () {
 
 // 			console.log(markerDefs[i].latLng, markerDefs[i].opts.opacity);
 
-			map.setView(L.latLng(markerDefs[i].latLng), 18);
+			map.setView(new L.LatLng(markerDefs[i].latLng), 18);
 			clock.tick(1000);
 			visibleClusters = group._featureGroup.getLayers();
 			expect(visibleClusters.length).to.be(1);

@@ -12,7 +12,7 @@
 		div.style.height = '200px';
 		document.body.appendChild(div);
 	
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 	
 		// Corresponds to zoom level 8 for the above div dimensions.
 		map.fitBounds(new L.LatLngBounds([
@@ -60,8 +60,8 @@
 
 		group = L.markerClusterGroup().addTo(map);
 
-		var marker1 = L.marker([1.5, 1.5]).addTo(group),
-		    marker2 = L.marker([1.5, 1.5]).addTo(group); // Needed to force a cluster.
+		var marker1 = new L.Marker([1.5, 1.5]).addTo(group),
+		    marker2 = new L.Marker([1.5, 1.5]).addTo(group); // Needed to force a cluster.
 
 		setMapView();
 
@@ -118,8 +118,8 @@
 			}
 		}).addTo(map);
 
-		var marker1 = L.marker([1.5, 1.5]).addTo(group),
-		    marker2 = L.marker([1.5, 1.5]).addTo(group); // Needed to force a cluster.
+		var marker1 = new L.Marker([1.5, 1.5]).addTo(group),
+		    marker2 = new L.Marker([1.5, 1.5]).addTo(group); // Needed to force a cluster.
 
 		setMapView();
 
@@ -171,7 +171,7 @@
 			iconCreateFunction: iconCreateFunction
 		}).addTo(map);
 
-		var marker1 = L.marker([1.5, 1.5]).addTo(group);
+		var marker1 = new L.Marker([1.5, 1.5]).addTo(group);
 
 		setMapView();
 
@@ -195,8 +195,8 @@
 			iconCreateFunction: iconCreateFunction
 		}).addTo(map);
 
-		var marker1 = L.marker([1.5, 1.5]).addTo(group),
-			marker2 = L.marker([1.5, 1.5], {
+		var marker1 = new L.Marker([1.5, 1.5]).addTo(group),
+			marker2 = new L.Marker([1.5, 1.5], {
 				icon: iconCreateFunction({
 					getAllChildMarkers: function () {
 						return marker2;
@@ -226,12 +226,12 @@
 
 
 	// Shared code for below tests.
-	var marker1 = L.marker([1.5, 1.5]),
-	    marker2 = L.marker([1.5, 1.5]), // Needed to force a cluster.
-	    marker3 = L.marker([1.1, 1.1]),
-	    marker4 = L.marker([1.1, 1.1]), // Needed to force a cluster.
-	    marker5 = L.marker([1.9, 1.9]),
-	    marker6 = L.marker([1.9, 1.9]), // Needed to force a cluster.
+	var marker1 = new L.Marker([1.5, 1.5]),
+	    marker2 = new L.Marker([1.5, 1.5]), // Needed to force a cluster.
+	    marker3 = new L.Marker([1.1, 1.1]),
+	    marker4 = new L.Marker([1.1, 1.1]), // Needed to force a cluster.
+	    marker5 = new L.Marker([1.9, 1.9]),
+	    marker6 = new L.Marker([1.9, 1.9]), // Needed to force a cluster.
 	    marker1cluster8,
 	    marker1cluster3,
 	    marker1cluster5,

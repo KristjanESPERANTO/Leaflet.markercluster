@@ -12,7 +12,7 @@
 		div.style.height = '200px';
 		document.body.appendChild(div);
 	
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 	
 		// Corresponds to zoom level 8 for the above div dimensions.
 		map.fitBounds(new L.LatLngBounds([
@@ -110,7 +110,7 @@
 
 		expect(zoom).to.be.lessThan(10);
 
-		cluster.fireEvent('click', null, true);
+		cluster.fire('click', null, true);
 
 		clock.tick(1000);
 
@@ -143,7 +143,7 @@
 
 		expect(zoom).to.be.lessThan(10);
 
-		cluster.fireEvent('click', null, true);
+		cluster.fire('click', null, true);
 
 		clock.tick(1000);
 

@@ -8,11 +8,11 @@ describe('Option removeOutsideVisibleBounds', function () {
 		realBrowser = L.Browser;
 		clock = sinon.useFakeTimers();
 
-		marker1 = L.marker([1.5, -0.4]); // 2 screens width away.
-		marker2 = L.marker([1.5, 0.6]); // 1 screen width away.
-		marker3 = L.marker([1.5, 1.5]); // In view port.
-		marker4 = L.marker([1.5, 2.4]); // 1 screen width away.
-		marker5 = L.marker([1.5, 3.4]); // 2 screens width away.
+		marker1 = new L.Marker([1.5, -0.4]); // 2 screens width away.
+		marker2 = new L.Marker([1.5, 0.6]); // 1 screen width away.
+		marker3 = new L.Marker([1.5, 1.5]); // In view port.
+		marker4 = new L.Marker([1.5, 2.4]); // 1 screen width away.
+		marker5 = new L.Marker([1.5, 3.4]); // 2 screens width away.
 		markers = [marker1, marker2, marker3, marker4, marker5];
 
 		div = document.createElement('div');
@@ -20,7 +20,7 @@ describe('Option removeOutsideVisibleBounds', function () {
 		div.style.height = '200px';
 		document.body.appendChild(div);
 
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 
 		// Corresponds to zoom level 8 for the above div dimensions.
 		map.fitBounds(new L.LatLngBounds([
@@ -29,7 +29,7 @@ describe('Option removeOutsideVisibleBounds', function () {
 		]));
 
 		// Add all markers once to map then remove them immediately so that their icon is null (instead of undefined).
-		for (i = 0; i < markers.length; i++) {
+		for (let i = 0; i < markers.length; i++) {
 			map.removeLayer(markers[i].addTo(map));
 		}
 	});
@@ -123,7 +123,7 @@ describe('Option removeOutsideVisibleBounds', function () {
 	];
 
 	function moveMarkersAndMapToMaxLat(latLngs, isSouth) {
-		for (i = 0; i < markers.length; i++) {
+		for (let i = 0; i < markers.length; i++) {
 			if (isSouth) {
 				markers[i].setLatLng([-latLngs[i][0], latLngs[i][1]]);
 			} else {
@@ -144,7 +144,7 @@ describe('Option removeOutsideVisibleBounds', function () {
 
 		var mapZoom = map.getZoom();
 
-		for (i = 0; i < markers.length; i++) {
+		for (let i = 0; i < markers.length; i++) {
 			try {
 				expect(markers[i].__parent._zoom).to.be.below(mapZoom);
 			} catch (e) {

@@ -12,7 +12,7 @@ describe('non-integer min/max zoom', function () {
 		div.style.height = '200px';
 		document.body.appendChild(div);
 
-		map = L.map(div, { minZoom: 0.5, maxZoom: 18.5, trackResize: false });
+		map = new L.Map(div, { minZoom: 0.5, maxZoom: 18.5, trackResize: false });
 
 		map.fitBounds(new L.LatLngBounds([
 			[1, 1],

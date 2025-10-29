@@ -13,8 +13,6 @@ To run the tests, run "jake test".
 For a custom build, open build/build.html in the browser and follow the instructions.
 */
 
-var path = require("path");
-
 desc("Check Leaflet.markercluster source for errors with ESLint");
 task(
   "lint",
@@ -57,49 +55,26 @@ task("uglify", ["build"], function () {
   });
 });
 
-desc("Run PhantomJS tests");
-task("test", ["lint"], function () {
-  var karma = require("karma"),
-    testConfig = { configFile: path.join(__dirname, "./spec/karma.conf.js") };
-
-  testConfig.browsers = ["PhantomJS"];
-
-  function isArgv(optName) {
-    return process.argv.indexOf(optName) !== -1;
+desc("Run tests with node:test");
+task(
+  "test",
+  ["lint"],
+  {
+    async: true
+  },
+  function () {
+    console.log("Running tests...");
+    jake.exec(
+      "npm test",
+      {
+        printStdout: true
+      },
+      function () {
+        console.log("\tTests ran successfully.\n");
+        complete();
+      }
+    );
   }
-
-  if (isArgv("--chrome")) {
-    testConfig.browsers.push("Chrome");
-  }
-  if (isArgv("--safari")) {
-    testConfig.browsers.push("Safari");
-  }
-  if (isArgv("--ff")) {
-    testConfig.browsers.push("Firefox");
-  }
-
-  if (isArgv("--cov")) {
-    testConfig.preprocessors = {
-      "src/**/*.js": "coverage"
-    };
-    testConfig.coverageReporter = {
-      type: "html",
-      dir: "coverage/"
-    };
-    testConfig.reporters = ["coverage"];
-  }
-
-  console.log("Running tests...");
-
-  var server = new karma.Server(testConfig, function (exitCode) {
-    if (!exitCode) {
-      console.log("\tTests ran successfully.\n");
-      complete();
-    } else {
-      process.exit(exitCode);
-    }
-  });
-  server.start();
-});
+);
 
 task("default", ["build", "uglify"]);

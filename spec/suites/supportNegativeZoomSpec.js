@@ -10,9 +10,9 @@
 		div.style.height = '200px';
 		document.body.appendChild(div);
 	
-		map = L.map(div, { minZoom: -3, maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { minZoom: -3, maxZoom: 18, trackResize: false });
 	
-		map.setView(L.latLng(0, 0), -3);
+		map.setView(new L.LatLng(0, 0), -3);
 	});
 
 	afterEach(function () {

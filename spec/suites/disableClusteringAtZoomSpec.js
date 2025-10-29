@@ -12,7 +12,7 @@ describe('disableClusteringAtZoom option', function () {
 		div.style.height = '200px';
 		document.body.appendChild(div);
 	
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 	
 		// Corresponds to zoom level 8 for the above div dimensions.
 		map.fitBounds(new L.LatLngBounds([
@@ -42,17 +42,18 @@ describe('disableClusteringAtZoom option', function () {
 			disableClusteringAtZoom: maxZoom
 		});
 
-		group.addLayers([
-			new L.Marker([1.5, 1.5]),
-			new L.Marker([1.5, 1.5])
-		]);
-		map.addLayer(group);
+	group.addLayers([
+		new L.Marker([1.5, 1.5]),
+		new L.Marker([1.5, 1.5])
+	]);
+	map.addLayer(group);
+	
+	// Give Leaflet 2 time to cluster
+	clock.tick(100);
 
-		expect(group._maxZoom).to.equal(maxZoom - 1);
+	expect(group._maxZoom).to.equal(maxZoom - 1);
 
-		expect(map._panes.markerPane.childNodes.length).to.equal(1); // 1 cluster.
-
-		map.setZoom(14);
+	expect(map._panes.markerPane.childNodes.length).to.equal(1); // 1 cluster.		map.setZoom(14);
 		clock.tick(1000);
 		expect(map._panes.markerPane.childNodes.length).to.equal(1); // 1 cluster.
 

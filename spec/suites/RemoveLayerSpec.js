@@ -12,7 +12,7 @@
 		div.style.height = '200px';
 		document.body.appendChild(div);
 	
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 	
 		// Corresponds to zoom level 8 for the above div dimensions.
 		map.fitBounds(new L.LatLngBounds([
@@ -160,7 +160,7 @@
 		map.addLayer(group);
 		group.addLayers([marker, marker2]);
 
-		var layer = L.layerGroup();
+		var layer = new L.LayerGroup();
 		layer.addLayer(marker2);
 		group.removeLayer(layer);
 
@@ -177,7 +177,7 @@
 
 		group.addLayers([marker, marker2]);
 
-		var layer = L.layerGroup();
+		var layer = new L.LayerGroup();
 		layer.addLayer(marker2);
 		group.removeLayer(layer);
 
@@ -194,7 +194,7 @@
 
 		group.addLayers([marker1, marker2]);
 
-		var layer = L.layerGroup();
+		var layer = new L.LayerGroup();
 		layer.addLayer(marker2);
 		group.removeLayer(new L.LayerGroup([layer]));
 

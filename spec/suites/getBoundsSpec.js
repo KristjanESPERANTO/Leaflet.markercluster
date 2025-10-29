@@ -10,7 +10,7 @@
 		div.style.height = '200px';
 		document.body.appendChild(div);
 
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 
 		map.fitBounds(new L.LatLngBounds([
 			[1, 1],
@@ -67,7 +67,7 @@
 
 			group.addLayers([marker, marker2, marker3]);
 
-			expect(group.getBounds().equals(L.latLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
+			expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
 		});
 
 		it('returns the correct bounds after adding to the map after adding markers', function () {
@@ -79,7 +79,7 @@
 			group.addLayers([marker, marker2, marker3]);
 			map.addLayer(group);
 
-			expect(group.getBounds().equals(L.latLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
+			expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
 		});
 
 		it('returns the correct bounds after adding to the map before adding markers', function () {
@@ -91,7 +91,7 @@
 			map.addLayer(group);
 			group.addLayers([marker, marker2, marker3]);
 
-			expect(group.getBounds().equals(L.latLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
+			expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
 		});
 	});
 
@@ -103,7 +103,7 @@
 
 			group.addLayers([marker, polygon]);
 
-			expect(group.getBounds().equals(L.latLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true);
+			expect(group.getBounds().equals(new L.LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true);
 		});
 
 		it('returns the correct bounds after adding to the map', function () {
@@ -114,7 +114,7 @@
 			map.addLayer(group);
 			group.addLayers([marker, polygon]);
 
-			expect(group.getBounds().equals(L.latLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true);
+			expect(group.getBounds().equals(new L.LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true);
 		});
 	});
 

@@ -10,7 +10,7 @@ describe('Map pane selection', function() {
 		div.style.height = '200px';
 		document.body.appendChild(div);
 	
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 	
 		// Create map pane
 		map.createPane('testPane');

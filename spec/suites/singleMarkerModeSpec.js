@@ -10,7 +10,7 @@ describe('singleMarkerMode option', function () {
 		div.style.height = '200px';
 		document.body.appendChild(div);
 	
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = new L.Map(div, { maxZoom: 18, trackResize: false });
 	
 		// Corresponds to zoom level 8 for the above div dimensions.
 		map.fitBounds(new L.LatLngBounds([
@@ -20,7 +20,7 @@ describe('singleMarkerMode option', function () {
 
 		defaultIcon = new L.Icon.Default();
 	    clusterIcon = new L.Icon.Default();
-		marker = L.marker([1.5, 1.5]);
+		marker = new L.Marker([1.5, 1.5]);
 		marker.setIcon(defaultIcon);
 	});
 
