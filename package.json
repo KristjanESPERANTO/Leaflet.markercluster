@@ -17,7 +17,6 @@
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
     "happen": "^0.3.2",
-    "jake": "10.9.2",
     "leaflet": "^2.0.0-alpha.1",
     "mocha": "^11.7.4",
     "playwright": "^1.56.1",
@@ -35,13 +34,17 @@
   "main": "dist/leaflet.markercluster-src.js",
   "style": "dist/MarkerCluster.css",
   "scripts": {
-    "test": "npm run rollup && node spec/run-tests.mjs",
-    "prepublish": "jake",
-    "lint": "eslint && stylelint **/*.css && prettier --check .",
+    "test": "npm run lint:code && npm run rollup && node spec/run-tests.mjs",
+    "build": "npm run lint:code && npm run rollup && npm run uglify",
+    "prepublish": "npm run build",
+    "lint": "npm run lint:code && npm run lint:style && npm run lint:format",
+    "lint:code": "eslint",
+    "lint:style": "stylelint **/*.css",
+    "lint:format": "prettier --check .",
     "lint:fix": "eslint --fix && stylelint --fix **/*.css && prettier --write .",
     "release": "npx bumpp --no-push",
     "rollup": "rollup -c build/rollup-config.mjs",
-    "uglify": "uglifyjs dist/leaflet.markercluster-src.js -c -m -o dist/leaflet.markercluster.js --source-map 'filename=dist/leaflet.markercluster.js.map,content=dist/leaflet.markercluster-src.js.map,url=leaflet.markercluster.js.map'"
+    "uglify": "uglifyjs dist/leaflet.markercluster-umd.js -c -m -o dist/leaflet.markercluster.js --source-map 'filename=dist/leaflet.markercluster.js.map,content=dist/leaflet.markercluster-umd.js.map,url=leaflet.markercluster.js.map'"
   },
   "keywords": [
     "gis",
