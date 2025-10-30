@@ -12,9 +12,12 @@
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.38.0",
+    "@eslint/markdown": "^7.5.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-terser": "^0.4.4",
+    "@stylistic/eslint-plugin": "^5.5.0",
     "eslint": "^9.38.0",
+    "eslint-plugin-import-x": "^4.16.1",
     "globals": "^16.4.0",
     "happen": "^0.3.2",
     "leaflet": "^2.0.0-alpha.1",
