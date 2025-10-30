@@ -1,6 +1,6 @@
 const config = {
   printWidth: 180,
-  trailingComma: "none"
-};
+  trailingComma: 'none',
+}
 
-export default config;
+export default config

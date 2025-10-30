@@ -71,10 +71,10 @@ Include the plugin CSS and JS files on your page after Leaflet files. Use files 
 
 ### Building, testing and linting scripts
 
-Install jake `npm install -g jake` then run `npm install`
+Install dependencies with `npm install`.
 
-- To check the code for errors and build Leaflet from source, run `jake`.
-- To run the tests, run `jake test`.
+- To check the code for errors and build Leaflet from source, run `npm run build`.
+- To run the tests, run `npm test`.
 
 ### Examples
 

@@ -18,14 +18,14 @@
 
     <!-- source files -->
     <script type="text/javascript" src="../dist/leaflet.markercluster-umd.js"></script>
-    
+
     <!-- Configure Leaflet icon path for PhantomJS-like environments -->
     <script type="text/javascript" src="after.js"></script>
-    
+
     <!-- Signal that all scripts are loaded -->
     <script>
       window.scriptsLoaded = true;
-      console.log('All scripts loaded, L is', typeof L);
+      console.log("All scripts loaded, L is", typeof L);
     </script>
 
     <script>
@@ -81,20 +81,20 @@
 
     <script>
       const runner = (window.mochaPhantomJS || window.mocha).run();
-      
+
       // Store results for automated testing
       window.mochaResults = null;
       const failedTests = [];
-      
+
       // Collect failures as they happen
-      runner.on('fail', function(test, err) {
+      runner.on("fail", function (test, err) {
         failedTests.push({
           title: test.fullTitle(),
           error: err.message || err.toString()
         });
       });
-      
-      runner.on('end', function() {
+
+      runner.on("end", function () {
         window.mochaResults = {
           passes: runner.stats.passes || 0,
           failures: runner.stats.failures || 0,
@@ -102,8 +102,8 @@
           duration: runner.stats.duration || 0,
           failureDetails: failedTests
         };
-        
-        console.log('Tests complete:', window.mochaResults.passes, 'passed,', window.mochaResults.failures, 'failed,', window.mochaResults.pending, 'skipped');
+
+        console.log("Tests complete:", window.mochaResults.passes, "passed,", window.mochaResults.failures, "failed,", window.mochaResults.pending, "skipped");
       });
     </script>
   </body>

@@ -44,22 +44,21 @@ and ask yourself two questions:
    Or will it look better as a plugin in a separate repository?
 2. Is it written in a simple, concise way that doesn't add bulk to the codebase?
 
-If your feature or API improvement did get merged into master,
-please consider submitting another pull request with the corresponding [documentation update](#improving-documentation).
+If your feature or API improvement did get merged into main branch,
+please consider submitting another pull request with the corresponding documentation update.
 
 ## Building
 
 Install the dependencies:
 
 ```bash
-npm install -g jake
 npm install
 ```
 
 Then to build:
 
 ```bash
-jake
+npm run build
 ```
 
 Output will be in the `dist/` directory
@@ -69,5 +68,5 @@ Output will be in the `dist/` directory
 To run unit tests:
 
 ```bash
-jake test
+npm test
 ```
