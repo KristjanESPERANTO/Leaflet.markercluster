@@ -1,365 +1,344 @@
-﻿describe('spiderfy', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var div, map, group, clock;
-	
-	beforeEach(function () {
-		clock = sinon.useFakeTimers();
+import L from 'leaflet'
 
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
-	
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
-	
-		// Corresponds to zoom level 8 for the above div dimensions.
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
+describe('spiderfy', function () {
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let div, map, group, clock
 
-	afterEach(function () {
-		if (group instanceof L.MarkerClusterGroup) {
-			group.removeLayers(group.getLayers());
-			map.removeLayer(group);
-		}
+  beforeEach(function () {
+    clock = sinon.useFakeTimers()
 
-		map.remove();
-		div.remove();
-		clock.restore();
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-		div = map = group = clock = null;
-	});
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('Spiderfies 2 Markers', function () {
+    // Corresponds to zoom level 8 for the above div dimensions.
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
 
-		group = new L.MarkerClusterGroup();
+  afterEach(function () {
+    if (group instanceof L.MarkerClusterGroup) {
+      group.removeLayers(group.getLayers())
+      map.removeLayer(group)
+    }
 
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+    map.remove()
+    div.remove()
+    clock.restore()
 
-		group.addLayer(marker);
-		group.addLayer(marker2);
-		map.addLayer(group);
+    div = map = group = clock = null
+  })
 
-		marker.__parent.spiderfy();
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('Spiderfies 2 Markers', function () {
+    group = new L.MarkerClusterGroup()
 
-		expect(marker._icon.parentNode).to.be(map._panes.markerPane);
-		expect(marker2._icon.parentNode).to.be(map._panes.markerPane);
-	});
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-	it('Spiderfies 2 CircleMarkers', function () {
+    group.addLayer(marker)
+    group.addLayer(marker2)
+    map.addLayer(group)
 
-		group = new L.MarkerClusterGroup();
+    marker.__parent.spiderfy()
 
-		var marker = new L.CircleMarker([1.5, 1.5]);
-		var marker2 = new L.CircleMarker([1.5, 1.5]);
+    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+  })
 
-		group.addLayer(marker);
-		group.addLayer(marker2);
-		map.addLayer(group);
+  it('Spiderfies 2 CircleMarkers', function () {
+    group = new L.MarkerClusterGroup()
 
-		marker.__parent.spiderfy();
+    const marker = new L.CircleMarker([1.5, 1.5])
+    const marker2 = new L.CircleMarker([1.5, 1.5])
 
-		// Leaflet 1.0.0 now uses an intermediate L.Renderer.
-		// marker > _path > _rootGroup (g) > _container (svg) > pane (div)
-		expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
-		expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
-	});
+    group.addLayer(marker)
+    group.addLayer(marker2)
+    map.addLayer(group)
 
-	it('Spiderfies 2 Circles', function () {
+    marker.__parent.spiderfy()
 
-		group = new L.MarkerClusterGroup();
+    // Leaflet 1.0.0 now uses an intermediate L.Renderer.
+    // marker > _path > _rootGroup (g) > _container (svg) > pane (div)
+    expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
+    expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
+  })
 
-		var marker = new L.Circle([1.5, 1.5], 10);
-		var marker2 = new L.Circle([1.5, 1.5], 10);
+  it('Spiderfies 2 Circles', function () {
+    group = new L.MarkerClusterGroup()
 
-		group.addLayer(marker);
-		group.addLayer(marker2);
-		map.addLayer(group);
+    const marker = new L.Circle([1.5, 1.5], 10)
+    const marker2 = new L.Circle([1.5, 1.5], 10)
 
-		marker.__parent.spiderfy();
+    group.addLayer(marker)
+    group.addLayer(marker2)
+    map.addLayer(group)
 
-		expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
-		expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
-	});
+    marker.__parent.spiderfy()
 
-	it('Spiderfies at current zoom if all child markers are at the exact same position', function () {
+    expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
+    expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
+  })
 
-		group = new L.MarkerClusterGroup();
+  it('Spiderfies at current zoom if all child markers are at the exact same position', function () {
+    group = new L.MarkerClusterGroup()
 
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-		// Get the appropriate cluster.
-		var cluster = marker.__parent,
-		    zoom = map.getZoom();
+    // Get the appropriate cluster.
+    let cluster = marker.__parent,
+      zoom = map.getZoom()
 
-		while (cluster._zoom !== zoom) {
-			cluster = cluster.__parent;
-		}
+    while (cluster._zoom !== zoom) {
+      cluster = cluster.__parent
+    }
 
-		expect(zoom).to.be.lessThan(10);
+    expect(zoom).to.be.lessThan(10)
 
-		cluster.fire('click', null, true);
+    cluster.fire('click', null, true)
 
-		clock.tick(1000);
+    clock.tick(1000)
 
-		expect(map.getZoom()).to.equal(zoom);
+    expect(map.getZoom()).to.equal(zoom)
 
-		expect(marker._icon.parentNode).to.be(map._panes.markerPane);
-		expect(marker2._icon.parentNode).to.be(map._panes.markerPane);
+    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+  })
 
-	});
+  it('Spiderfies at current zoom if all child markers are still within a single cluster at map maxZoom', function () {
+    group = new L.MarkerClusterGroup()
 
-	it('Spiderfies at current zoom if all child markers are still within a single cluster at map maxZoom', function () {
+    const marker = new L.Marker([1.5, 1.50001])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		group = new L.MarkerClusterGroup();
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-		var marker = new L.Marker([1.5, 1.50001]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+    expect(marker.__parent._zoom).to.equal(18)
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+    // Get the appropriate cluster.
+    let cluster = marker.__parent,
+      zoom = map.getZoom()
 
-		expect(marker.__parent._zoom).to.equal(18);
+    while (cluster._zoom !== zoom) {
+      cluster = cluster.__parent
+    }
 
-		// Get the appropriate cluster.
-		var cluster = marker.__parent,
-		    zoom = map.getZoom();
+    expect(zoom).to.be.lessThan(10)
 
-		while (cluster._zoom !== zoom) {
-			cluster = cluster.__parent;
-		}
+    cluster.fire('click', null, true)
 
-		expect(zoom).to.be.lessThan(10);
+    clock.tick(1000)
 
-		cluster.fire('click', null, true);
+    expect(map.getZoom()).to.equal(zoom)
 
-		clock.tick(1000);
+    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+  })
 
-		expect(map.getZoom()).to.equal(zoom);
+  it('removes all markers and spider legs when group is removed from map', function () {
+    group = new L.MarkerClusterGroup()
 
-		expect(marker._icon.parentNode).to.be(map._panes.markerPane);
-		expect(marker2._icon.parentNode).to.be(map._panes.markerPane);
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-	});
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-	it('removes all markers and spider legs when group is removed from map', function () {
+    marker.__parent.spiderfy()
 
-		group = new L.MarkerClusterGroup();
+    expect(map._panes.markerPane.childNodes.length).to.be(3) // The 2 markers + semi-transparent cluster.
+    expect(map.getPane('overlayPane').firstChild.firstChild.childNodes.length).to.be(2) // The 2 spider legs.
+  })
 
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+  it('adds then removes class "leaflet-cluster-anim" from mapPane on spiderfy', function () {
+    group = new L.MarkerClusterGroup()
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		marker.__parent.spiderfy();
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-		expect(map._panes.markerPane.childNodes.length).to.be(3); // The 2 markers + semi-transparent cluster.
-		expect(map.getPane('overlayPane').firstChild.firstChild.childNodes.length).to.be(2); // The 2 spider legs.
+    marker.__parent.spiderfy()
 
-	});
+    expect(map._panes.mapPane.className).to.contain('leaflet-cluster-anim')
 
-	it('adds then removes class "leaflet-cluster-anim" from mapPane on spiderfy', function () {
+    clock.tick(1000)
 
-		group = new L.MarkerClusterGroup();
+    expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim')
+  })
 
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+  it('adds then removes class "leaflet-cluster-anim" from mapPane on unspiderfy', function () {
+    group = new L.MarkerClusterGroup()
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		marker.__parent.spiderfy();
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-		expect(map._panes.mapPane.className).to.contain('leaflet-cluster-anim');
+    marker.__parent.spiderfy()
 
-		clock.tick(1000);
+    clock.tick(1000)
 
-		expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim');
+    marker.__parent.unspiderfy()
 
-	});
+    expect(map._panes.mapPane.className).to.contain('leaflet-cluster-anim')
 
-	it('adds then removes class "leaflet-cluster-anim" from mapPane on unspiderfy', function () {
+    clock.tick(1000)
 
-		group = new L.MarkerClusterGroup();
+    expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim')
+  })
 
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+  it('fires unspiderfied event on unspiderfy', function (done) {
+    group = new L.MarkerClusterGroup()
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		marker.__parent.spiderfy();
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-		clock.tick(1000);
+    marker.__parent.spiderfy()
 
-		marker.__parent.unspiderfy();
+    clock.tick(1000)
 
-		expect(map._panes.mapPane.className).to.contain('leaflet-cluster-anim');
+    // Add event listener
+    group.on('unspiderfied', function (event) {
+      expect(event.target).to.be(group)
+      expect(event.cluster).to.be.a(L.Marker)
+      expect(event.markers[1]).to.be(marker)
+      expect(event.markers[0]).to.be(marker2)
 
-		clock.tick(1000);
+      done()
+    })
 
-		expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim');
+    marker.__parent.unspiderfy()
 
-	});
+    clock.tick(1000)
+  })
 
-	it('fires unspiderfied event on unspiderfy', function (done) {
+  it('does not leave class "leaflet-cluster-anim" on mapPane when group is removed while spiderfied', function () {
+    group = new L.MarkerClusterGroup()
 
-		group = new L.MarkerClusterGroup();
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+    marker.__parent.spiderfy()
 
-		marker.__parent.spiderfy();
+    clock.tick(1000)
 
-		clock.tick(1000);
+    map.removeLayer(group)
 
-		// Add event listener
-		group.on('unspiderfied', function (event) {
-			expect(event.target).to.be(group);
-			expect(event.cluster).to.be.a(L.Marker);
-			expect(event.markers[1]).to.be(marker);
-			expect(event.markers[0]).to.be(marker2);
+    expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim')
+  })
 
-			done();
-		});
+  it('overrides spiderfy shape positions when custom function has been provided', function () {
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		marker.__parent.unspiderfy();
+    const spiderfyShapePositionsFuntion = sinon.spy(function () {
+      return [{ x: 1.6, y: 1.6 }, { x: 1.6, y: 1.6 }]
+    },
+    )
 
-		clock.tick(1000);
+    group = new L.MarkerClusterGroup({ spiderfyShapePositions: spiderfyShapePositionsFuntion })
 
-	});
+    group.addLayer(marker)
+    group.addLayer(marker2)
+    map.addLayer(group)
 
-	it('does not leave class "leaflet-cluster-anim" on mapPane when group is removed while spiderfied', function () {
+    marker.__parent.spiderfy()
 
-		group = new L.MarkerClusterGroup();
+    sinon.assert.calledOnce(spiderfyShapePositionsFuntion)
+  })
 
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+  describe('zoomend event listener', function () {
+    it('unspiderfies correctly', function () {
+      group = new L.MarkerClusterGroup()
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+      const marker = new L.Circle([1.5, 1.5], 10)
+      const marker2 = new L.Circle([1.5, 1.5], 10)
 
-		marker.__parent.spiderfy();
+      group.addLayer(marker)
+      group.addLayer(marker2)
+      map.addLayer(group)
 
-		clock.tick(1000);
+      marker.__parent.spiderfy()
 
-		map.removeLayer(group);
+      expect(group._spiderfied).to.not.be(null)
 
-		expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim');
+      map.fire('zoomend')
 
-	});
+      // We should unspiderfy with no animation, so this should be null
+      expect(group._spiderfied).to.be(null)
+    })
+  })
 
-	it('overrides spiderfy shape positions when custom function has been provided', function () {
-		
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+  describe('spiderfied event listener', function () {
+    it('Spiderfies 2 Markers', function (done) {
+      group = new L.MarkerClusterGroup()
+      const marker = new L.Marker([1.5, 1.5])
+      const marker2 = new L.Marker([1.5, 1.5])
 
-		var spiderfyShapePositionsFuntion =  sinon.spy(function (){
-			return [{x: 1.6, y: 1.6}, {x: 1.6, y: 1.6} ];
-			}
-		);
+      group.addLayer(marker)
+      group.addLayer(marker2)
+      map.addLayer(group)
 
-		group = new L.MarkerClusterGroup({spiderfyShapePositions: spiderfyShapePositionsFuntion});
+      // Add event listener
+      group.on('spiderfied', function (event) {
+        expect(event.target).to.be(group)
+        expect(event.cluster).to.be.a(L.Marker)
+        expect(event.markers[1]).to.be(marker)
+        expect(event.markers[0]).to.be(marker2)
 
-		group.addLayer(marker);
-		group.addLayer(marker2)
-		map.addLayer(group);
+        done()
+      })
 
-		marker.__parent.spiderfy();
+      marker.__parent.spiderfy()
 
-		sinon.assert.calledOnce(spiderfyShapePositionsFuntion);
-	});
+      clock.tick(200)
+    })
 
-	describe('zoomend event listener', function () {
+    it('Spiderfies 2 Circles', function (done) {
+      group = new L.MarkerClusterGroup()
+      const marker = new L.Circle([1.5, 1.5], 10)
+      const marker2 = new L.Circle([1.5, 1.5], 10)
 
-		it('unspiderfies correctly', function () {
+      group.addLayer(marker)
+      group.addLayer(marker2)
+      map.addLayer(group)
 
-			group = new L.MarkerClusterGroup();
+      // Add event listener
+      group.on('spiderfied', function (event) {
+        expect(event.target).to.be(group)
+        expect(event.cluster).to.be.a(L.Marker)
+        expect(event.markers[1]).to.be(marker)
+        expect(event.markers[0]).to.be(marker2)
 
-			var marker = new L.Circle([1.5, 1.5], 10);
-			var marker2 = new L.Circle([1.5, 1.5], 10);
+        done()
+      })
 
-			group.addLayer(marker);
-			group.addLayer(marker2);
-			map.addLayer(group);
+      marker.__parent.spiderfy()
 
-			marker.__parent.spiderfy();
-
-			expect(group._spiderfied).to.not.be(null);
-
-			map.fire('zoomend');
-
-			//We should unspiderfy with no animation, so this should be null
-			expect(group._spiderfied).to.be(null);
-		});
-
-	});
-
-	describe('spiderfied event listener', function () {
-		it('Spiderfies 2 Markers', function (done) {
-
-			group = new L.MarkerClusterGroup();
-			var marker = new L.Marker([1.5, 1.5]);
-			var marker2 = new L.Marker([1.5, 1.5]);
-
-			group.addLayer(marker);
-			group.addLayer(marker2);
-			map.addLayer(group);
-
-			// Add event listener
-			group.on('spiderfied', function (event) {
-				expect(event.target).to.be(group);
-				expect(event.cluster).to.be.a(L.Marker);
-				expect(event.markers[1]).to.be(marker);
-				expect(event.markers[0]).to.be(marker2);
-
-				done();
-			});
-
-			marker.__parent.spiderfy();
-
-			clock.tick(200);
-		});
-
-		it('Spiderfies 2 Circles', function (done) {
-
-			group = new L.MarkerClusterGroup();
-			var marker = new L.Circle([1.5, 1.5], 10);
-			var marker2 = new L.Circle([1.5, 1.5], 10);
-
-			group.addLayer(marker);
-			group.addLayer(marker2);
-			map.addLayer(group);
-
-			// Add event listener
-			group.on('spiderfied', function (event) {
-				expect(event.target).to.be(group);
-				expect(event.cluster).to.be.a(L.Marker);
-				expect(event.markers[1]).to.be(marker);
-				expect(event.markers[0]).to.be(marker2);
-
-				done();
-			});
-
-			marker.__parent.spiderfy();
-
-			clock.tick(200);
-		});
-	});
-});
+      clock.tick(200)
+    })
+  })
+})

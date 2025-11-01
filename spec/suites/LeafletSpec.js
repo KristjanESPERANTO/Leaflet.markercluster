@@ -1,6 +1,7 @@
-describe('L#noConflict', function() {
-	it('restores the previous L value and returns Leaflet namespace', function(){
+import L from 'leaflet'
 
-		expect(L.version).to.be.ok();
-	});
-});
+describe('L#noConflict', function () {
+  it('restores the previous L value and returns Leaflet namespace', function () {
+    expect(L.version).to.be.ok()
+  })
+})

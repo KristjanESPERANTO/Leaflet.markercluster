@@ -1,160 +1,156 @@
-﻿describe('addLayer adding multiple markers', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var map, div, clock;
+import L from 'leaflet'
 
-	beforeEach(function () {
-		clock = sinon.useFakeTimers();
+describe('addLayer adding multiple markers', function () {
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let map, div, clock
 
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
+  beforeEach(function () {
+    clock = sinon.useFakeTimers()
 
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-	afterEach(function () {
-		map.remove();
-		document.body.removeChild(div);
-		clock.restore();
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
 
-		map = div = clock = null;
-	});
+  afterEach(function () {
+    map.remove()
+    document.body.removeChild(div)
+    clock.restore()
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('creates a cluster when 2 overlapping markers are added before the group is added to the map', function () {
+    map = div = clock = null
+  })
 
-		var group = new L.MarkerClusterGroup();
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('creates a cluster when 2 overlapping markers are added before the group is added to the map', function () {
+    const group = new L.MarkerClusterGroup()
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		group.addLayer(marker);
-		group.addLayer(marker2);
-		map.addLayer(group);
+    group.addLayer(marker)
+    group.addLayer(marker2)
+    map.addLayer(group)
 
-		expect(marker._icon).to.be(undefined);
-		expect(marker2._icon).to.be(undefined);
+    expect(marker._icon).to.be(undefined)
+    expect(marker2._icon).to.be(undefined)
 
-		expect(map._panes.markerPane.childNodes.length).to.be(1);
-	});
-	it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
+    expect(map._panes.markerPane.childNodes.length).to.be(1)
+  })
+  it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
+    const group = new L.MarkerClusterGroup()
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		var group = new L.MarkerClusterGroup();
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+    map.addLayer(group)
+    group.addLayer(marker)
+    group.addLayer(marker2)
 
-		map.addLayer(group);
-		group.addLayer(marker);
-		group.addLayer(marker2);
+    expect(marker._icon).to.be(null) // Null as was added and then removed
+    expect(marker2._icon).to.be(undefined)
 
-		expect(marker._icon).to.be(null); //Null as was added and then removed
-		expect(marker2._icon).to.be(undefined);
+    expect(map._panes.markerPane.childNodes.length).to.be(1)
+  })
+  it('creates a cluster with an animation when 2 overlapping markers are added after the group is added to the map', function () {
+    const group = new L.MarkerClusterGroup({ animateAddingMarkers: true })
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		expect(map._panes.markerPane.childNodes.length).to.be(1);
-	});
-	it('creates a cluster with an animation when 2 overlapping markers are added after the group is added to the map', function () {
+    map.addLayer(group)
+    group.addLayer(marker)
+    group.addLayer(marker2)
 
-		var group = new L.MarkerClusterGroup({ animateAddingMarkers: true });
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
+    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
 
-		map.addLayer(group);
-		group.addLayer(marker);
-		group.addLayer(marker2);
+    expect(map._panes.markerPane.childNodes.length).to.be(3)
 
-		expect(marker._icon.parentNode).to.be(map._panes.markerPane);
-		expect(marker2._icon.parentNode).to.be(map._panes.markerPane);
+    // Run the the animation
+    clock.tick(1000)
 
-		expect(map._panes.markerPane.childNodes.length).to.be(3);
+    // Then markers should be removed from map
+    expect(marker._icon).to.be(null)
+    expect(marker2._icon).to.be(null)
 
-		//Run the the animation
-		clock.tick(1000);
+    expect(map._panes.markerPane.childNodes.length).to.be(1)
+  })
 
-		//Then markers should be removed from map
-		expect(marker._icon).to.be(null);
-		expect(marker2._icon).to.be(null);
+  it('creates a cluster and marker when 2 overlapping markers and one non-overlapping are added before the group is added to the map', function () {
+    const group = new L.MarkerClusterGroup()
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
+    const marker3 = new L.Marker([3.0, 1.5])
 
-		expect(map._panes.markerPane.childNodes.length).to.be(1);
-	});
+    group.addLayer(marker)
+    group.addLayer(marker2)
+    group.addLayer(marker3)
+    map.addLayer(group)
 
-	it('creates a cluster and marker when 2 overlapping markers and one non-overlapping are added before the group is added to the map', function () {
+    expect(marker._icon).to.be(undefined)
+    expect(marker2._icon).to.be(undefined)
+    expect(marker3._icon.parentNode).to.be(map._panes.markerPane)
 
-		var group = new L.MarkerClusterGroup();
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
-		var marker3 = new L.Marker([3.0, 1.5]);
+    expect(map._panes.markerPane.childNodes.length).to.be(2)
+  })
+  it('creates a cluster and marker when 2 overlapping markers and one non-overlapping are added after the group is added to the map', function () {
+    const group = new L.MarkerClusterGroup()
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
+    const marker3 = new L.Marker([3.0, 1.5])
 
-		group.addLayer(marker);
-		group.addLayer(marker2);
-		group.addLayer(marker3);
-		map.addLayer(group);
+    map.addLayer(group)
+    group.addLayer(marker)
+    group.addLayer(marker2)
+    group.addLayer(marker3)
 
-		expect(marker._icon).to.be(undefined);
-		expect(marker2._icon).to.be(undefined);
-		expect(marker3._icon.parentNode).to.be(map._panes.markerPane);
+    expect(marker._icon).to.be(null) // Null as was added and then removed
+    expect(marker2._icon).to.be(undefined)
+    expect(marker3._icon.parentNode).to.be(map._panes.markerPane)
 
-		expect(map._panes.markerPane.childNodes.length).to.be(2);
-	});
-	it('creates a cluster and marker when 2 overlapping markers and one non-overlapping are added after the group is added to the map', function () {
+    expect(map._panes.markerPane.childNodes.length).to.be(2)
+  })
 
-		var group = new L.MarkerClusterGroup();
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
-		var marker3 = new L.Marker([3.0, 1.5]);
+  it('unspiderfies before adding a new Marker', function () {
+    const group = new L.MarkerClusterGroup()
 
-		map.addLayer(group);
-		group.addLayer(marker);
-		group.addLayer(marker2);
-		group.addLayer(marker3);
+    const marker = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
+    const marker3 = new L.Marker([1.5, 1.5])
 
-		expect(marker._icon).to.be(null); //Null as was added and then removed
-		expect(marker2._icon).to.be(undefined);
-		expect(marker3._icon.parentNode).to.be(map._panes.markerPane);
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-		expect(map._panes.markerPane.childNodes.length).to.be(2);
-	});
+    expect(marker._icon).to.be(undefined)
+    expect(marker2._icon).to.be(undefined)
 
-	it('unspiderfies before adding a new Marker', function () {
+    group.zoomToShowLayer(marker)
+    // Run the the animation
+    clock.tick(1000)
 
-		group = new L.MarkerClusterGroup();
+    expect(marker._icon).to.not.be(undefined)
+    expect(marker._icon).to.not.be(null)
+    expect(marker2._icon).to.not.be(undefined)
+    expect(marker2._icon).to.not.be(null)
 
-		var marker = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
-		var marker3 = new L.Marker([1.5, 1.5]);
+    group.addLayer(marker3)
+    // Run the the animation
+    clock.tick(1000)
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
-
-		expect(marker._icon).to.be(undefined);
-		expect(marker2._icon).to.be(undefined);
-
-		group.zoomToShowLayer(marker);
-		//Run the the animation
-		clock.tick(1000);
-
-		expect(marker._icon).to.not.be(undefined);
-		expect(marker._icon).to.not.be(null);
-		expect(marker2._icon).to.not.be(undefined);
-		expect(marker2._icon).to.not.be(null);
-
-		group.addLayer(marker3);
-		//Run the the animation
-		clock.tick(1000);
-
-		expect(marker._icon).to.be(null);
-		expect(marker2._icon).to.be(null);
-		expect(marker3._icon).to.be(undefined);
-		expect(marker3.__parent._icon).to.not.be(undefined);
-		expect(marker3.__parent._icon).to.not.be(null);
-		expect(marker3.__parent._icon.innerText.trim()).to.equal('3');
-	});
-});
+    expect(marker._icon).to.be(null)
+    expect(marker2._icon).to.be(null)
+    expect(marker3._icon).to.be(undefined)
+    expect(marker3.__parent._icon).to.not.be(undefined)
+    expect(marker3.__parent._icon).to.not.be(null)
+    expect(marker3.__parent._icon.innerText.trim()).to.equal('3')
+  })
+})

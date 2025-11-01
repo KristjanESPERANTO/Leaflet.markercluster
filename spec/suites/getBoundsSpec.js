@@ -1,128 +1,130 @@
-﻿describe('getBounds', function() {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var map, div;
+import L from 'leaflet'
 
-	beforeEach(function() {
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
+describe('getBounds', function () {
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let map, div
 
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
+  beforeEach(function () {
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
-	afterEach(function() {
-		map.remove();
-		document.body.removeChild(div);
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-		map = div = null;
-	});
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
+  afterEach(function () {
+    map.remove()
+    document.body.removeChild(div)
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	describe('polygon layer', function() {
-		it('returns the correct bounds before adding to the map', function() {
-			var group = new L.MarkerClusterGroup();
-			var polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]]);
+    map = div = null
+  })
 
-			group.addLayer(polygon);
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  describe('polygon layer', function () {
+    it('returns the correct bounds before adding to the map', function () {
+      const group = new L.MarkerClusterGroup()
+      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
-			expect(group.getBounds().equals(polygon.getBounds())).to.be(true);
-		});
+      group.addLayer(polygon)
 
-		it('returns the correct bounds after adding to the map after adding polygon', function() {
-			var group = new L.MarkerClusterGroup();
-			var polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]]);
+      expect(group.getBounds().equals(polygon.getBounds())).to.be(true)
+    })
 
-			group.addLayer(polygon);
-			map.addLayer(group);
+    it('returns the correct bounds after adding to the map after adding polygon', function () {
+      const group = new L.MarkerClusterGroup()
+      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
-			expect(group.getBounds().equals(polygon.getBounds())).to.be(true);
-		});
+      group.addLayer(polygon)
+      map.addLayer(group)
 
-		it('returns the correct bounds after adding to the map before adding polygon', function() {
-			var group = new L.MarkerClusterGroup();
-			var polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]]);
+      expect(group.getBounds().equals(polygon.getBounds())).to.be(true)
+    })
 
-			map.addLayer(group);
-			group.addLayer(polygon);
+    it('returns the correct bounds after adding to the map before adding polygon', function () {
+      const group = new L.MarkerClusterGroup()
+      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
-			expect(group.getBounds().equals(polygon.getBounds())).to.be(true);
-		});
-	});
+      map.addLayer(group)
+      group.addLayer(polygon)
 
-	describe('marker layers', function () {
-		it('returns the correct bounds before adding to the map', function () {
-			var group = new L.MarkerClusterGroup();
-			var marker = new L.Marker([1.5, 1.5]);
-			var marker2 = new L.Marker([1.0, 5.0]);
-			var marker3 = new L.Marker([6.0, 2.0]);
+      expect(group.getBounds().equals(polygon.getBounds())).to.be(true)
+    })
+  })
 
-			group.addLayers([marker, marker2, marker3]);
+  describe('marker layers', function () {
+    it('returns the correct bounds before adding to the map', function () {
+      const group = new L.MarkerClusterGroup()
+      const marker = new L.Marker([1.5, 1.5])
+      const marker2 = new L.Marker([1.0, 5.0])
+      const marker3 = new L.Marker([6.0, 2.0])
 
-			expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
-		});
+      group.addLayers([marker, marker2, marker3])
 
-		it('returns the correct bounds after adding to the map after adding markers', function () {
-			var group = new L.MarkerClusterGroup();
-			var marker = new L.Marker([1.5, 1.5]);
-			var marker2 = new L.Marker([1.0, 5.0]);
-			var marker3 = new L.Marker([6.0, 2.0]);
+      expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true)
+    })
 
-			group.addLayers([marker, marker2, marker3]);
-			map.addLayer(group);
+    it('returns the correct bounds after adding to the map after adding markers', function () {
+      const group = new L.MarkerClusterGroup()
+      const marker = new L.Marker([1.5, 1.5])
+      const marker2 = new L.Marker([1.0, 5.0])
+      const marker3 = new L.Marker([6.0, 2.0])
 
-			expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
-		});
+      group.addLayers([marker, marker2, marker3])
+      map.addLayer(group)
 
-		it('returns the correct bounds after adding to the map before adding markers', function () {
-			var group = new L.MarkerClusterGroup();
-			var marker = new L.Marker([1.5, 1.5]);
-			var marker2 = new L.Marker([1.0, 5.0]);
-			var marker3 = new L.Marker([6.0, 2.0]);
+      expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true)
+    })
 
-			map.addLayer(group);
-			group.addLayers([marker, marker2, marker3]);
+    it('returns the correct bounds after adding to the map before adding markers', function () {
+      const group = new L.MarkerClusterGroup()
+      const marker = new L.Marker([1.5, 1.5])
+      const marker2 = new L.Marker([1.0, 5.0])
+      const marker3 = new L.Marker([6.0, 2.0])
 
-			expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true);
-		});
-	});
+      map.addLayer(group)
+      group.addLayers([marker, marker2, marker3])
 
-	describe('marker and polygon layers', function() {
-		it('returns the correct bounds before adding to the map', function() {
-			var group = new L.MarkerClusterGroup();
-			var marker = new L.Marker([6.0, 3.0]);
-			var polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]]);
+      expect(group.getBounds().equals(new L.LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true)
+    })
+  })
 
-			group.addLayers([marker, polygon]);
+  describe('marker and polygon layers', function () {
+    it('returns the correct bounds before adding to the map', function () {
+      const group = new L.MarkerClusterGroup()
+      const marker = new L.Marker([6.0, 3.0])
+      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
-			expect(group.getBounds().equals(new L.LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true);
-		});
+      group.addLayers([marker, polygon])
 
-		it('returns the correct bounds after adding to the map', function () {
-			var group = new L.MarkerClusterGroup();
-			var marker = new L.Marker([6.0, 3.0]);
-			var polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]]);
+      expect(group.getBounds().equals(new L.LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true)
+    })
 
-			map.addLayer(group);
-			group.addLayers([marker, polygon]);
+    it('returns the correct bounds after adding to the map', function () {
+      const group = new L.MarkerClusterGroup()
+      const marker = new L.Marker([6.0, 3.0])
+      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
-			expect(group.getBounds().equals(new L.LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true);
-		});
-	});
+      map.addLayer(group)
+      group.addLayers([marker, polygon])
 
-	describe('blank layer', function () {
-		it('returns a blank bounds', function () {
-			var group = new L.MarkerClusterGroup();
+      expect(group.getBounds().equals(new L.LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true)
+    })
+  })
 
-			expect(group.getBounds().isValid()).to.be(false);
-		});
-	});
-});
+  describe('blank layer', function () {
+    it('returns a blank bounds', function () {
+      const group = new L.MarkerClusterGroup()
+
+      expect(group.getBounds().isValid()).to.be(false)
+    })
+  })
+})

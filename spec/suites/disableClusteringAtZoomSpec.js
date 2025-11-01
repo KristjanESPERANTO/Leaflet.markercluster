@@ -1,64 +1,65 @@
+import L from 'leaflet'
+
 describe('disableClusteringAtZoom option', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var div, map, group, clock;
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let div, map, group, clock
 
-	beforeEach(function () {
-		clock = sinon.useFakeTimers();
+  beforeEach(function () {
+    clock = sinon.useFakeTimers()
 
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
-	
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
-	
-		// Corresponds to zoom level 8 for the above div dimensions.
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-	afterEach(function () {
-		group.clearLayers();
-		map.removeLayer(group);
-		map.remove();
-		div.remove();
-		clock.restore();
-		
-		div, map, group, clock = null;
-	});
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('unclusters at zoom level equal or higher', function () {
+    // Corresponds to zoom level 8 for the above div dimensions.
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
 
-		var maxZoom = 15;
+  afterEach(function () {
+    group.clearLayers()
+    map.removeLayer(group)
+    map.remove()
+    div.remove()
+    clock.restore()
 
-		group = new L.MarkerClusterGroup({
-			disableClusteringAtZoom: maxZoom
-		});
+    div, map, group, clock = null
+  })
 
-	group.addLayers([
-		new L.Marker([1.5, 1.5]),
-		new L.Marker([1.5, 1.5])
-	]);
-	map.addLayer(group);
-	
-	// Give Leaflet 2 time to cluster
-	clock.tick(100);
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('unclusters at zoom level equal or higher', function () {
+    const maxZoom = 15
 
-	expect(group._maxZoom).to.equal(maxZoom - 1);
+    group = new L.MarkerClusterGroup({
+      disableClusteringAtZoom: maxZoom,
+    })
 
-	expect(map._panes.markerPane.childNodes.length).to.equal(1); // 1 cluster.		map.setZoom(14);
-		clock.tick(1000);
-		expect(map._panes.markerPane.childNodes.length).to.equal(1); // 1 cluster.
+    group.addLayers([
+      new L.Marker([1.5, 1.5]),
+      new L.Marker([1.5, 1.5]),
+    ])
+    map.addLayer(group)
 
-		map.setZoom(15);
-		clock.tick(1000);
-		expect(map._panes.markerPane.childNodes.length).to.equal(2); // 2 markers.
-	});
-});
+    // Give Leaflet 2 time to cluster
+    clock.tick(100)
+
+    expect(group._maxZoom).to.equal(maxZoom - 1)
+
+    expect(map._panes.markerPane.childNodes.length).to.equal(1) // 1 cluster.		map.setZoom(14);
+    clock.tick(1000)
+    expect(map._panes.markerPane.childNodes.length).to.equal(1) // 1 cluster.
+
+    map.setZoom(15)
+    clock.tick(1000)
+    expect(map._panes.markerPane.childNodes.length).to.equal(2) // 2 markers.
+  })
+})

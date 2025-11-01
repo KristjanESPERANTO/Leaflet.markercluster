@@ -1,195 +1,192 @@
-﻿describe('removeLayers', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var div, map, group, clock;
+import L from 'leaflet'
 
-	beforeEach(function () {
-		clock = sinon.useFakeTimers();
+describe('removeLayers', function () {
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let div, map, group, clock
 
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
+  beforeEach(function () {
+    clock = sinon.useFakeTimers()
 
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-		// Corresponds to zoom level 8 for the above div dimensions.
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-	afterEach(function () {
-		if (group instanceof L.MarkerClusterGroup) {
-			group.clearLayers();
-			map.removeLayer(group);
-		}
+    // Corresponds to zoom level 8 for the above div dimensions.
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
 
-		map.remove();
-		div.remove();
-		clock.restore();
+  afterEach(function () {
+    if (group instanceof L.MarkerClusterGroup) {
+      group.clearLayers()
+      map.removeLayer(group)
+    }
 
-		div = map = group = clock = null;
-	});
+    map.remove()
+    div.remove()
+    clock.restore()
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('removes all the layer given to it', function () {
+    div = map = group = clock = null
+  })
 
-		group = new L.MarkerClusterGroup();
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('removes all the layer given to it', function () {
+    group = new L.MarkerClusterGroup()
 
-		var markers = [
-			new L.Marker([1.5, 1.5]),
-			new L.Marker([1.5, 1.5]),
-			new L.Marker([1.5, 1.5])
-		];
+    const markers = [
+      new L.Marker([1.5, 1.5]),
+      new L.Marker([1.5, 1.5]),
+      new L.Marker([1.5, 1.5]),
+    ]
 
-		map.addLayer(group);
+    map.addLayer(group)
 
-		group.addLayers(markers);
+    group.addLayers(markers)
 
-		group.removeLayers(markers);
+    group.removeLayers(markers)
 
-		expect(group.hasLayer(markers[0])).to.be(false);
-		expect(group.hasLayer(markers[1])).to.be(false);
-		expect(group.hasLayer(markers[2])).to.be(false);
+    expect(group.hasLayer(markers[0])).to.be(false)
+    expect(group.hasLayer(markers[1])).to.be(false)
+    expect(group.hasLayer(markers[2])).to.be(false)
 
-		expect(group.getLayers().length).to.be(0);
-	});
+    expect(group.getLayers().length).to.be(0)
+  })
 
-	it('removes all the layer given to it even though they move', function () {
+  it('removes all the layer given to it even though they move', function () {
+    group = new L.MarkerClusterGroup()
 
-		group = new L.MarkerClusterGroup();
+    const markers = [
+      new L.Marker([10, 10]),
+      new L.Marker([20, 20]),
+      new L.Marker([30, 30]),
+    ]
+    const len = markers.length
+    map.addLayer(group)
 
-		var markers = [
-			new L.Marker([10, 10]),
-			new L.Marker([20, 20]),
-			new L.Marker([30, 30])
-		];
-		var len = markers.length;
-		map.addLayer(group);
+    group.addLayers(markers)
 
-		group.addLayers(markers);
+    markers.forEach(function (marker) {
+      marker.setLatLng([1.5, 1.5])
+      group.removeLayer(marker)
+      expect(group.getLayers().length).to.be(len - 1)
+      group.addLayer(marker)
+      expect(group.getLayers().length).to.be(len)
+    })
 
-		markers.forEach(function (marker) {
-			marker.setLatLng([1.5, 1.5]);
-			group.removeLayer(marker);
-			expect(group.getLayers().length).to.be(len - 1);
-			group.addLayer(marker);
-			expect(group.getLayers().length).to.be(len);
-		});
+    expect(group.getLayers().length).to.be(len)
+  })
 
-		expect(group.getLayers().length).to.be(len);
-	});
+  it('removes all the layer given to it even if the group is not on the map', function () {
+    group = new L.MarkerClusterGroup()
 
-	it('removes all the layer given to it even if the group is not on the map', function () {
+    const markers = [
+      new L.Marker([1.5, 1.5]),
+      new L.Marker([1.5, 1.5]),
+      new L.Marker([1.5, 1.5]),
+    ]
 
-		group = new L.MarkerClusterGroup();
+    map.addLayer(group)
+    group.addLayers(markers)
+    map.removeLayer(group)
+    group.removeLayers(markers)
+    map.addLayer(group)
 
-		var markers = [
-			new L.Marker([1.5, 1.5]),
-			new L.Marker([1.5, 1.5]),
-			new L.Marker([1.5, 1.5])
-		];
+    expect(group.hasLayer(markers[0])).to.be(false)
+    expect(group.hasLayer(markers[1])).to.be(false)
+    expect(group.hasLayer(markers[2])).to.be(false)
 
-		map.addLayer(group);
-		group.addLayers(markers);
-		map.removeLayer(group);
-		group.removeLayers(markers);
-		map.addLayer(group);
+    expect(group.getLayers().length).to.be(0)
+  })
 
-		expect(group.hasLayer(markers[0])).to.be(false);
-		expect(group.hasLayer(markers[1])).to.be(false);
-		expect(group.hasLayer(markers[2])).to.be(false);
+  it('doesnt break if we are spiderfied', function () {
+    group = new L.MarkerClusterGroup()
 
-		expect(group.getLayers().length).to.be(0);
-	});
+    const markers = [
+      new L.Marker([1.5, 1.5]),
+      new L.Marker([1.5, 1.5]),
+      new L.Marker([1.5, 1.5]),
+    ]
 
-	it('doesnt break if we are spiderfied', function () {
+    map.addLayer(group)
 
-		group = new L.MarkerClusterGroup();
+    group.addLayers(markers)
 
-		var markers = [
-			new L.Marker([1.5, 1.5]),
-			new L.Marker([1.5, 1.5]),
-			new L.Marker([1.5, 1.5])
-		];
+    markers[0].__parent.spiderfy()
 
-		map.addLayer(group);
+    // We must wait for the spiderfy animation to timeout
+    clock.tick(200)
 
-		group.addLayers(markers);
+    group.removeLayers(markers)
 
-		markers[0].__parent.spiderfy();
+    expect(group.hasLayer(markers[0])).to.be(false)
+    expect(group.hasLayer(markers[1])).to.be(false)
+    expect(group.hasLayer(markers[2])).to.be(false)
 
-		// We must wait for the spiderfy animation to timeout
-		clock.tick(200);
+    expect(group.getLayers().length).to.be(0)
 
-		group.removeLayers(markers);
+    group.on('spiderfied', function () {
+      expect(group._spiderfied).to.be(null)
+    })
+  })
 
-		expect(group.hasLayer(markers[0])).to.be(false);
-		expect(group.hasLayer(markers[1])).to.be(false);
-		expect(group.hasLayer(markers[2])).to.be(false);
+  it('handles nested Layer Groups', function () {
+    group = new L.MarkerClusterGroup()
 
-		expect(group.getLayers().length).to.be(0);
+    const marker1 = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
+    const marker3 = new L.Marker([1.5, 1.5])
 
-		group.on('spiderfied', function() {
-			expect(group._spiderfied).to.be(null);
-		});
-	});
+    map.addLayer(group)
 
-	it('handles nested Layer Groups', function () {
+    group.addLayers([marker1, marker2, marker3])
 
-		group = new L.MarkerClusterGroup();
+    expect(group.hasLayer(marker1)).to.be(true)
+    expect(group.hasLayer(marker2)).to.be(true)
+    expect(group.hasLayer(marker3)).to.be(true)
 
-		var marker1 = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
-		var marker3 = new L.Marker([1.5, 1.5]);
+    group.removeLayers([
+      marker1,
+      new L.LayerGroup([
+        marker2, new L.LayerGroup([
+          marker3,
+        ]),
+      ]),
+    ])
 
-		map.addLayer(group);
+    expect(group.hasLayer(marker1)).to.be(false)
+    expect(group.hasLayer(marker2)).to.be(false)
+    expect(group.hasLayer(marker3)).to.be(false)
 
-		group.addLayers([marker1, marker2, marker3]);
+    expect(group.getLayers().length).to.be(0)
+  })
 
-		expect(group.hasLayer(marker1)).to.be(true);
-		expect(group.hasLayer(marker2)).to.be(true);
-		expect(group.hasLayer(marker3)).to.be(true);
+  it('chunked loading zoom out', function () {
+    // See #743 for more details
+    const markers = []
 
-		group.removeLayers([
-			marker1,
-			new L.LayerGroup([
-				marker2, new L.LayerGroup([
-					marker3
-				])
-			])
-		]);
+    group = new L.MarkerClusterGroup({
+      chunkedLoading: true, chunkProgress: function () {
+        // Before this provoked an "undefined" exception
+        map.zoomOut()
+        group.removeLayers(markers)
+      },
+    })
 
-		expect(group.hasLayer(marker1)).to.be(false);
-		expect(group.hasLayer(marker2)).to.be(false);
-		expect(group.hasLayer(marker3)).to.be(false);
+    for (let i = 1; i < 1000; i++) {
+      markers.push(new L.Marker([1.0 + (0.0001 * i), 1.0 + (0.0001 * i)]))
+    }
 
-		expect(group.getLayers().length).to.be(0);
-	});
+    map.addLayer(group)
 
-    it('chunked loading zoom out', function () {
-        //See #743 for more details
-        var markers = [];
-
-        group = new L.MarkerClusterGroup({
-            chunkedLoading: true, chunkProgress: function () {
-                //Before this provoked an "undefined" exception
-                map.zoomOut();
-                group.removeLayers(markers);
-            }
-        });
-
-        for (var i = 1; i < 1000; i++) {
-            markers.push(new L.Marker([1.0 + (.0001 * i), 1.0 + (.0001 * i)]));
-        }
-
-        map.addLayer(group);
-
-        group.addLayers(markers);
-    });
-});
+    group.addLayers(markers)
+  })
+})

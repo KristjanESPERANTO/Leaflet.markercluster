@@ -1,54 +1,56 @@
-﻿describe('clearLayer', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var map, div;
+import L from 'leaflet'
 
-	beforeEach(function () {
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
+describe('clearLayer', function () {
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let map, div
 
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
+  beforeEach(function () {
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
-	afterEach(function () {
-		map.remove();
-		document.body.removeChild(div);
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-		map = div = null;
-	});
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
+  afterEach(function () {
+    map.remove()
+    document.body.removeChild(div)
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('clears everything before adding to map', function () {
-		var group = new L.MarkerClusterGroup();
-		var polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]]);
-		var marker = new L.Marker([1.5, 1.5]);
+    map = div = null
+  })
 
-		group.addLayers([polygon, marker]);
-		group.clearLayers();
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('clears everything before adding to map', function () {
+    const group = new L.MarkerClusterGroup()
+    const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+    const marker = new L.Marker([1.5, 1.5])
 
-		expect(group.hasLayer(polygon)).to.be(false);
-		expect(group.hasLayer(marker)).to.be(false);
-	});
+    group.addLayers([polygon, marker])
+    group.clearLayers()
 
-	it('hits polygons and markers after adding to map', function () {
-		var group = new L.MarkerClusterGroup();
-		var polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]]);
-		var marker = new L.Marker([1.5, 1.5]);
+    expect(group.hasLayer(polygon)).to.be(false)
+    expect(group.hasLayer(marker)).to.be(false)
+  })
 
-		group.addLayers([polygon, marker]);
-		map.addLayer(group);
-		group.clearLayers();
+  it('hits polygons and markers after adding to map', function () {
+    const group = new L.MarkerClusterGroup()
+    const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+    const marker = new L.Marker([1.5, 1.5])
 
-		expect(group.hasLayer(polygon)).to.be(false);
-		expect(group.hasLayer(marker)).to.be(false);
-	});
-});
+    group.addLayers([polygon, marker])
+    map.addLayer(group)
+    group.clearLayers()
+
+    expect(group.hasLayer(polygon)).to.be(false)
+    expect(group.hasLayer(marker)).to.be(false)
+  })
+})

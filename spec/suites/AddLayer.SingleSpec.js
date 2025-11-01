@@ -1,118 +1,114 @@
-﻿describe('addLayer adding a single marker', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var div, map, group;
+import L from 'leaflet'
 
-	beforeEach(function () {
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
-	
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
-	
-		// Corresponds to zoom level 8 for the above div dimensions.
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
+describe('addLayer adding a single marker', function () {
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let div, map, group
 
-	afterEach(function () {
-		if (group instanceof L.MarkerClusterGroup) {
-			group.clearLayers();
-			map.removeLayer(group);
-		}
+  beforeEach(function () {
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-		map.remove();
-		div.remove()
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-		div = map = group = null;
-	});
+    // Corresponds to zoom level 8 for the above div dimensions.
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('appears when added to the group before the group is added to the map', function () {
+  afterEach(function () {
+    if (group instanceof L.MarkerClusterGroup) {
+      group.clearLayers()
+      map.removeLayer(group)
+    }
 
-		group = new L.MarkerClusterGroup();
+    map.remove()
+    div.remove()
 
-		var marker = new L.Marker([1.5, 1.5]);
+    div = map = group = null
+  })
 
-		group.addLayer(marker);
-		map.addLayer(group);
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('appears when added to the group before the group is added to the map', function () {
+    group = new L.MarkerClusterGroup()
 
-		expect(marker._icon).to.not.be(undefined);
-		expect(marker._icon.parentNode).to.be(map._panes.markerPane);
-	});
+    const marker = new L.Marker([1.5, 1.5])
 
-	it('appears when added to the group after the group is added to the map', function () {
+    group.addLayer(marker)
+    map.addLayer(group)
 
-		group = new L.MarkerClusterGroup();
+    expect(marker._icon).to.not.be(undefined)
+    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+  })
 
-		var marker = new L.Marker([1.5, 1.5]);
+  it('appears when added to the group after the group is added to the map', function () {
+    group = new L.MarkerClusterGroup()
 
-		map.addLayer(group);
-		group.addLayer(marker);
+    const marker = new L.Marker([1.5, 1.5])
 
-		expect(marker._icon).to.not.be(undefined);
-		expect(marker._icon.parentNode).to.be(map._panes.markerPane);
-	});
+    map.addLayer(group)
+    group.addLayer(marker)
 
-	it('appears (using animations) when added after the group is added to the map', function () {
+    expect(marker._icon).to.not.be(undefined)
+    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+  })
 
-		group = new L.MarkerClusterGroup({ animateAddingMarkers: true });
+  it('appears (using animations) when added after the group is added to the map', function () {
+    group = new L.MarkerClusterGroup({ animateAddingMarkers: true })
 
-		var marker = new L.Marker([1.5, 1.5]);
+    const marker = new L.Marker([1.5, 1.5])
 
-		map.addLayer(group);
-		group.addLayer(marker);
+    map.addLayer(group)
+    group.addLayer(marker)
 
-		expect(marker._icon).to.not.be(undefined);
-		expect(marker._icon.parentNode).to.be(map._panes.markerPane);
-	});
+    expect(marker._icon).to.not.be(undefined)
+    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+  })
 
-	it('does not appear when too far away when added before the group is added to the map', function () {
+  it('does not appear when too far away when added before the group is added to the map', function () {
+    group = new L.MarkerClusterGroup()
 
-		group = new L.MarkerClusterGroup();
+    const marker = new L.Marker([3.5, 1.5])
 
-		var marker = new L.Marker([3.5, 1.5]);
+    group.addLayer(marker)
+    map.addLayer(group)
 
-		group.addLayer(marker);
-		map.addLayer(group);
+    expect(marker._icon).to.be(undefined)
+  })
 
-		expect(marker._icon).to.be(undefined);
-	});
+  it('does not appear when too far away when added after the group is added to the map', function () {
+    group = new L.MarkerClusterGroup()
 
-	it('does not appear when too far away when added after the group is added to the map', function () {
+    const marker = new L.Marker([3.5, 1.5])
 
-		group = new L.MarkerClusterGroup();
+    map.addLayer(group)
+    group.addLayer(marker)
 
-		var marker = new L.Marker([3.5, 1.5]);
+    expect(marker._icon).to.be(undefined)
+  })
 
-		map.addLayer(group);
-		group.addLayer(marker);
+  it('passes control to addLayers when marker is a Layer Group', function () {
+    group = new L.MarkerClusterGroup()
 
-		expect(marker._icon).to.be(undefined);
-	});
+    const marker1 = new L.Marker([1.5, 1.5])
+    const marker2 = new L.Marker([1.5, 1.5])
+    const layerGroup = new L.LayerGroup([marker1, marker2])
 
-	it('passes control to addLayers when marker is a Layer Group', function () {
+    map.addLayer(group)
+    group.addLayer(layerGroup)
 
-		group = new L.MarkerClusterGroup();
+    expect(group._topClusterLevel.getChildCount()).to.equal(2)
 
-		var marker1 = new L.Marker([1.5, 1.5]);
-		var marker2 = new L.Marker([1.5, 1.5]);
-		var layerGroup = new L.LayerGroup([marker1, marker2]);
+    expect(marker1._icon).to.be(undefined)
+    expect(marker2._icon).to.be(undefined)
 
-		map.addLayer(group);
-		group.addLayer(layerGroup);
-
-		expect(group._topClusterLevel.getChildCount()).to.equal(2);
-
-		expect(marker1._icon).to.be(undefined);
-		expect(marker2._icon).to.be(undefined);
-
-		expect(map._panes.markerPane.childNodes.length).to.be(1);
-	});
-});
+    expect(map._panes.markerPane.childNodes.length).to.be(1)
+  })
+})

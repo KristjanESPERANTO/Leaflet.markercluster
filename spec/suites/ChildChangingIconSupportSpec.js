@@ -1,56 +1,57 @@
-﻿describe('support child markers changing icon', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var map, div, clock;
+import L from 'leaflet'
 
-	beforeEach(function () {
-		clock = sinon.useFakeTimers();
+describe('support child markers changing icon', function () {
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let map, div, clock
 
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
+  beforeEach(function () {
+    clock = sinon.useFakeTimers()
 
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-	afterEach(function () {
-		map.remove();
-		document.body.removeChild(div);
-		clock.restore();
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
 
-		map = div = clock = null;
-	});
+  afterEach(function () {
+    map.remove()
+    document.body.removeChild(div)
+    clock.restore()
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('child markers end up with the right icon after becoming unclustered', function () {
+    map = div = clock = null
+  })
 
-		var group = new L.MarkerClusterGroup();
-		var marker = new L.Marker([1.5, 1.5], { icon: new L.DivIcon({html: 'Inner1Text' }) });
-		var marker2 = new L.Marker([1.5, 1.5]);
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('child markers end up with the right icon after becoming unclustered', function () {
+    const group = new L.MarkerClusterGroup()
+    const marker = new L.Marker([1.5, 1.5], { icon: new L.DivIcon({ html: 'Inner1Text' }) })
+    const marker2 = new L.Marker([1.5, 1.5])
 
-		map.addLayer(group);
-		group.addLayer(marker);
+    map.addLayer(group)
+    group.addLayer(marker)
 
-		expect(marker._icon.parentNode).to.be(map._panes.markerPane);
-		expect(marker._icon.innerHTML).to.contain('Inner1Text');
+    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.innerHTML).to.contain('Inner1Text')
 
-		group.addLayer(marker2);
+    group.addLayer(marker2)
 
-		expect(marker._icon).to.be(null); //Have been removed from the map
+    expect(marker._icon).to.be(null) // Have been removed from the map
 
-		marker.setIcon(new L.DivIcon({ html: 'Inner2Text' })); //Change the icon
+    marker.setIcon(new L.DivIcon({ html: 'Inner2Text' })) // Change the icon
 
-		group.removeLayer(marker2); //Remove the other marker, so we'll become unclustered
+    group.removeLayer(marker2) // Remove the other marker, so we'll become unclustered
 
-		expect(marker._icon.innerHTML).to.contain('Inner2Text');
-	});
-});
+    expect(marker._icon.innerHTML).to.contain('Inner2Text')
+  })
+})

@@ -1,147 +1,143 @@
-﻿describe('support for CircleMarker elements', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var clock, div, map, group;
+import L from 'leaflet'
 
-	beforeEach(function () {
-		clock = sinon.useFakeTimers();
+describe('support for CircleMarker elements', function () {
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let clock, div, map, group
 
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
-	
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
-	
-		// Corresponds to zoom level 8 for the above div dimensions.
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
+  beforeEach(function () {
+    clock = sinon.useFakeTimers()
 
-	afterEach(function () {
-		if (group instanceof L.MarkerClusterGroup) {
-			group.clearLayers();
-			map.removeLayer(group);
-		}
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-		map.remove();
-		div.remove()
-		clock.restore();
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-		clock = div = map = group = null;
-	});
+    // Corresponds to zoom level 8 for the above div dimensions.
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('appears when added to the group before the group is added to the map', function () {
+  afterEach(function () {
+    if (group instanceof L.MarkerClusterGroup) {
+      group.clearLayers()
+      map.removeLayer(group)
+    }
 
-		group = new L.MarkerClusterGroup();
+    map.remove()
+    div.remove()
+    clock.restore()
 
-		var marker = new L.CircleMarker([1.5, 1.5]);
+    clock = div = map = group = null
+  })
 
-		group.addLayer(marker);
-		map.addLayer(group);
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('appears when added to the group before the group is added to the map', function () {
+    group = new L.MarkerClusterGroup()
 
-		// Leaflet 1.0.0 now uses an intermediate L.Renderer.
-		// marker > _path > _rootGroup (g) > _container (svg) > pane (div)
-		expect(marker._path.parentNode.parentNode).to.not.be(undefined);
-		expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
+    const marker = new L.CircleMarker([1.5, 1.5])
 
-		clock.tick(1000);
-	});
+    group.addLayer(marker)
+    map.addLayer(group)
 
-	it('appears when added to the group after the group is added to the map', function () {
+    // Leaflet 1.0.0 now uses an intermediate L.Renderer.
+    // marker > _path > _rootGroup (g) > _container (svg) > pane (div)
+    expect(marker._path.parentNode.parentNode).to.not.be(undefined)
+    expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
 
-		group = new L.MarkerClusterGroup();
+    clock.tick(1000)
+  })
 
-		var marker = new L.CircleMarker([1.5, 1.5]);
+  it('appears when added to the group after the group is added to the map', function () {
+    group = new L.MarkerClusterGroup()
 
-		group.addLayer(marker);
-		map.addLayer(group);
+    const marker = new L.CircleMarker([1.5, 1.5])
 
-		expect(marker._path.parentNode.parentNode).to.not.be(undefined);
-		expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
+    group.addLayer(marker)
+    map.addLayer(group)
 
-		clock.tick(1000);
-	});
+    expect(marker._path.parentNode.parentNode).to.not.be(undefined)
+    expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
 
-	it('appears animated when added to the group after the group is added to the map', function () {
+    clock.tick(1000)
+  })
 
-		group = new L.MarkerClusterGroup({ animateAddingMarkers: true });
+  it('appears animated when added to the group after the group is added to the map', function () {
+    group = new L.MarkerClusterGroup({ animateAddingMarkers: true })
 
-		var marker = new L.CircleMarker([1.5, 1.5]);
-		var marker2 = new L.CircleMarker([1.5, 1.5]);
+    const marker = new L.CircleMarker([1.5, 1.5])
+    const marker2 = new L.CircleMarker([1.5, 1.5])
 
-		map.addLayer(group);
-		group.addLayer(marker);
-		group.addLayer(marker2);
+    map.addLayer(group)
+    group.addLayer(marker)
+    group.addLayer(marker2)
 
-		expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
-		expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
+    expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
+    expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
 
-		clock.tick(1000);
+    clock.tick(1000)
 
-		expect(marker._path.parentNode).to.be(null);
-		expect(marker2._path.parentNode).to.be(null);
-	});
+    expect(marker._path.parentNode).to.be(null)
+    expect(marker2._path.parentNode).to.be(null)
+  })
 
-	it('creates a cluster when 2 overlapping markers are added before the group is added to the map', function () {
+  it('creates a cluster when 2 overlapping markers are added before the group is added to the map', function () {
+    group = new L.MarkerClusterGroup()
 
-		group = new L.MarkerClusterGroup();
+    const marker = new L.CircleMarker([1.5, 1.5])
+    const marker2 = new L.CircleMarker([1.5, 1.5])
 
-		var marker = new L.CircleMarker([1.5, 1.5]);
-		var marker2 = new L.CircleMarker([1.5, 1.5]);
+    group.addLayers([marker, marker2])
+    map.addLayer(group)
 
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+    expect(marker._path).to.be(undefined)
+    expect(marker2._path).to.be(undefined)
 
-		expect(marker._path).to.be(undefined);
-		expect(marker2._path).to.be(undefined);
+    expect(map._panes.markerPane.childNodes.length).to.be(1)
 
-		expect(map._panes.markerPane.childNodes.length).to.be(1);
+    clock.tick(1000)
+  })
 
-		clock.tick(1000);
-	});
+  it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
+    group = new L.MarkerClusterGroup()
 
-	it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
+    const marker = new L.CircleMarker([1.5, 1.5])
+    const marker2 = new L.CircleMarker([1.5, 1.5])
 
-		group = new L.MarkerClusterGroup();
+    map.addLayer(group)
+    group.addLayer(marker)
+    group.addLayer(marker2)
 
-		var marker = new L.CircleMarker([1.5, 1.5]);
-		var marker2 = new L.CircleMarker([1.5, 1.5]);
+    expect(marker._path.parentNode).to.be(null) // Removed then re-added, so null
+    expect(marker2._path).to.be(undefined)
 
-		map.addLayer(group);
-		group.addLayer(marker);
-		group.addLayer(marker2);
+    expect(map._panes.markerPane.childNodes.length).to.be(1)
 
-		expect(marker._path.parentNode).to.be(null); //Removed then re-added, so null
-		expect(marker2._path).to.be(undefined);
+    clock.tick(1000)
+  })
 
-		expect(map._panes.markerPane.childNodes.length).to.be(1);
+  it('disappears when removed from the group', function () {
+    group = new L.MarkerClusterGroup()
 
-		clock.tick(1000);
-	});
+    const marker = new L.CircleMarker([1.5, 1.5])
 
-	it('disappears when removed from the group', function () {
+    group.addLayer(marker)
+    map.addLayer(group)
 
-		group = new L.MarkerClusterGroup();
+    expect(marker._path.parentNode).to.not.be(undefined)
+    expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
 
-		var marker = new L.CircleMarker([1.5, 1.5]);
+    group.removeLayer(marker)
 
-		group.addLayer(marker);
-		map.addLayer(group);
+    expect(marker._path.parentNode).to.be(null)
 
-		expect(marker._path.parentNode).to.not.be(undefined);
-		expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'));
-
-		group.removeLayer(marker);
-
-		expect(marker._path.parentNode).to.be(null);
-
-		clock.tick(1000);
-	});
-});
+    clock.tick(1000)
+  })
+})

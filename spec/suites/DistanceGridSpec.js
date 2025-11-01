@@ -1,41 +1,43 @@
-﻿describe('distance grid', function () {
-	it('addObject', function () {
-		var grid = new L.DistanceGrid(100),
-		    obj = {};
+import L from 'leaflet'
 
-		expect(grid.addObject(obj, { x: 0, y: 0 })).to.eql(undefined);
-		expect(grid.removeObject(obj, { x: 0, y: 0 })).to.eql(true);
-	});
+describe('distance grid', function () {
+  it('addObject', function () {
+    const grid = new L.DistanceGrid(100),
+      obj = {}
 
-	it('eachObject', function (done) {
-		var grid = new L.DistanceGrid(100),
-		    obj = {};
+    expect(grid.addObject(obj, { x: 0, y: 0 })).to.eql(undefined)
+    expect(grid.removeObject(obj, { x: 0, y: 0 })).to.eql(true)
+  })
 
-		expect(grid.addObject(obj, { x: 0, y: 0 })).to.eql(undefined);
+  it('eachObject', function (done) {
+    const grid = new L.DistanceGrid(100),
+      obj = {}
 
-		grid.eachObject(function(o) {
-			expect(o).to.eql(obj);
-			done();
-		});
-	});
+    expect(grid.addObject(obj, { x: 0, y: 0 })).to.eql(undefined)
 
-	it('getNearObject', function () {
-		var grid = new L.DistanceGrid(100),
-			obj = {};
+    grid.eachObject(function (o) {
+      expect(o).to.eql(obj)
+      done()
+    })
+  })
 
-		grid.addObject(obj, { x: 0, y: 0 });
+  it('getNearObject', function () {
+    const grid = new L.DistanceGrid(100),
+      obj = {}
 
-		expect(grid.getNearObject({ x: 50, y: 50 })).to.equal(obj);
-		expect(grid.getNearObject({ x: 100, y: 0 })).to.equal(obj);
-	});
+    grid.addObject(obj, { x: 0, y: 0 })
 
-	it('getNearObject with cellSize 0', function () {
-		var grid = new L.DistanceGrid(0),
-			obj = {};
+    expect(grid.getNearObject({ x: 50, y: 50 })).to.equal(obj)
+    expect(grid.getNearObject({ x: 100, y: 0 })).to.equal(obj)
+  })
 
-		grid.addObject(obj, { x: 0, y: 0 });
+  it('getNearObject with cellSize 0', function () {
+    const grid = new L.DistanceGrid(0),
+      obj = {}
 
-		expect(grid.getNearObject({ x: 50, y: 50 })).to.equal(null);
-		expect(grid.getNearObject({ x: 0, y: 0 })).to.equal(obj);
-	});
-});
+    grid.addObject(obj, { x: 0, y: 0 })
+
+    expect(grid.getNearObject({ x: 50, y: 50 })).to.equal(null)
+    expect(grid.getNearObject({ x: 0, y: 0 })).to.equal(obj)
+  })
+})
