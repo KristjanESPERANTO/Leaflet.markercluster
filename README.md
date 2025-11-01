@@ -53,21 +53,35 @@ This plugin targets Leaflet 2.x only. Internals have been migrated away from dep
 - `L.bind` → `Function.prototype.bind`
 - `L.DomUtil.hasClass` → `element.classList.contains`
 
-When consuming as ES module, import the built ESM bundle:
+### For bundlers (Webpack, Vite, etc.)
+
+When consuming as ES module with a bundler:
 
 ```js
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import "leaflet.markercluster/dist/leaflet.markercluster-esm.js";
+import "leaflet.markercluster/dist/leaflet.markercluster.js";
 ```
 
-Include the plugin CSS and JS files on your page after Leaflet files. Use files in the `dist` folder:
+### For browser usage with script tags
 
-- `MarkerCluster.css`
-- `MarkerCluster.Default.css` (not needed if you use your own `iconCreateFunction` instead of the default one)
-- `leaflet.markercluster.js` (or `leaflet.markercluster-src.js` for the non-minified version)
+Include Leaflet and the plugin CSS and JS files on your page using script tags:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@2/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+<script src="https://unpkg.com/leaflet@2/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster-global.js"></script>
+```
+
+**Note:** The plugin provides two builds:
+
+- `dist/leaflet.markercluster.js` - ES Module for bundlers (with tree-shaking support)
+- `dist/leaflet.markercluster-global.js` - IIFE build that extends the global `L` object for browser usage
 
 ### Building, testing and linting scripts
 
@@ -90,7 +104,7 @@ Or check out the [custom example](https://kristjanesperanto.github.io/Leaflet.ma
 Create a new MarkerClusterGroup, add your markers to it, then add it to the map
 
 ```javascript
-var markers = L.markerClusterGroup();
+let markers = L.markerClusterGroup();
 markers.addLayer(L.marker(getRandomLatLng(map)));
 ... Add more layers ...
 map.addLayer(markers);
@@ -111,7 +125,7 @@ By default the Clusterer enables some nice defaults for you:
 You can disable any of these as you want in the options when you create the MarkerClusterGroup:
 
 ```javascript
-var markers = L.markerClusterGroup({
+let markers = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false
@@ -126,7 +140,7 @@ You do not need to include the .Default css if you go this way.
 You are passed a MarkerCluster object, you'll probably want to use `getChildCount()` or `getAllChildMarkers()` to work out the icon to show.
 
 ```javascript
-var markers = L.markerClusterGroup({
+let markers = L.markerClusterGroup({
   iconCreateFunction: function (cluster) {
     return L.divIcon({ html: "<b>" + cluster.getChildCount() + "</b>" });
   }
@@ -142,9 +156,9 @@ If you need to update the clusters icon (e.g. they are based on markers real-tim
 You can also provide a custom function as an option to MarkerClusterGroup to override the spiderfy shape positions. The example below implements linear spiderfy positions which overrides the default circular shape.
 
 ```javascript
-var markers = L.markerClusterGroup({
+let markers = L.markerClusterGroup({
   spiderfyShapePositions: function (count, centerPt) {
-    var distanceFromCenter = 35,
+    let distanceFromCenter = 35,
       markerDistance = 45,
       lineLength = markerDistance * (count - 1),
       lineStart = centerPt.y - lineLength / 2,
@@ -246,7 +260,7 @@ If you have a marker in your MarkerClusterGroup and you want to get the visible 
 This will return null if the marker and its parent clusters are not visible currently (they are not near the visible viewpoint)
 
 ```javascript
-var visibleOne = markerClusterGroup.getVisibleParent(myMarker);
+let visibleOne = markerClusterGroup.getVisibleParent(myMarker);
 console.log(visibleOne.getLatLng());
 ```
 
@@ -299,7 +313,7 @@ When you receive an event from a cluster you can query it for the bounds.
 
 ```javascript
 markers.on("clusterclick", function (a) {
-  var latLngBounds = a.layer.getBounds();
+  let latLngBounds = a.layer.getBounds();
 });
 ```
 
@@ -345,8 +359,6 @@ Note: these two examples use the `chunkedLoading` option set to true in order to
 ## License
 
 Leaflet.markercluster is free software, and may be redistributed under the MIT-LICENSE.
-
-[![Build Status](https://travis-ci.org/Leaflet/Leaflet.markercluster.png?branch=master)](https://travis-ci.org/Leaflet/Leaflet.markercluster)
 
 ## Sub-plugins
 
