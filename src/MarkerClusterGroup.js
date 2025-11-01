@@ -1306,12 +1306,14 @@ MarkerClusterGroup.include({
           c._recursivelyAddChildrenToMap(startPos, newZoomLevel, bounds)
         }
 
-        // Remove all markers that aren't visible any more
-        // TODO: Do we actually need to do this on the higher levels too?
-        for (i = markers.length - 1; i >= 0; i--) {
-          m = markers[i]
-          if (!bounds.contains(m._latlng)) {
-            fg.removeLayer(m)
+        // Remove markers that are no longer visible (only needed on the previous zoom level
+        // where markers were actually visible on the map, not on higher cluster levels)
+        if (c._zoom === previousZoomLevel) {
+          for (i = markers.length - 1; i >= 0; i--) {
+            m = markers[i]
+            if (!bounds.contains(m._latlng)) {
+              fg.removeLayer(m)
+            }
           }
         }
       })
