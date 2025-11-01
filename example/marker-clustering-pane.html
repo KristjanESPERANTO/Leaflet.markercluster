@@ -2,10 +2,11 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
 
@@ -16,6 +17,7 @@
         background-color: greenyellow;
         text-align: center;
         font-size: 24px;
+        color: #000;
       }
       .myclusterB {
         width: 40px;
@@ -23,38 +25,75 @@
         background-color: red;
         text-align: center;
         font-size: 24px;
+        color: #000;
       }
     </style>
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+      <div class="description-content">
+        <h3>Custom Panes for Layer Ordering</h3>
+        <p>
+          This example demonstrates using custom Leaflet panes to control the z-index stacking order of different cluster groups. Useful when you need certain clusters to always
+          appear above others.
+        </p>
+
+        <div class="code-block">
+          <pre><code>// Create custom pane with higher z-index
+map.createPane('paneB').style.zIndex = 610;
+
+let markersA = new L.MarkerClusterGroup({
+  clusterPane: 'markerPane' // default
+});
+
+let markersB = new L.MarkerClusterGroup({
+  clusterPane: 'paneB' // custom pane
+});</code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>Two cluster groups with different z-index layers</li>
+          <li>Green clusters (default pane) appear below red clusters</li>
+          <li>Red clusters (custom pane, z-index 610) always on top</li>
+          <li>Each group has custom icon styling</li>
+        </ul>
+
+        <p><strong>Use case:</strong> When displaying multiple marker categories that need specific layering order (e.g., prioritizing emergency markers over regular ones).</p>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(50.5, 30.51);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
         //Define a pane above the default markerPane
         map.createPane("paneB").style.zIndex = 610;
 
         //Create two markerClusterGroups, one in the default markerPane, one in our custom pane
-        var markersA = createMarkerClusterGroup("myclusterA");
-        var markersB = createMarkerClusterGroup("myclusterB", "paneB");
+        let markersA = createMarkerClusterGroup("myclusterA");
+        let markersB = createMarkerClusterGroup("myclusterB", "paneB");
 
         function createMarkerClusterGroup(className, pane) {
-          var options = {
+          let options = {
             maxClusterRadius: 120,
             iconCreateFunction: function (cluster) {
-              var markers = cluster.getAllChildMarkers();
-              var n = 0;
-              for (var i = 0; i < markers.length; i++) {
+              let markers = cluster.getAllChildMarkers();
+              let n = 0;
+              for (let i = 0; i < markers.length; i++) {
                 n += markers[i].number;
               }
               return new L.DivIcon({ html: n, className: className, iconSize: new L.Point(40, 40) });
@@ -67,13 +106,13 @@
           if (pane) {
             options.clusterPane = pane;
           }
-          var mcg = new L.MarkerClusterGroup(options);
+          let mcg = new L.MarkerClusterGroup(options);
           return mcg;
         }
 
         function populate(markers) {
-          for (var i = 0; i < 100; i++) {
-            var m = new L.Marker(getRandomLatLng(map), { title: i });
+          for (let i = 0; i < 100; i++) {
+            let m = new L.Marker(getRandomLatLng(map), { title: i });
             m.number = i;
             markers.addLayer(m);
           }
@@ -81,7 +120,7 @@
         }
 
         function getRandomLatLng(map) {
-          var bounds = map.getBounds(),
+          let bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
@@ -96,5 +135,6 @@
         map.addLayer(markersB);
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

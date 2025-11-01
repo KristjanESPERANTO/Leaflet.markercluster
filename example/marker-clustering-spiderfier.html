@@ -2,42 +2,76 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
-    <button id="populate">Populate 1 marker</button>
-    <button id="remove">Remove 1 marker</button>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
+
+      <div class="description-content">
+        <h3>Manual Spiderfy Control</h3>
+        <p>
+          This example demonstrates how to disable all default cluster behaviors and implement manual spiderfying. All automatic features are turned off, giving you full control
+          over cluster interactions.
+        </p>
+
+        <div class="code-block">
+          <pre><code>let markers = new L.MarkerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: false
+});
+
+// Manually trigger spiderfy
+cluster.spiderfy();</code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>All automatic behaviors disabled</li>
+          <li>No spiderfy on max zoom</li>
+          <li>No coverage display on hover</li>
+          <li>No zoom to bounds on click</li>
+          <li>Full manual control over cluster interactions</li>
+        </ul>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(50.5, 30.51);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+        let markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
 
         function populate() {
-          for (var i = 0; i < 100; i++) {
-            var m = new L.Marker(getRandomLatLng(map));
+          for (let i = 0; i < 100; i++) {
+            let m = new L.Marker(getRandomLatLng(map));
             markers.addLayer(m);
           }
           return false;
         }
         function getRandomLatLng(map) {
-          var bounds = map.getBounds(),
+          let bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
@@ -47,12 +81,13 @@
         }
 
         markers.on("clusterclick", function (a) {
-          a.layer.spiderfy();
+          a.sourceTarget.spiderfy();
         });
 
         populate();
         map.addLayer(markers);
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

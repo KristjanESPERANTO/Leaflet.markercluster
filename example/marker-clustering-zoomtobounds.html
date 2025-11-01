@@ -2,41 +2,77 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
-    <span>Click a cluster to zoom to its bounds</span>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+      <div class="description-content">
+        <h3>Zoom to Bounds on Click</h3>
+        <p>
+          This example demonstrates the <code>zoomToBoundsOnClick</code> option. When you click a cluster, the map zooms and pans to fit all markers within that cluster in the
+          viewport.
+        </p>
+
+        <div class="code-block">
+          <pre><code><span class="code-comment">// Enable zoom to bounds on cluster click (default: true)</span>
+let markers = new L.MarkerClusterGroup({
+  zoomToBoundsOnClick: true
+});
+
+<span class="code-comment">// Or use programmatically:</span>
+markers.on('clusterclick', function(a) {
+  a.sourceTarget.zoomToBounds();
+});</code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>Click clusters to zoom to their geographical bounds</li>
+          <li>Map automatically adjusts zoom level to fit all markers</li>
+          <li>Smooth animated transition</li>
+          <li>Other default behaviors disabled for clarity</li>
+        </ul>
+
+        <p><strong>Tip:</strong> Click on any cluster icon to zoom in and see all markers it contains.</p>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(50.5, 30.51);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+        let markers = new L.MarkerClusterGroup();
 
         function populate() {
-          for (var i = 0; i < 100; i++) {
-            var m = new L.Marker(getRandomLatLng(map));
+          for (let i = 0; i < 100; i++) {
+            let m = new L.Marker(getRandomLatLng(map));
             markers.addLayer(m);
           }
           return false;
         }
         function getRandomLatLng(map) {
-          var bounds = map.getBounds(),
+          let bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
@@ -45,13 +81,10 @@
           return new L.LatLng(southWest.lat + latSpan * Math.random(), southWest.lng + lngSpan * Math.random());
         }
 
-        markers.on("clusterclick", function (a) {
-          a.layer.zoomToBounds();
-        });
-
         populate();
         map.addLayer(markers);
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

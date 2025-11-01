@@ -2,39 +2,75 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
     <script src="realworld.388.js"></script>
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
-    <button id="doit">Zoom to marker</button>
-    <span>When clicked we will zoom down to a marker, spiderfying if required to show it and then open its popup</span>
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
+
+      <div class="description-content">
+        <h3>Zoom to Show Specific Layer</h3>
+        <p>
+          This example demonstrates the <code>zoomToShowLayer</code> method, which intelligently zooms the map to reveal a specific marker, even if it's currently hidden inside a
+          cluster. It will spiderfy if necessary.
+        </p>
+
+        <div class="code-block">
+          <pre><code><span class="code-comment">// Zoom to a specific marker programmatically</span>
+markers.zoomToShowLayer(targetMarker, function() {
+  <span class="code-comment">// Callback after zoom completes</span>
+  targetMarker.openPopup();
+});
+
+<span class="code-comment">// Works with 388 real-world markers</span></code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>Programmatically zoom to any marker in a cluster</li>
+          <li>Automatically spiderfies cluster if needed</li>
+          <li>Opens popup after zoom completes</li>
+          <li>Smooth animated transition</li>
+          <li>Uses real-world dataset (388 addresses)</li>
+        </ul>
+
+        <p><strong>Interactive Controls:</strong></p>
+        <button id="doit">Zoom to random marker</button>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(-37.82, 175.24);
 
-        var map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup();
-        var markerList = [];
+        let markers = new L.MarkerClusterGroup();
+        let markerList = [];
 
         function populate() {
-          for (var i = 0; i < addressPoints.length; i++) {
-            var a = addressPoints[i];
-            var title = a[2];
-            var marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
+          for (let i = 0; i < addressPoints.length; i++) {
+            let a = addressPoints[i];
+            let title = a[2];
+            let marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
             marker.bindPopup(title);
             markers.addLayer(marker);
             markerList.push(marker);
@@ -46,12 +82,13 @@
         map.addLayer(markers);
 
         document.getElementById("doit").onclick = function () {
-          var m = markerList[Math.floor(Math.random() * markerList.length)];
+          let m = markerList[Math.floor(Math.random() * markerList.length)];
           markers.zoomToShowLayer(m, function () {
             m.openPopup();
           });
         };
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

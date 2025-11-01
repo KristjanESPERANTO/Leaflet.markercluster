@@ -2,41 +2,74 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
-    <span>Click a cluster to zoom to its bounds</span>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+      <div class="description-content">
+        <h3>Single Marker Mode</h3>
+        <p>
+          This example demonstrates the <code>singleMarkerMode</code> option, which displays clusters even when they contain only a single marker. This creates a uniform visual
+          appearance.
+        </p>
+
+        <div class="code-block">
+          <pre><code>let markers = new L.MarkerClusterGroup({
+  singleMarkerMode: true
+});
+
+<span class="code-comment">// Even single markers appear as clusters</span>
+markers.addLayer(singleMarker);</code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>Single markers display as 1-marker clusters</li>
+          <li>Consistent cluster appearance across all zoom levels</li>
+          <li>Useful for uniform UI/UX design</li>
+          <li>Click clusters to zoom to bounds (even for single markers)</li>
+        </ul>
+
+        <p><strong>Use case:</strong> When you want all markers to have the same visual treatment, regardless of whether they're clustered or standalone.</p>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(50.5, 30.51);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup({ singleMarkerMode: true });
+        let markers = new L.MarkerClusterGroup({ singleMarkerMode: true });
 
         function populate() {
-          for (var i = 0; i < 100; i++) {
-            var m = new L.Marker(getRandomLatLng(map));
+          for (let i = 0; i < 100; i++) {
+            let m = new L.Marker(getRandomLatLng(map));
             markers.addLayer(m);
           }
           return false;
         }
         function getRandomLatLng(map) {
-          var bounds = map.getBounds(),
+          let bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
@@ -46,12 +79,13 @@
         }
 
         markers.on("clusterclick", function (a) {
-          a.layer.zoomToBounds();
+          a.sourceTarget.zoomToBounds();
         });
 
         populate();
         map.addLayer(markers);
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

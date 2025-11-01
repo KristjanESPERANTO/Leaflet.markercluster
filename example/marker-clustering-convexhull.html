@@ -2,42 +2,97 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
-    <button id="populate">Populate 1 marker</button>
-    <button id="remove">Remove 1 marker</button>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
+
+      <div class="description-content">
+        <h3>Custom ConvexHull Polygon Demo</h3>
+        <p>
+          This example demonstrates how to customize the cluster coverage polygon using the
+          <code>clustermouseover</code> and <code>clustermouseout</code> events.
+        </p>
+        <p>
+          <strong>Note:</strong> The built-in <code>showCoverageOnHover</code> option already displays a convex hull polygon. This example shows how to implement custom styling
+          (red polygon) by manually handling the events.
+        </p>
+
+        <div class="code-block">
+          <pre><code><span class="code-comment">// Disable built-in polygon</span>
+showCoverageOnHover: false
+
+<span class="code-comment">// Handle hover events manually</span>
+markers.on("clustermouseover", function(a) {
+  let hull = a.sourceTarget.getConvexHull();
+  
+  <span class="code-comment">// Create custom red polygon</span>
+  polygon = new L.Polygon(hull, {
+    color: '#ff0000',
+    weight: 3,
+    fillColor: '#ff0000',
+    fillOpacity: 0.3
+  });
+  
+  map.addLayer(polygon);
+});
+
+<span class="code-comment">// Remove polygon on mouseout</span>
+markers.on("clustermouseout", function() {
+  map.removeLayer(polygon);
+});</code></pre>
+        </div>
+
+        <p><strong>Key code:</strong></p>
+        <ul>
+          <li><code>showCoverageOnHover: false</code> – Disable built-in polygon</li>
+          <li><code>a.sourceTarget.getConvexHull()</code> – Get convex hull points</li>
+          <li><code>new L.Polygon(hull, {...})</code> – Create custom styled polygon</li>
+          <li><code>map.addLayer(polygon)</code> – Display on map</li>
+        </ul>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        const tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(50.5, 30.51);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        const map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+        const markers = new L.MarkerClusterGroup({
+          spiderfyOnMaxZoom: false,
+          showCoverageOnHover: false,
+          zoomToBoundsOnClick: true
+        });
 
         function populate() {
-          for (var i = 0; i < 100; i++) {
-            var m = new L.Marker(getRandomLatLng(map));
+          for (let i = 0; i < 100; i++) {
+            const m = new L.Marker(getRandomLatLng(map));
             markers.addLayer(m);
           }
           return false;
         }
         function getRandomLatLng(map) {
-          var bounds = map.getBounds(),
+          const bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
@@ -46,16 +101,23 @@
           return new L.LatLng(southWest.lat + latSpan * Math.random(), southWest.lng + lngSpan * Math.random());
         }
 
-        var polygon;
+        let polygon;
+
         markers.on("clustermouseover", function (a) {
           if (polygon) {
             map.removeLayer(polygon);
           }
-          polygon = new L.Polygon(a.layer.getConvexHull());
+          const hull = a.sourceTarget.getConvexHull();
+          polygon = new L.Polygon(hull, {
+            color: "#ff0000",
+            weight: 3,
+            fillColor: "#ff0000",
+            fillOpacity: 0.3
+          });
           map.addLayer(polygon);
         });
 
-        markers.on("clustermouseout", function (a) {
+        markers.on("clustermouseout", function () {
           if (polygon) {
             map.removeLayer(polygon);
             polygon = null;
@@ -73,5 +135,6 @@
         map.addLayer(markers);
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

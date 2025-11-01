@@ -2,36 +2,70 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
     <script src="realworld.388.js"></script>
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
-    <span>Markers will show on the bottom 2 zoom levels even though the markers would normally cluster.</span>
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
+
+      <div class="description-content">
+        <h3>Disable Clustering at Max Zoom</h3>
+        <p>
+          This example demonstrates the <code>disableClusteringAtZoom</code> option. At zoom level 17 and higher, all markers display individually instead of clustering, allowing
+          users to see exact marker positions.
+        </p>
+
+        <div class="code-block">
+          <pre><code>let markers = new L.MarkerClusterGroup({
+  disableClusteringAtZoom: 17
+});
+
+// At zoom ≥17, no clustering occurs
+// Below zoom 17, normal clustering</code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>388 real address markers</li>
+          <li>Normal clustering at zoom levels &lt; 17</li>
+          <li>All markers visible individually at zoom ≥ 17</li>
+          <li>Useful for detailed street-level views</li>
+        </ul>
+
+        <p><strong>Try it:</strong> Zoom in to level 17+ to see all individual markers spread out on the map.</p>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Points &copy 2012 LINZ'
           }),
           latlng = new L.LatLng(-37.82, 175.24);
 
-        var map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup({ disableClusteringAtZoom: 17 });
+        let markers = new L.MarkerClusterGroup({ disableClusteringAtZoom: 17 });
 
-        for (var i = 0; i < addressPoints.length; i++) {
-          var a = addressPoints[i];
-          var title = a[2];
-          var marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
+        for (let i = 0; i < addressPoints.length; i++) {
+          let a = addressPoints[i];
+          let title = a[2];
+          let marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
           marker.bindPopup(title);
           markers.addLayer(marker);
         }
@@ -39,5 +73,6 @@
         map.addLayer(markers);
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

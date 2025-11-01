@@ -2,50 +2,84 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
-    <button id="moveone">Move a random marker</button>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+      <div class="description-content">
+        <h3>Draggable Markers in Clusters</h3>
+        <p>This example demonstrates that markers within clusters can be made draggable. The clusters automatically update when markers are moved.</p>
+
+        <div class="code-block">
+          <pre><code><span class="code-comment">// Create draggable markers</span>
+let marker = new L.Marker(latlng, {
+  draggable: true
+});
+
+markers.addLayer(marker);
+
+<span class="code-comment">// Programmatically move a marker</span>
+marker.setLatLng(newLatLng);</code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>All markers are draggable by default</li>
+          <li>Clusters recalculate automatically when markers move</li>
+          <li>Markers can be moved programmatically via button</li>
+          <li>Works seamlessly with clustering logic</li>
+        </ul>
+
+        <p><strong>Interactive Controls:</strong></p>
+        <button id="moveone">Move a random marker</button>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(50.5, 30.51);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup();
-        var markersList = [];
+        let markers = new L.MarkerClusterGroup();
+        let markersList = [];
 
         function populate() {
-          for (var i = 0; i < 100; i++) {
-            var m = new L.Marker(getRandomLatLng(map), { draggable: true });
+          for (let i = 0; i < 100; i++) {
+            let m = new L.Marker(getRandomLatLng(map), { draggable: true });
             markersList.push(m);
             markers.addLayer(m);
           }
           return false;
         }
         function populateRandomVector() {
-          for (var i = 0, latlngs = [], len = 20; i < len; i++) {
+          for (let i = 0, latlngs = [], len = 20; i < len; i++) {
             latlngs.push(getRandomLatLng(map));
           }
-          var path = new L.Polyline(latlngs);
+          let path = new L.Polyline(latlngs);
           map.addLayer(path);
         }
         function getRandomLatLng(map) {
-          var bounds = map.getBounds(),
+          let bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
@@ -55,25 +89,27 @@
         }
 
         markers.on("clusterclick", function (a) {
-          alert("cluster " + a.layer.getAllChildMarkers().length);
+          console.log("cluster clicked:", a.sourceTarget.getAllChildMarkers().length, "markers");
         });
         markers.on("click", function (a) {
-          alert("marker " + a.layer);
+          alert("marker " + a.sourceTarget.getLatLng());
         });
 
         populate();
         map.addLayer(markers);
 
-        L.DomUtil.get("moveone").onclick = function () {
-          var m = markersList[Math.floor(Math.random() * markersList.length)];
-          var bounds = map.getBounds(),
+        L.DomUtil.get("moveone").onclick = function (e) {
+          let m = markersList[Math.floor(Math.random() * markersList.length)];
+          let bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
             latSpan = northEast.lat - southWest.lat;
           m.setLatLng(new L.LatLng(southWest.lat + latSpan * 0.5, southWest.lng + lngSpan * 0.5));
+          return false;
         };
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

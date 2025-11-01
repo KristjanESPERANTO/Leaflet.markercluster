@@ -2,35 +2,75 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
-    <button id="doit">Remove marker #1</button><button id="doit2">Remove marker #2</button><br />
-    <span>New Bug. Spiderfy the cluster then click the button #1. All markers disapear, but it should remain marker #2.</span><br />
-    <span>New Bug. Spiderfy the cluster then click the button #2. All markers disapear, but it should remain marker #1.</span><br />
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+      <div class="description-content">
+        <h3>Remove GeoJSON During Spiderfy</h3>
+        <p>
+          This example tests the behavior of removing GeoJSON markers while a cluster is spiderfied. Click a cluster to spiderfy it, then use the buttons to remove individual
+          markers.
+        </p>
+
+        <div class="code-block">
+          <pre><code>// Create GeoJSON layers
+let m = new L.GeoJSON(geoJsonFeature, {
+  pointToLayer: function (feature, latlng) {
+    return new L.Marker(latlng);
+  }
+});
+markers.addLayer(m);
+
+// Remove specific marker
+markers.removeLayer(markersList[0]);</code></pre>
+        </div>
+
+        <p><strong>Test Scenario:</strong></p>
+        <ul>
+          <li>Two overlapping GeoJSON markers in one cluster</li>
+          <li>Spiderfy the cluster to spread markers apart</li>
+          <li>Click "Remove marker #1" → marker #2 should remain</li>
+          <li>Demonstrates correct cleanup during spiderfy state</li>
+        </ul>
+
+        <p><strong>Interactive Controls:</strong></p>
+        <button id="doit">Remove marker #1</button>
+        <button id="doit2">Remove marker #2</button>
+
+        <p><strong>Expected behavior:</strong> When a cluster is spiderfied and you remove one marker, the remaining marker should stay visible and correctly positioned.</p>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(50.5, 30.51);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup({ disableClusteringAtZoom: 19 });
-        var markersList = [];
-        var m;
+        let markers = new L.MarkerClusterGroup({ disableClusteringAtZoom: 19 });
+        let markersList = [];
+        let m;
+        let geoJsonFeature;
 
         geoJsonFeature = {
           type: "FeatureCollection",
@@ -83,5 +123,6 @@
         };
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

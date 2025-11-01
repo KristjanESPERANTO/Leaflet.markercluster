@@ -2,35 +2,94 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
 
+    <style>
+      #progress {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: 200px;
+        height: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 2px solid #333;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      #progress-bar {
+        height: 100%;
+        background-color: #4caf50;
+        width: 0%;
+        transition: width 0.3s;
+      }
+    </style>
+
     <script src="realworld.50000.1.js"></script>
     <script src="realworld.50000.2.js"></script>
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="progress"><div id="progress-bar"></div></div>
     <div id="map"></div>
-    <span>Mouse over a cluster to see the bounds of its children and click a cluster to zoom to those bounds</span>
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
+
+      <div class="description-content">
+        <h3>Real-World Dataset (50,000 Markers)</h3>
+        <p>
+          This example demonstrates extreme-scale clustering by loading 50,000 real address points 5 times, resulting in 250,000 total markers. Shows the plugin's maximum
+          performance capabilities with chunked loading and a progress bar.
+        </p>
+
+        <div class="code-block">
+          <pre><code>let markers = new L.MarkerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 200,
+  chunkDelay: 50
+});
+
+<span class="code-comment">// Load 50,000 markers 5 times (250,000 total) with progress tracking</span>
+markers.addLayers(markerArray);</code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li><strong>250,000 markers</strong> – stress test dataset</li>
+          <li>Chunked loading prevents UI freeze</li>
+          <li>Progress bar shows loading status</li>
+          <li>Maintains smooth performance</li>
+          <li>Full clustering functionality</li>
+        </ul>
+
+        <p><strong>Tip:</strong> Watch the progress bar as markers load in batches to keep the browser responsive.</p>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Points &copy 2012 LINZ'
           }),
           latlng = new L.LatLng(-37.79, 175.27);
 
-        var map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
 
-        var progress = document.getElementById("progress");
-        var progressBar = document.getElementById("progress-bar");
+        let progress = document.getElementById("progress");
+        let progressBar = document.getElementById("progress-bar");
 
         function updateProgressBar(processed, total, elapsed, layersArray) {
           if (elapsed > 1000) {
@@ -45,25 +104,28 @@
           }
         }
 
-        var markers = new L.MarkerClusterGroup({ chunkedLoading: true, chunkProgress: updateProgressBar });
+        let markers = new L.MarkerClusterGroup({ chunkedLoading: true, chunkProgress: updateProgressBar });
 
-        var markerList = [];
+        let markerList = [];
 
         //console.log('start creating markers: ' + window.performance.now());
 
-        for (var i = 0; i < addressPoints.length; i++) {
-          var a = addressPoints[i];
-          var title = a[2];
-          var marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
-          marker.bindPopup(title);
-          markerList.push(marker);
-        }
-        for (var i = 0; i < addressPoints2.length; i++) {
-          var a = addressPoints2[i];
-          var title = a[2];
-          var marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
-          marker.bindPopup(title);
-          markerList.push(marker);
+        // Load each dataset 5 times to get 250,000 markers
+        for (let repeat = 0; repeat < 5; repeat++) {
+          for (let i = 0; i < addressPoints.length; i++) {
+            let a = addressPoints[i];
+            let title = a[2];
+            let marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
+            marker.bindPopup(title);
+            markerList.push(marker);
+          }
+          for (let i = 0; i < addressPoints2.length; i++) {
+            let a = addressPoints2[i];
+            let title = a[2];
+            let marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
+            marker.bindPopup(title);
+            markerList.push(marker);
+          }
         }
 
         //console.log('start clustering: ' + window.performance.now());
@@ -74,5 +136,6 @@
         //console.log('end clustering: ' + window.performance.now());
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

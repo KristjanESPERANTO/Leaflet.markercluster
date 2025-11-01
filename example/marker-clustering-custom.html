@@ -2,10 +2,11 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="example.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
 
@@ -14,60 +15,108 @@
         width: 40px;
         height: 40px;
         background-color: greenyellow;
+        color: #000;
         text-align: center;
         font-size: 24px;
       }
     </style>
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="../index.html" class="back-button">Back to Examples</a>
+      </div>
+
+      <div class="description-content">
+        <h3>Custom Cluster Icons</h3>
+        <p>
+          This example demonstrates how to create custom cluster icons with the
+          <code>iconCreateFunction</code> option. The clusters display a custom green background and sum up marker numbers instead of showing the count.
+        </p>
+
+        <div class="code-block">
+          <pre><code><span class="code-comment">// Create cluster group with custom icon function</span>
+let markers = new L.MarkerClusterGroup({
+  maxClusterRadius: 120,
+  iconCreateFunction: function(cluster) {
+    let markers = cluster.getAllChildMarkers();
+    let sum = 0;
+    
+    <span class="code-comment">// Sum up marker numbers instead of count</span>
+    for (let i = 0; i &lt; markers.length; i++) {
+      sum += markers[i].number;
+    }
+    
+    <span class="code-comment">// Return custom DivIcon with sum</span>
+    return new L.DivIcon({
+      html: sum,
+      className: 'mycluster',
+      iconSize: new L.Point(40, 40)
+    });
+  }
+});</code></pre>
+        </div>
+
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>Custom cluster radius (120px instead of default 80px)</li>
+          <li>Custom icon with green background via CSS class</li>
+          <li>Displays sum of marker numbers, not marker count</li>
+          <li>All default cluster behaviors work normally (click to zoom, spiderfy, etc.)</li>
+        </ul>
+
+        <p><strong>Custom CSS:</strong></p>
+        <div class="code-block">
+          <pre><code>.mycluster {
+  width: 40px;
+  height: 40px;
+  background-color: greenyellow;
+  color: #000;
+  text-align: center;
+  font-size: 24px;
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
           latlng = new L.LatLng(50.5, 30.51);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        //Custom radius and icon create function
-        var markers = new L.MarkerClusterGroup({
+        // Custom radius and icon create function
+        let markers = new L.MarkerClusterGroup({
           maxClusterRadius: 120,
           iconCreateFunction: function (cluster) {
-            var markers = cluster.getAllChildMarkers();
-            var n = 0;
-            for (var i = 0; i < markers.length; i++) {
+            let markers = cluster.getAllChildMarkers();
+            let n = 0;
+            for (let i = 0; i < markers.length; i++) {
               n += markers[i].number;
             }
             return new L.DivIcon({ html: n, className: "mycluster", iconSize: new L.Point(40, 40) });
-          },
-          //Disable all of the defaults:
-          spiderfyOnMaxZoom: false,
-          showCoverageOnHover: false,
-          zoomToBoundsOnClick: false
+          }
         });
 
         function populate() {
-          for (var i = 0; i < 100; i++) {
-            var m = new L.Marker(getRandomLatLng(map), { title: i });
+          for (let i = 0; i < 100; i++) {
+            let m = new L.Marker(getRandomLatLng(map), { title: i });
             m.number = i;
             markers.addLayer(m);
           }
           return false;
         }
-        function populateRandomVector() {
-          for (var i = 0, latlngs = [], len = 20; i < len; i++) {
-            latlngs.push(getRandomLatLng(map));
-          }
-          var path = new L.Polyline(latlngs);
-          map.addLayer(path);
-        }
+
         function getRandomLatLng(map) {
-          var bounds = map.getBounds(),
+          let bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
@@ -78,31 +127,8 @@
 
         populate();
         map.addLayer(markers);
-
-        var shownLayer, polygon;
-
-        function removePolygon() {
-          if (shownLayer) {
-            shownLayer.setOpacity(1);
-            shownLayer = null;
-          }
-          if (polygon) {
-            map.removeLayer(polygon);
-            polygon = null;
-          }
-        }
-
-        markers.on("clustermouseover", function (a) {
-          removePolygon();
-
-          a.layer.setOpacity(0.2);
-          shownLayer = a.layer;
-          polygon = new L.Polygon(a.layer.getConvexHull());
-          map.addLayer(polygon);
-        });
-        markers.on("clustermouseout", removePolygon);
-        map.on("zoomend", removePolygon);
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>

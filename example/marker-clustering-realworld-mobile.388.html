@@ -2,36 +2,202 @@
 <html>
   <head>
     <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="mobile.css" />
 
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <style>
+      .info-toggle {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+        background: white;
+        color: #1f2328;
+        padding: 10px 15px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .info-panel {
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        z-index: 1000;
+        background: white;
+        color: #1f2328;
+        padding: 16px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        max-width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+      }
+
+      .info-panel.open {
+        display: block;
+      }
+
+      .info-panel h3 {
+        margin-top: 0;
+        font-size: 16px;
+        color: #1f2328;
+      }
+
+      .info-panel p {
+        margin: 8px 0;
+        line-height: 1.5;
+      }
+
+      .info-panel ul {
+        margin: 8px 0;
+        padding-left: 20px;
+      }
+
+      .info-panel li {
+        margin: 4px 0;
+      }
+
+      .info-panel a {
+        color: #0969da;
+      }
+
+      .info-panel code {
+        background: rgba(175, 184, 193, 0.2);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.9em;
+        font-family: monospace;
+      }
+
+      .info-panel pre {
+        background: rgba(175, 184, 193, 0.2);
+        padding: 12px;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 8px 0;
+      }
+
+      .info-panel pre code {
+        background: none;
+        padding: 0;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .back-link,
+      .next-link {
+        flex: 1;
+        display: inline-block;
+        padding: 8px 12px;
+        background: #f6f8fa;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #0969da;
+        font-size: 13px;
+        text-align: center;
+        box-sizing: border-box;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .info-toggle {
+          background: #0f1419;
+          color: #e6edf3;
+        }
+
+        .info-panel {
+          background: #0f1419;
+          color: #e6edf3;
+        }
+
+        .info-panel h3 {
+          color: #e6edf3;
+        }
+
+        .info-panel a {
+          color: #58a6ff;
+        }
+
+        .info-panel code {
+          background: rgba(110, 118, 129, 0.15);
+        }
+
+        .info-panel pre {
+          background: rgba(110, 118, 129, 0.15);
+        }
+
+        .back-link,
+        .next-link {
+          background: #21262d;
+          color: #58a6ff;
+        }
+      }
+    </style>
+
     <script src="realworld.388.js"></script>
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
+    <div class="info-toggle" onclick="document.getElementById('info').classList.toggle('open')">ℹ️ Info</div>
+
+    <div id="info" class="info-panel">
+      <h3>Mobile-Optimized Map</h3>
+      <p>This example shows a full-screen map optimized for mobile devices with special viewport settings:</p>
+
+      <p><strong>Mobile optimizations:</strong></p>
+      <pre><code>&lt;meta name="viewport" 
+      content="width=device-width, 
+               initial-scale=1.0, 
+               maximum-scale=1.0, 
+               user-scalable=no" /&gt;</code></pre>
+
+      <p><strong>Dataset:</strong> 388 real address markers with standard clustering settings.</p>
+
+      <p><strong>Note:</strong> The mobile optimization is purely in the HTML viewport meta tag and CSS layout, not in clustering configuration.</p>
+
+      <div class="nav-links">
+        <a href="../index.html" class="back-link">← Back to Examples</a>
+        <a href="marker-clustering-realworld-maxzoom.388.html" class="next-link">Next Example →</a>
+      </div>
+    </div>
+
     <div id="map"></div>
 
-    <script src="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet-global.js"></script>
-    <script src="../dist/leaflet.markercluster-umd.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Points &copy 2012 LINZ'
           }),
           latlng = new L.LatLng(-37.821, 175.22);
 
-        var map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        var markers = new L.MarkerClusterGroup();
+        let markers = new L.MarkerClusterGroup();
 
-        for (var i = 0; i < addressPoints.length; i++) {
-          var a = addressPoints[i];
-          var title = a[2];
-          var marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
+        for (let i = 0; i < addressPoints.length; i++) {
+          let a = addressPoints[i];
+          let title = a[2];
+          let marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
           marker.bindPopup(title);
           markers.addLayer(marker);
         }
@@ -39,5 +205,6 @@
         map.addLayer(markers);
       });
     </script>
+    <script src="example-nav.js"></script>
   </body>
 </html>
