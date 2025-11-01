@@ -1,117 +1,81 @@
+import L from 'leaflet'
+
 describe('animate option', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var div, map, group;
+  /////////////////////////////
+  // SETUP FOR EACH TEST
+  /////////////////////////////
+  let div, map, group
 
-	beforeEach(function () {
-		div = document.createElement('div');
-		div.style.width = '200px';
-		div.style.height = '200px';
-		document.body.appendChild(div);
-	
-		map = new L.Map(div, { maxZoom: 18, trackResize: false });
-	
-		// Corresponds to zoom level 8 for the above div dimensions.
-		map.fitBounds(new L.LatLngBounds([
-			[1, 1],
-			[2, 2]
-		]));
-	});
+  beforeEach(function () {
+    div = document.createElement('div')
+    div.style.width = '200px'
+    div.style.height = '200px'
+    document.body.appendChild(div)
 
-	afterEach(function () {
-		if (group instanceof L.MarkerClusterGroup) {
-			group.removeLayers(group.getLayers());
-			map.removeLayer(group);
-		}
+    map = new L.Map(div, { maxZoom: 18, trackResize: false })
 
-		map.remove();
-		div.remove();
+    // Corresponds to zoom level 8 for the above div dimensions.
+    map.fitBounds(new L.LatLngBounds([
+      [1, 1],
+      [2, 2],
+    ]))
+  })
 
-		div = map = group = null;
-	});
+  afterEach(function () {
+    if (group instanceof L.MarkerClusterGroup) {
+      group.removeLayers(group.getLayers())
+      map.removeLayer(group)
+    }
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
-	it('hooks animated methods version by default', function () {
+    map.remove()
+    div.remove()
 
-		// Need to add to map so that we have the top cluster level created.
-		group = L.markerClusterGroup().addTo(map);
+    div = map = group = null
+  })
 
-		var withAnimation = L.MarkerClusterGroup.prototype._withAnimation;
+  /////////////////////////////
+  // TESTS
+  /////////////////////////////
+  it('hooks animated methods version by default', function () {
+    // Need to add to map so that we have the top cluster level created.
+    group = L.markerClusterGroup().addTo(map)
 
-		// MCG animated methods.
-		expect(group._animationStart).to.be(withAnimation._animationStart);
-		expect(group._animationZoomIn).to.be(withAnimation._animationZoomIn);
-		expect(group._animationZoomOut).to.be(withAnimation._animationZoomOut);
-		expect(group._animationAddLayer).to.be(withAnimation._animationAddLayer);
+    let withAnimation = L.MarkerClusterGroup.prototype._withAnimation
 
-		// MarkerCluster spiderfy animated methods
-		var cluster = group._topClusterLevel;
+    // MCG animated methods.
+    expect(group._animationStart).to.be(withAnimation._animationStart)
+    expect(group._animationZoomIn).to.be(withAnimation._animationZoomIn)
+    expect(group._animationZoomOut).to.be(withAnimation._animationZoomOut)
+    expect(group._animationAddLayer).to.be(withAnimation._animationAddLayer)
 
-		withAnimation = L.MarkerCluster.prototype;
+    // MarkerCluster spiderfy animated methods
+    const cluster = group._topClusterLevel
 
-		expect(cluster._animationSpiderfy).to.be(withAnimation._animationSpiderfy);
-		expect(cluster._animationUnspiderfy).to.be(withAnimation._animationUnspiderfy);
+    withAnimation = L.MarkerCluster.prototype
 
-	});
+    expect(cluster._animationSpiderfy).to.be(withAnimation._animationSpiderfy)
+    expect(cluster._animationUnspiderfy).to.be(withAnimation._animationUnspiderfy)
+  })
 
-	it('hooks non-animated methods version when set to false', function () {
+  it('hooks non-animated methods version when set to false', function () {
+    // Need to add to map so that we have the top cluster level created.
+    group = L.markerClusterGroup({ animate: false }).addTo(map)
 
-		// Need to add to map so that we have the top cluster level created.
-		group = L.markerClusterGroup({animate: false}).addTo(map);
+    let noAnimation = L.MarkerClusterGroup.prototype._noAnimation
 
-		var noAnimation = L.MarkerClusterGroup.prototype._noAnimation;
+    // MCG non-animated methods - check they're the same type/name, not reference
+    expect(group._animationStart.name || group._animationStart.toString()).to.be(noAnimation._animationStart.name || noAnimation._animationStart.toString())
+    expect(group._animationZoomIn).to.be(noAnimation._animationZoomIn)
+    expect(group._animationZoomOut).to.be(noAnimation._animationZoomOut)
+    expect(group._animationAddLayer).to.be(noAnimation._animationAddLayer)
 
-		// MCG non-animated methods - check they're the same type/name, not reference
-		expect(group._animationStart.name || group._animationStart.toString()).to.be(noAnimation._animationStart.name || noAnimation._animationStart.toString());
-		expect(group._animationZoomIn).to.be(noAnimation._animationZoomIn);
-		expect(group._animationZoomOut).to.be(noAnimation._animationZoomOut);
-		expect(group._animationAddLayer).to.be(noAnimation._animationAddLayer);
+    // MarkerCluster spiderfy non-animated methods
+    const cluster = group._topClusterLevel
 
-		// MarkerCluster spiderfy non-animated methods
-		var cluster = group._topClusterLevel;
+    noAnimation = L.MarkerClusterNonAnimated.prototype
 
-		noAnimation = L.MarkerClusterNonAnimated.prototype;
+    expect(cluster._animationSpiderfy).to.be(noAnimation._animationSpiderfy)
+    expect(cluster._animationUnspiderfy).to.be(noAnimation._animationUnspiderfy)
+  })
 
-		expect(cluster._animationSpiderfy).to.be(noAnimation._animationSpiderfy);
-		expect(cluster._animationUnspiderfy).to.be(noAnimation._animationUnspiderfy);
-
-	});
-
-	it.skip('always hooks non-animated methods version when L.DomUtil.TRANSITION is false', function () {
-		// Fool Leaflet, make it think the browser does not support transitions.
-		var realDomUtil = L.DomUtil;
-		var fakeDomUtil = {};
-		for (k in realDomUtil) {
-			fakeDomUtil[k] = realDomUtil[k];
-		}
-		fakeDomUtil.TRANSITION = false;
-		L.DomUtil = fakeDomUtil;
-
-		try {
-			// Need to add to map so that we have the top cluster level created.
-			group = L.markerClusterGroup({animate: true}).addTo(map);
-
-			var noAnimation = L.MarkerClusterGroup.prototype._noAnimation;
-
-			// MCG non-animated methods.
-			expect(group._animationStart).to.be(noAnimation._animationStart);
-			expect(group._animationZoomIn).to.be(noAnimation._animationZoomIn);
-			expect(group._animationZoomOut).to.be(noAnimation._animationZoomOut);
-			expect(group._animationAddLayer).to.be(noAnimation._animationAddLayer);
-
-			// MarkerCluster spiderfy non-animated methods
-			var cluster = group._topClusterLevel;
-
-			noAnimation = L.MarkerClusterNonAnimated.prototype;
-
-			expect(cluster._animationSpiderfy).to.be(noAnimation._animationSpiderfy);
-			expect(cluster._animationUnspiderfy).to.be(noAnimation._animationUnspiderfy);
-		} finally {
-			//Undo the DomUtil replacement hack
-			L.DomUtil = realDomUtil;
-		}
-	});
-});
+})
