@@ -1,16 +1,15 @@
 /*
-* Extends L.Marker to include two extra methods: clusterHide and clusterShow.
-*
-* They work as setOpacity(0) and setOpacity(1) respectively, but
-* don't overwrite the options.opacity
-*
-*/
+ * Extends L.Marker with clusterHide/clusterShow helpers that toggle visibility
+ * without permanently mutating the marker's configured opacity option.
+ */
 
-L.Marker.include({
+import { Marker } from 'leaflet'
+
+Marker.include({
   clusterHide: function () {
-    const backup = this.options.opacity
+    const originalOpacity = this.options.opacity
     this.setOpacity(0)
-    this.options.opacity = backup
+    this.options.opacity = originalOpacity
     return this
   },
 

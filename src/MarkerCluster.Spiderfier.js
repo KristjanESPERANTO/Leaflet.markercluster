@@ -1,7 +1,11 @@
 // This code is 100% based on https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet
 // Huge thanks to jawj for implementing it first to make my job easy :-)
 
-L.MarkerCluster.include({
+import Leaflet, { Path, Point, Polyline } from 'leaflet'
+import { MarkerCluster } from './MarkerCluster.js'
+import { MarkerClusterGroup } from './MarkerClusterGroup.js'
+
+MarkerCluster.include({
 
   _2PI: Math.PI * 2,
   _circleFootSeparation: 25, // related to circumference of circle
@@ -19,11 +23,11 @@ L.MarkerCluster.include({
       return
     }
 
-    let childMarkers = this.getAllChildMarkers(null, true),
+    const childMarkers = this.getAllChildMarkers(null, true),
       group = this._group,
       map = group._map,
-      center = map.latLngToLayerPoint(this._latlng),
-      positions
+      center = map.latLngToLayerPoint(this._latlng)
+    let positions
 
     this._group._unspiderfy()
     this._group._spiderfied = this
@@ -55,11 +59,11 @@ L.MarkerCluster.include({
   },
 
   _generatePointsCircle: function (count, centerPt) {
-    let circumference = this._group.options.spiderfyDistanceMultiplier * this._circleFootSeparation * (2 + count),
-      legLength = circumference / this._2PI, // radius from circumference
-      angleStep = this._2PI / count,
-      res = [],
-      i, angle
+    const circumference = this._group.options.spiderfyDistanceMultiplier * this._circleFootSeparation * (2 + count)
+    let legLength = circumference / this._2PI // radius from circumference
+    const angleStep = this._2PI / count
+    const res = []
+    let i, angle
 
     legLength = Math.max(legLength, 35) // Minimum distance to get outside the cluster icon.
 
@@ -67,20 +71,20 @@ L.MarkerCluster.include({
 
     for (i = 0; i < count; i++) { // Clockwise, like spiral.
       angle = this._circleStartAngle + i * angleStep
-      res[i] = new L.Point(centerPt.x + legLength * Math.cos(angle), centerPt.y + legLength * Math.sin(angle))._round()
+      res[i] = new Point(centerPt.x + legLength * Math.cos(angle), centerPt.y + legLength * Math.sin(angle))._round()
     }
 
     return res
   },
 
   _generatePointsSpiral: function (count, centerPt) {
-    let spiderfyDistanceMultiplier = this._group.options.spiderfyDistanceMultiplier,
-      legLength = spiderfyDistanceMultiplier * this._spiralLengthStart,
-      separation = spiderfyDistanceMultiplier * this._spiralFootSeparation,
-      lengthFactor = spiderfyDistanceMultiplier * this._spiralLengthFactor * this._2PI,
-      angle = 0,
-      res = [],
-      i
+    const spiderfyDistanceMultiplier = this._group.options.spiderfyDistanceMultiplier
+    let legLength = spiderfyDistanceMultiplier * this._spiralLengthStart
+    const separation = spiderfyDistanceMultiplier * this._spiralFootSeparation,
+      lengthFactor = spiderfyDistanceMultiplier * this._spiralLengthFactor * this._2PI
+    let angle = 0
+    const res = []
+    let i
 
     res.length = count
 
@@ -89,7 +93,7 @@ L.MarkerCluster.include({
       // Skip the first position, so that we are already farther from center and we avoid
       // being under the default cluster icon (especially important for Circle Markers).
       if (i < count) {
-        res[i] = new L.Point(centerPt.x + legLength * Math.cos(angle), centerPt.y + legLength * Math.sin(angle))._round()
+        res[i] = new Point(centerPt.x + legLength * Math.cos(angle), centerPt.y + legLength * Math.sin(angle))._round()
       }
       angle += separation / legLength + i * 0.0005
       legLength += lengthFactor / angle
@@ -98,11 +102,11 @@ L.MarkerCluster.include({
   },
 
   _noanimationUnspiderfy: function () {
-    let group = this._group,
+    const group = this._group,
       map = group._map,
       fg = group._featureGroup,
-      childMarkers = this.getAllChildMarkers(null, true),
-      m, i
+      childMarkers = this.getAllChildMarkers(null, true)
+    let m, i
 
     group._ignoreMove = true
 
@@ -136,13 +140,13 @@ L.MarkerCluster.include({
 })
 
 // Non Animated versions of everything
-L.MarkerClusterNonAnimated = L.MarkerCluster.extend({
+export const MarkerClusterNonAnimated = Leaflet.MarkerClusterNonAnimated = MarkerCluster.extend({
   _animationSpiderfy: function (childMarkers, positions) {
-    let group = this._group,
+    const group = this._group,
       map = group._map,
       fg = group._featureGroup,
-      legOptions = this._group.options.spiderLegPolylineOptions,
-      i, m, leg, newPos
+      legOptions = this._group.options.spiderLegPolylineOptions
+    let i, m, leg, newPos
 
     group._ignoreMove = true
 
@@ -153,7 +157,7 @@ L.MarkerClusterNonAnimated = L.MarkerCluster.extend({
       m = childMarkers[i]
 
       // Add the leg before the marker, so that in case the latter is a circleMarker, the leg is behind it.
-      leg = new L.Polyline([this._latlng, newPos], legOptions)
+      leg = new Polyline([this._latlng, newPos], legOptions)
       map.addLayer(leg)
       m._spiderLeg = leg
 
@@ -181,22 +185,22 @@ L.MarkerClusterNonAnimated = L.MarkerCluster.extend({
 })
 
 // Animated versions here
-L.MarkerCluster.include({
+MarkerCluster.include({
 
   _animationSpiderfy: function (childMarkers, positions) {
-    let me = this,
+    const me = this,
       group = this._group,
       map = group._map,
       fg = group._featureGroup,
       thisLayerLatLng = this._latlng,
       thisLayerPos = map.latLngToLayerPoint(thisLayerLatLng),
-      svg = L.Path.SVG,
-      legOptions = Object.assign({}, this._group.options.spiderLegPolylineOptions), // Copy the options so that we can modify them for animation.
-      finalLegOpacity = legOptions.opacity,
+      svg = Path.SVG,
+      legOptions = Object.assign({}, this._group.options.spiderLegPolylineOptions) // Copy the options so that we can modify them for animation.
+    let finalLegOpacity = legOptions.opacity,
       i, m, leg, legPath, legLength, newPos
 
     if (finalLegOpacity === undefined) {
-      finalLegOpacity = L.MarkerClusterGroup.prototype.options.spiderLegPolylineOptions.opacity
+      finalLegOpacity = MarkerClusterGroup.prototype.options.spiderLegPolylineOptions.opacity
     }
 
     if (svg) {
@@ -222,7 +226,7 @@ L.MarkerCluster.include({
       newPos = map.layerPointToLatLng(positions[i])
 
       // Add the leg before the marker, so that in case the latter is a circleMarker, the leg is behind it.
-      leg = new L.Polyline([thisLayerLatLng, newPos], legOptions)
+      leg = new Polyline([thisLayerLatLng, newPos], legOptions)
       map.addLayer(leg)
       m._spiderLeg = leg
 
@@ -290,14 +294,14 @@ L.MarkerCluster.include({
   },
 
   _animationUnspiderfy: function (zoomDetails) {
-    let me = this,
+    const me = this,
       group = this._group,
       map = group._map,
       fg = group._featureGroup,
       thisLayerPos = zoomDetails ? map._latLngToNewLayerPoint(this._latlng, zoomDetails.zoom, zoomDetails.center) : map.latLngToLayerPoint(this._latlng),
       childMarkers = this.getAllChildMarkers(null, true),
-      svg = L.Path.SVG,
-      m, i, leg, legPath, legLength, nonAnimatable
+      svg = Path.SVG
+    let m, i, leg, legPath, legLength, nonAnimatable
 
     group._ignoreMove = true
     group._animationStart()
@@ -385,7 +389,7 @@ L.MarkerCluster.include({
   },
 })
 
-L.MarkerClusterGroup.include({
+MarkerClusterGroup.include({
   // The MarkerCluster currently spiderfied (if any)
   _spiderfied: null,
 
@@ -402,7 +406,11 @@ L.MarkerClusterGroup.include({
     // Browsers without zoomAnimation or a big zoom don't fire zoomstart
     this._map.on('zoomend', this._noanimationUnspiderfy, this)
 
-    if (!L.Browser.touch) {
+    const browser = typeof globalThis !== 'undefined' && globalThis.L
+      ? globalThis.L.Browser
+      : undefined
+
+    if (!(browser && browser.touch)) {
       this._map.getRenderer(this)
       // Needs to happen in the pageload, not after, or animations don't work in webkit
       //  http://stackoverflow.com/questions/8455200/svg-animate-with-dynamically-added-elements

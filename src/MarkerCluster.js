@@ -1,8 +1,10 @@
-export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
-  options: L.Icon.prototype.options,
+import Leaflet, { Icon, LatLng, LatLngBounds, Marker } from 'leaflet'
+
+export const MarkerCluster = Leaflet.MarkerCluster = Marker.extend({
+  options: Icon.prototype.options,
 
   initialize: function (group, zoom, a, b) {
-    L.Marker.prototype.initialize.call(this, a ? (a._cLatLng || a.getLatLng()) : new L.LatLng(0, 0),
+    Marker.prototype.initialize.call(this, a ? (a._cLatLng || a.getLatLng()) : new LatLng(0, 0),
       { icon: this, pane: group.options.clusterPane })
 
     this._group = group
@@ -14,7 +16,7 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
     this._iconNeedsUpdate = true
     this._boundsNeedUpdate = true
 
-    this._bounds = new L.LatLngBounds()
+    this._bounds = new LatLngBounds()
 
     if (a) {
       this._addChild(a)
@@ -47,14 +49,59 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
     return this._childCount
   },
 
+  // Add mouseover/mouseout event handlers when added to map
+  onAdd: function (map) {
+    Marker.prototype.onAdd.call(this, map)
+    this._bindIconEvents()
+  },
+
+  // Bind DOM events to icon after it's created
+  _bindIconEvents: function () {
+    if (this._icon && !this._iconEventsBound) {
+      const self = this
+      this._icon.addEventListener('mouseover', this._onMouseOver = function (e) {
+        if (self._group) {
+          self._group.fire('mouseover', {
+            originalEvent: e,
+            sourceTarget: self,
+            layer: self,
+          })
+        }
+      })
+      this._icon.addEventListener('mouseout', this._onMouseOut = function (e) {
+        if (self._group) {
+          self._group.fire('mouseout', {
+            originalEvent: e,
+            sourceTarget: self,
+            layer: self,
+          })
+        }
+      })
+      this._iconEventsBound = true
+    }
+  },
+
+  // Remove event handlers when removed from map
+  onRemove: function (map) {
+    if (this._icon && this._onMouseOver) {
+      this._icon.removeEventListener('mouseover', this._onMouseOver)
+      this._icon.removeEventListener('mouseout', this._onMouseOut)
+      this._onMouseOver = null
+      this._onMouseOut = null
+      this._iconEventsBound = false
+    }
+
+    Marker.prototype.onRemove.call(this, map)
+  },
+
   // Zoom to the minimum of showing all of the child markers, or the extents of this cluster
   zoomToBounds: function (fitBoundsOptions) {
-    let childClusters = this._childClusters.slice(),
-      map = this._group._map,
-      boundsZoom = map.getBoundsZoom(this._bounds),
-      zoom = this._zoom + 1,
-      mapZoom = map.getZoom(),
-      i
+    let childClusters = this._childClusters.slice()
+    const map = this._group._map,
+      boundsZoom = map.getBoundsZoom(this._bounds)
+    let zoom = this._zoom + 1
+    const mapZoom = map.getZoom()
+    let i
 
     // calculate how far we need to zoom down to see all of the markers
     while (childClusters.length > 0 && boundsZoom > zoom) {
@@ -78,7 +125,7 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
   },
 
   getBounds: function () {
-    const bounds = new L.LatLngBounds()
+    const bounds = new LatLngBounds()
     bounds.extend(this._bounds)
     return bounds
   },
@@ -87,6 +134,7 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
     this._iconNeedsUpdate = true
     if (this._icon) {
       this.setIcon(this)
+      this._bindIconEvents()
     }
   },
 
@@ -108,7 +156,7 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
     this._boundsNeedUpdate = true
     this._setClusterCenter(new1)
 
-    if (new1 instanceof L.MarkerCluster) {
+    if (new1 instanceof MarkerCluster) {
       if (!isNotificationFromChild) {
         this._childClusters.push(new1)
         new1.__parent = this
@@ -159,12 +207,12 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
   },
 
   _recalculateBounds: function () {
-    let markers = this._markers,
-      childClusters = this._childClusters,
-      latSum = 0,
-      lngSum = 0,
-      totalCount = this._childCount,
-      i, child, childLatLng, childCount
+    const markers = this._markers
+    const childClusters = this._childClusters
+    let latSum = 0,
+      lngSum = 0
+    const totalCount = this._childCount
+    let i, child, childLatLng, childCount
 
     // Case where all markers are removed from the map and we are left with just an empty _topClusterLevel.
     if (totalCount === 0) {
@@ -202,7 +250,7 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
       lngSum += childLatLng.lng * childCount
     }
 
-    this._latlng = this._wLatLng = new L.LatLng(latSum / totalCount, lngSum / totalCount)
+    this._latlng = this._wLatLng = new LatLng(latSum / totalCount, lngSum / totalCount)
 
     // Reset dirty flag.
     this._boundsNeedUpdate = false
@@ -220,8 +268,8 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
   _recursivelyAnimateChildrenIn: function (bounds, center, maxZoom) {
     this._recursively(bounds, this._group._map.getMinZoom(), maxZoom - 1,
       function (c) {
-        let markers = c._markers,
-          i, m
+        const markers = c._markers
+        let i, m
         for (i = markers.length - 1; i >= 0; i--) {
           m = markers[i]
 
@@ -233,8 +281,8 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
         }
       },
       function (c) {
-        let childClusters = c._childClusters,
-          j, cm
+        const childClusters = c._childClusters
+        let j, cm
         for (j = childClusters.length - 1; j >= 0; j--) {
           cm = childClusters[j]
           if (cm._icon) {
@@ -373,9 +421,9 @@ export const MarkerCluster = L.MarkerCluster = L.Marker.extend({
   // runAtEveryLevel: function that takes an L.MarkerCluster as an argument that should be applied on every level
   // runAtBottomLevel: function that takes an L.MarkerCluster as an argument that should be applied at only the bottom level
   _recursively: function (boundsToApplyTo, zoomLevelToStart, zoomLevelToStop, runAtEveryLevel, runAtBottomLevel) {
-    let childClusters = this._childClusters,
-      zoom = this._zoom,
-      i, c
+    const childClusters = this._childClusters,
+      zoom = this._zoom
+    let i, c
 
     if (zoomLevelToStart <= zoom) {
       if (runAtEveryLevel) {

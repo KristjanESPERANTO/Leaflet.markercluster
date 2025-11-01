@@ -1,11 +1,13 @@
-L.DistanceGrid = function (cellSize) {
+import Leaflet, { Util } from 'leaflet'
+
+export const DistanceGrid = Leaflet.DistanceGrid = function (cellSize) {
   this._cellSize = cellSize
   this._sqCellSize = cellSize * cellSize
   this._grid = {}
   this._objectPoint = { }
 }
 
-L.DistanceGrid.prototype = {
+DistanceGrid.prototype = {
 
   addObject: function (obj, point) {
     const x = this._getCoord(point.x),
@@ -13,7 +15,7 @@ L.DistanceGrid.prototype = {
       grid = this._grid,
       row = grid[y] = grid[y] || {},
       cell = row[x] = row[x] || [],
-      stamp = L.Util.stamp(obj)
+      stamp = Util.stamp(obj)
 
     this._objectPoint[stamp] = point
 
@@ -27,14 +29,14 @@ L.DistanceGrid.prototype = {
 
   // Returns true if the object was found
   removeObject: function (obj, point) {
-    let x = this._getCoord(point.x),
-      y = this._getCoord(point.y),
-      grid = this._grid,
+    const x = this._getCoord(point.x)
+    const y = this._getCoord(point.y)
+    const grid = this._grid,
       row = grid[y] = grid[y] || {},
-      cell = row[x] = row[x] || [],
-      i, len
+      cell = row[x] = row[x] || []
+    let i, len
 
-    delete this._objectPoint[L.Util.stamp(obj)]
+    delete this._objectPoint[Util.stamp(obj)]
 
     for (i = 0, len = cell.length; i < len; i++) {
       if (cell[i] === obj) {
@@ -50,8 +52,8 @@ L.DistanceGrid.prototype = {
   },
 
   eachObject: function (fn, context) {
-    let i, j, k, len, row, cell, removed,
-      grid = this._grid
+    let i, j, k, len, row, cell, removed
+    const grid = this._grid
 
     for (i in grid) {
       row = grid[i]
@@ -71,11 +73,11 @@ L.DistanceGrid.prototype = {
   },
 
   getNearObject: function (point) {
-    let x = this._getCoord(point.x),
-      y = this._getCoord(point.y),
-      i, j, k, row, cell, len, obj, dist,
-      objectPoint = this._objectPoint,
-      closestDistSq = this._sqCellSize,
+    const x = this._getCoord(point.x),
+      y = this._getCoord(point.y)
+    let i, j, k, row, cell, len, obj, dist
+    const objectPoint = this._objectPoint
+    let closestDistSq = this._sqCellSize,
       closest = null
 
     for (i = y - 1; i <= y + 1; i++) {
@@ -86,7 +88,7 @@ L.DistanceGrid.prototype = {
           if (cell) {
             for (k = 0, len = cell.length; k < len; k++) {
               obj = cell[k]
-              dist = this._sqDist(objectPoint[L.Util.stamp(obj)], point)
+              dist = this._sqDist(objectPoint[Util.stamp(obj)], point)
               if (dist < closestDistSq
                 || (dist <= closestDistSq && closest === null)) {
                 closestDistSq = dist

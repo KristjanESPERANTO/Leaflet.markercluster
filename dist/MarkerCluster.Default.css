@@ -39,6 +39,13 @@
     Arial,
     Helvetica,
     sans-serif;
+  color: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+  .marker-cluster div {
+    color: #000;
+  }
 }
 
 .marker-cluster span {

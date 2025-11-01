@@ -5,7 +5,11 @@
  * to make up the cluster icon).
  */
 
-L.MarkerClusterGroup.include({
+import { LayerGroup, Marker, Util } from 'leaflet'
+import { MarkerClusterGroup } from './MarkerClusterGroup.js'
+import { MarkerCluster } from './MarkerCluster.js'
+
+MarkerClusterGroup.include({
   /**
    * Updates the icon of all clusters which are parents of the given marker(s).
    * In singleMarkerMode, also updates the given marker(s) icon.
@@ -18,16 +22,16 @@ L.MarkerClusterGroup.include({
     if (!layers) {
       layers = this._topClusterLevel.getAllChildMarkers()
     }
-    else if (layers instanceof L.MarkerClusterGroup) {
+    else if (layers instanceof MarkerClusterGroup) {
       layers = layers._topClusterLevel.getAllChildMarkers()
     }
-    else if (layers instanceof L.LayerGroup) {
+    else if (layers instanceof LayerGroup) {
       layers = layers._layers
     }
-    else if (layers instanceof L.MarkerCluster) {
+    else if (layers instanceof MarkerCluster) {
       layers = layers.getAllChildMarkers()
     }
-    else if (layers instanceof L.Marker) {
+    else if (layers instanceof Marker) {
       layers = [layers]
     } // else: must be an Array(L.Marker)|Map(L.Marker)
     this._flagParentsIconsNeedUpdate(layers)
@@ -85,7 +89,7 @@ L.MarkerClusterGroup.include({
   },
 })
 
-L.Marker.include({
+Marker.include({
   /**
    * Updates the given options in the marker's icon and refreshes the marker.
    * @param options map object of icon options.
@@ -96,7 +100,7 @@ L.Marker.include({
   refreshIconOptions: function (options, directlyRefreshClusters) {
     const icon = this.options.icon
 
-    L.setOptions(icon, options)
+    Util.setOptions(icon, options)
 
     this.setIcon(icon)
 
