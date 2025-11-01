@@ -41,7 +41,7 @@ MarkerCluster.include({
       positions = this._generatePointsSpiral(childMarkers.length, center)
     }
     else {
-      center.y += 10 // Otherwise circles look wrong => hack for standard blue icon, renders differently for other icons.
+      center.y += 10 // Vertical offset to compensate for standard marker icon anchor point
       positions = this._generatePointsCircle(childMarkers.length, center)
     }
 
@@ -323,7 +323,7 @@ MarkerCluster.include({
       m.setLatLng(m._preSpiderfyLatlng)
       delete m._preSpiderfyLatlng
 
-      // Hack override the location to be our center
+      // Override marker position to cluster center for unspiderfy animation
       nonAnimatable = true
       if (m._setPos) {
         m._setPos(thisLayerPos)
