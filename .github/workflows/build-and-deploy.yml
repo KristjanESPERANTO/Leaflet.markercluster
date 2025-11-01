@@ -34,10 +34,27 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Prepare GitHub Pages deployment
+        run: .github/workflows/prepare-pages.sh
+
+      - name: Verify .nojekyll file exists
+        run: |
+          if [ ! -f _site/.nojekyll ]; then
+            echo "ERROR: .nojekyll file not found!"
+            exit 1
+          fi
+          echo ".nojekyll file exists - Jekyll will be disabled"
+          ls -la _site/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "_site"
 
   deploy:
     environment:

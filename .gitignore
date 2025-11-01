@@ -9,3 +9,6 @@ node_modules
 # dist files
 dist/*.js
 dist/*.js.map
+
+# GitHub Pages build directory
+_site
