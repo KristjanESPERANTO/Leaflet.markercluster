@@ -1,6 +1,54 @@
-# Leaflet.markercluster
+# Changelog
 
-(part of repo mgmt responsibilities transferred to [@ykzeng](https://github.com/ykzeng))
+## 2.0.0 (2025-11-01)
+
+### Breaking Changes
+
+- **Minimum required Leaflet version is now 2.0.0**
+- **Removed support for UMD builds** - replaced with dual ES Module + IIFE builds
+- **Deprecated Leaflet 1.x API removed:**
+  - `L.featureGroup()` factory → use `new L.FeatureGroup()` constructor
+  - `L.extend` → use `Object.assign`
+  - `L.Util.isArray` → use `Array.isArray`
+  - `L.bind` → use `Function.prototype.bind`
+  - `L.DomUtil.hasClass` → use `element.classList.contains`
+
+### New Features
+
+- **Dual build system** for better tree-shaking and browser compatibility:
+  - `dist/leaflet.markercluster.js` - ES Module for bundlers (Webpack, Vite, etc.) with tree-shaking support
+  - `dist/leaflet.markercluster-global.js` - IIFE build that extends `window.L` for direct browser usage
+- **Modern ES6+ syntax throughout the codebase:**
+  - Replaced `var` with `const` and `let`
+  - Using modern JavaScript features consistently
+- **Improved package.json exports field** for better module resolution
+
+### Improvements
+
+- **Build and Development Infrastructure:**
+  - Replaced Jake build system with npm scripts
+  - Migrated from Karma to Playwright for more reliable testing
+  - Using GitHub Actions instead of Travis CI
+  - Build configuration changed from `.mjs` to `.js` (CommonJS)
+- **Test Infrastructure:**
+  - Modernized all test suites with ES6+ syntax
+  - Fixed event handling tests for Leaflet 2.0 (`a.layer` → `a.sourceTarget`)
+  - Removed obsolete `L.DomUtil.TRANSITION` test (property removed in Leaflet 2.0)
+  - Removed PhantomJS legacy code and dependencies
+  - Replaced vendor files (expect.js 4KB, sinon.js 4300 lines) with npm packages
+  - Fixed all test failures - 174 tests passing, 0 failed, 4 skipped
+  - Modernized test runner with Playwright automation (replaced Karma)
+  - Added comprehensive ESLint coverage for test files
+- **Examples:**
+  - Converted all 18 examples to IIFE/global pattern
+  - Use local Leaflet files instead of CDN for consistency
+  - Improved layout and responsiveness with new `example.css`
+  - Added automatic navigation between examples (`example-nav.js`)
+  - Added central `index.html` linking to all examples (now live on GitHub Pages)
+- **Documentation:**
+  - Updated README with clear dual build usage instructions
+  - Separate sections for bundler usage vs. browser script tags
+  - Examples updated to use modern syntax (`let`/`const` instead of `var`)
 
 ## 1.5.5 (2024-12-24)
 

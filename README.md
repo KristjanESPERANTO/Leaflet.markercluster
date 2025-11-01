@@ -53,6 +53,14 @@ This plugin targets Leaflet 2.x only. Internals have been migrated away from dep
 - `L.bind` → `Function.prototype.bind`
 - `L.DomUtil.hasClass` → `element.classList.contains`
 
+### Installation
+
+Install via npm:
+
+```bash
+npm install @kristjan.esperanto/leaflet.markercluster
+```
+
 ### For bundlers (Webpack, Vite, etc.)
 
 When consuming as ES module with a bundler:
@@ -60,9 +68,9 @@ When consuming as ES module with a bundler:
 ```js
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import "leaflet.markercluster/dist/MarkerCluster.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import "leaflet.markercluster/dist/leaflet.markercluster.js";
+import "@kristjan.esperanto/leaflet.markercluster/dist/MarkerCluster.css";
+import "@kristjan.esperanto/leaflet.markercluster/dist/MarkerCluster.Default.css";
+import "@kristjan.esperanto/leaflet.markercluster/dist/leaflet.markercluster.js";
 ```
 
 ### For browser usage with script tags
@@ -71,11 +79,11 @@ Include Leaflet and the plugin CSS and JS files on your page using script tags:
 
 ```html
 <link rel="stylesheet" href="https://unpkg.com/leaflet@2/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@2/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@2/dist/MarkerCluster.Default.css" />
 
 <script src="https://unpkg.com/leaflet@2/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster-global.js"></script>
+<script src="https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@2/dist/leaflet.markercluster-global.js"></script>
 ```
 
 **Note:** The plugin provides two builds:
