@@ -61,7 +61,21 @@ Then to build:
 npm run build
 ```
 
-Output will be in the `dist/` directory
+Output will be in the `dist/` directory:
+- `leaflet.markercluster.js` - ES Module for bundlers (Webpack, Vite, etc.)
+- `leaflet.markercluster-global.js` - IIFE build for browsers (extends `window.L`)
+
+## Code Quality
+
+Before submitting a pull request, make sure your code follows the project's style guidelines:
+
+```bash
+# Check for linting errors
+npm run lint
+
+# Automatically fix linting errors
+npm run lint:fix
+```
 
 ## Testing
 
@@ -70,3 +84,5 @@ To run unit tests:
 ```bash
 npm test
 ```
+
+The test suite uses Playwright and runs tests in real browsers. Make sure all tests pass before submitting a pull request.
