@@ -32,8 +32,6 @@ MarkerCluster.include({
     this._group._unspiderfy()
     this._group._spiderfied = this
 
-    // TODO Maybe: childMarkers order by distance to center
-
     if (this._group.options.spiderfyShapePositions) {
       positions = this._group.options.spiderfyShapePositions(childMarkers.length, center)
     }
