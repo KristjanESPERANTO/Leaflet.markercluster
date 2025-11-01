@@ -227,6 +227,7 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
 
     if (this._map) {
       const started = (new Date()).getTime()
+      const addedLayers = []
       const process = function () {
         const start = (new Date()).getTime()
 
@@ -266,7 +267,7 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
           if (!m.getLatLng) {
             npg.addLayer(m)
             if (!skipLayerAddEvent) {
-              this.fire('layeradd', { layer: m })
+              addedLayers.push(m)
             }
             continue
           }
@@ -277,7 +278,7 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
 
           this._addLayer(m, this._maxZoom)
           if (!skipLayerAddEvent) {
-            this.fire('layeradd', { layer: m })
+            addedLayers.push(m)
           }
 
           // If we just made a cluster of size 2 then we need to remove the other marker from the map (if it is) or we never will
@@ -303,6 +304,11 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
           this._refreshClustersIcons()
 
           this._topClusterLevel._recursivelyAddChildrenToMap(null, this._zoom, this._currentShownBounds)
+
+          // Fire single batch event for all added layers instead of individual events
+          if (addedLayers.length > 0) {
+            this.fire('layersadd', { layers: addedLayers })
+          }
         }
         else {
           setTimeout(process, this.options.chunkDelay)

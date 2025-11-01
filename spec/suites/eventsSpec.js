@@ -216,30 +216,32 @@ describe('events', function () {
       expect(callback.callCount).to.be(1)
     })
 
-    it('fires layeradd when markers are added using addLayers while on the map with chunked loading', function () {
+    it('fires layersadd (batch event) when markers are added using addLayers while on the map with chunked loading', function () {
       const callback = sinon.spy()
 
       group = new L.MarkerClusterGroup({ chunkedLoading: true })
-      group.on('layeradd', callback)
+      group.on('layersadd', callback)
       map.addLayer(group)
 
       const marker = new L.Marker([1.5, 1.5])
       group.addLayers([marker])
 
       expect(callback.callCount).to.be(1)
+      expect(callback.firstCall.args[0].layers.length).to.be(1)
     })
 
-    it('fires layeradd when vectors are added using addLayers while on the map with chunked loading', function () {
+    it('fires layersadd (batch event) when vectors are added using addLayers while on the map with chunked loading', function () {
       const callback = sinon.spy()
 
       group = new L.MarkerClusterGroup({ chunkedLoading: true })
-      group.on('layeradd', callback)
+      group.on('layersadd', callback)
       map.addLayer(group)
 
       const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayers([polygon])
 
       expect(callback.callCount).to.be(1)
+      expect(callback.firstCall.args[0].layers.length).to.be(1)
     })
 
     // layerremove
