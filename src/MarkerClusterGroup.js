@@ -1392,7 +1392,7 @@ MarkerClusterGroup.include({
       minZoom = Math.floor(this._map.getMinZoom())
 
     // Animate all of the markers in the clusters to move to their cluster center point
-    cluster._recursivelyAnimateChildrenInAndAddSelfToMap(bounds, minZoom, previousZoomLevel + 1, newZoomLevel)
+    cluster._recursivelyAnimateChildrenInAndAddSelfToMap(bounds, this._currentShownBounds, minZoom, previousZoomLevel + 1, newZoomLevel)
 
     const me = this
 

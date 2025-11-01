@@ -294,16 +294,18 @@ export const MarkerCluster = Leaflet.MarkerCluster = Marker.extend({
     )
   },
 
-  _recursivelyAnimateChildrenInAndAddSelfToMap: function (bounds, mapMinZoom, previousZoomLevel, newZoomLevel) {
+  _recursivelyAnimateChildrenInAndAddSelfToMap: function (bounds, previousBounds, mapMinZoom, previousZoomLevel, newZoomLevel) {
     this._recursively(bounds, newZoomLevel, mapMinZoom,
       function (c) {
         c._recursivelyAnimateChildrenIn(bounds, c._group._map.latLngToLayerPoint(c.getLatLng()).round(), previousZoomLevel)
 
-        // TODO: depthToAnimateIn affects _isSingleParent, if there is a multizoom we may/may not be.
-        // As a hack we only do a animation free zoom on a single level zoom, if someone does multiple levels then we always animate
+        // Animation optimization: Skip animation when zooming a single-parent cluster by one level.
+        // For multi-level zooms, we always animate to avoid complexity with depthToAnimateIn interactions.
+        // The single-level check ensures _isSingleParent() remains stable throughout the transition.
         if (c._isSingleParent() && previousZoomLevel - 1 === newZoomLevel) {
           c.clusterShow()
-          c._recursivelyRemoveChildrenFromMap(bounds, mapMinZoom, previousZoomLevel) // Immediately remove our children as we are replacing them. TODO previousBounds not bounds
+          // Remove children immediately as we're replacing them with the parent cluster.
+          c._recursivelyRemoveChildrenFromMap(previousBounds, mapMinZoom, previousZoomLevel)
         }
         else {
           c.clusterHide()
