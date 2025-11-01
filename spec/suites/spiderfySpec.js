@@ -99,8 +99,8 @@ describe('spiderfy', function () {
     map.addLayer(group)
 
     // Get the appropriate cluster.
-    let cluster = marker.__parent,
-      zoom = map.getZoom()
+    let cluster = marker.__parent
+    const zoom = map.getZoom()
 
     while (cluster._zoom !== zoom) {
       cluster = cluster.__parent
@@ -130,8 +130,8 @@ describe('spiderfy', function () {
     expect(marker.__parent._zoom).to.equal(18)
 
     // Get the appropriate cluster.
-    let cluster = marker.__parent,
-      zoom = map.getZoom()
+    let cluster = marker.__parent
+    const zoom = map.getZoom()
 
     while (cluster._zoom !== zoom) {
       cluster = cluster.__parent

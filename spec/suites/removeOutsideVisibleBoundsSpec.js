@@ -135,7 +135,7 @@ describe('Option removeOutsideVisibleBounds', function () {
     ])
   }
 
-  function checkProjection(latLngs) {
+  function checkProjection() {
     expect(map.options.crs).to.equal(L.CRS.EPSG3857)
     expect(L.CRS.EPSG3857.projection).to.equal(L.Projection.SphericalMercator)
     expect(L.Projection.SphericalMercator.MAX_LATITUDE).to.be.a('number')

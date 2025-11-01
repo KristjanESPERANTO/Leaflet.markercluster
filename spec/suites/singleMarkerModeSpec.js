@@ -44,7 +44,7 @@ describe('singleMarkerMode option', function () {
   it('overrides marker icons when set to true', function () {
     group = L.markerClusterGroup({
       singleMarkerMode: true,
-      iconCreateFunction: function (layer) {
+      iconCreateFunction: function () {
         return clusterIcon
       },
     }).addTo(map)
@@ -58,7 +58,7 @@ describe('singleMarkerMode option', function () {
 
   it('does not modify marker icons by default (or set to false)', function () {
     group = L.markerClusterGroup({
-      iconCreateFunction: function (layer) {
+      iconCreateFunction: function () {
         return clusterIcon
       },
     }).addTo(map)

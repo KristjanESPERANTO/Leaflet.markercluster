@@ -59,14 +59,14 @@ describe('moving markers', function () {
 
     const markers = []
     for (let i = 0; i < 10; i++) {
-      let marker = new L.Marker([10, 10])
+      const marker = new L.Marker([10, 10])
       group.addLayer(marker)
       markers.push(marker)
     }
 
     map.removeLayer(group)
     for (let i = 0; i < 10; i++) {
-      let marker = markers[i]
+      const marker = markers[i]
       marker.setLatLng([1.5, 1.5])
     }
     map.addLayer(group)

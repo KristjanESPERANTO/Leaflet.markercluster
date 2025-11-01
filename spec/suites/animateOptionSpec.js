@@ -77,5 +77,4 @@ describe('animate option', function () {
     expect(cluster._animationSpiderfy).to.be(noAnimation._animationSpiderfy)
     expect(cluster._animationUnspiderfy).to.be(noAnimation._animationUnspiderfy)
   })
-
 })

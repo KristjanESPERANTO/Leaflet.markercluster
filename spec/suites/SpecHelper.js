@@ -1,9 +1,3 @@
-import L from 'leaflet'
-
-function noSpecs() {
-  xit('has no specs')
-}
-
 if (!Array.prototype.map) {
   Array.prototype.map = function (fun /* , thisp */) {
     'use strict'

@@ -353,22 +353,22 @@ describe('events', function () {
   })
 
   /*
-	//No normal events can be fired by a clustered marker, so probably don't need this.
-	it('is fired for a clustered child marker', function() {
-		let callback = sinon.spy();
+  //No normal events can be fired by a clustered marker, so probably don't need this.
+  it('is fired for a clustered child marker', function() {
+    let callback = sinon.spy();
 
-		group = new L.MarkerClusterGroup();
+    group = new L.MarkerClusterGroup();
 
-		let marker = new L.Marker([1.5, 1.5]);
-		let marker2 = new L.Marker([1.5, 1.5]);
+    let marker = new L.Marker([1.5, 1.5]);
+    let marker2 = new L.Marker([1.5, 1.5]);
 
-		group.on('click', callback);
-		group.addLayers([marker, marker2]);
-		map.addLayer(group);
+    group.on('click', callback);
+    group.addLayers([marker, marker2]);
+    map.addLayer(group);
 
-		marker.fire('click');
+    marker.fire('click');
 
-		expect(callback.called).to.be(true);
-	});
-	*/
+    expect(callback.called).to.be(true);
+  });
+  */
 })

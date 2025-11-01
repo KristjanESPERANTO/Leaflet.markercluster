@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import L from 'leaflet'
 
 describe('refreshClusters', function () {
@@ -190,15 +191,15 @@ describe('refreshClusters', function () {
       iconCreateFunction: iconCreateFunction,
     }).addTo(map)
 
-    let marker1 = new L.Marker([1.5, 1.5]).addTo(group)
-    let marker2
-    marker2 = new L.Marker([1.5, 1.5], {
-      icon: iconCreateFunction({
-        getAllChildMarkers: function () {
-          return marker2
-        },
-      }),
-    }).addTo(map)
+    const marker1 = new L.Marker([1.5, 1.5]).addTo(group)
+
+    const marker2 = new L.Marker([1.5, 1.5])
+    marker2.setIcon(iconCreateFunction({
+      getAllChildMarkers: function () {
+        return marker2
+      },
+    }))
+    marker2.addTo(map)
 
     setMapView()
 
@@ -220,13 +221,13 @@ describe('refreshClusters', function () {
   })
 
   // Shared code for below tests.
-  let marker1 = new L.Marker([1.5, 1.5]),
+  const marker1 = new L.Marker([1.5, 1.5]),
     marker2 = new L.Marker([1.5, 1.5]), // Needed to force a cluster.
     marker3 = new L.Marker([1.1, 1.1]),
     marker4 = new L.Marker([1.1, 1.1]), // Needed to force a cluster.
     marker5 = new L.Marker([1.9, 1.9]),
-    marker6 = new L.Marker([1.9, 1.9]), // Needed to force a cluster.
-    marker1cluster8,
+    marker6 = new L.Marker([1.9, 1.9]) // Needed to force a cluster.
+  let marker1cluster8,
     marker1cluster3,
     marker1cluster5,
     marker3cluster8,

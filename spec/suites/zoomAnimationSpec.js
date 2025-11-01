@@ -39,7 +39,7 @@ describe('zoomAnimation', function () {
 
   function setBrowserToMobile() {
     const fakeBrowser = {}
-    for (k in realBrowser) {
+    for (const k in realBrowser) {
       fakeBrowser[k] = realBrowser[k]
     }
     fakeBrowser.mobile = true
@@ -59,7 +59,7 @@ describe('zoomAnimation', function () {
     })
     const marker = new L.Marker([-37.77852090603777, 175.3103667497635])
     group.addLayer(marker) // The one we zoom in on
-    group.addLayer(new L.Marker([-37.711800591811055, 174.50034790039062])) // Marker that we cluster with at the top zoom level, but not 1 level down
+    group.addLayer(new L.Marker([-37.711800591811055, 174.5003479003906])) // Marker that we cluster with at the top zoom level, but not 1 level down
     map.addLayer(group)
 
     clock.tick(1000)
@@ -174,7 +174,7 @@ describe('zoomAnimation', function () {
       // Give Leaflet 2 more time for cleanup
       clock.tick(100)
 
-      expect(map.getZoom()).to.equal(initialZoom + 1) // The fitBounds with 200px height should result in zooming 1 level in.			// Finally make sure that the cluster has been removed from map.
+      expect(map.getZoom()).to.equal(initialZoom + 1) // The fitBounds with 200px height should result in zooming 1 level in.      // Finally make sure that the cluster has been removed from map.
       expect(parentCluster._icon).to.be(null)
       // In Leaflet 2, the number of child nodes might differ - just check it's > 0
       expect(map._panes.markerPane.childNodes.length).to.be.greaterThan(0)
@@ -182,7 +182,9 @@ describe('zoomAnimation', function () {
     finally {
       L.Browser = realBrowser
     }
-  });	describe('zoomToShowLayer', function () {
+  })
+
+  describe('zoomToShowLayer', function () {
     it('zoom to single marker inside map view', function () {
       group = new L.MarkerClusterGroup()
 
@@ -280,14 +282,14 @@ describe('zoomAnimation', function () {
 
       // Run the animation - should zoom in or spiderfy to show markers
       clock.tick(2000)
-      
+
       // Give it more time for events to fire
       clock.tick(2000)
 
       // Now at least marker1 should be visible (either individually or spiderfied)
       // The callback should have been called
       sinon.assert.calledOnce(zoomCallbackSpy)
-      
+
       // The cluster should now be resolved - either zoomed in to show individuals,
       // or spiderfied to show all markers
       expect(marker1._icon || marker1.__parent._icon).to.not.be(undefined)

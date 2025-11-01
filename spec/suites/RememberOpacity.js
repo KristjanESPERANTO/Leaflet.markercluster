@@ -146,7 +146,7 @@ describe('Remember opacity', function () {
     }
 
     for (let i = 0; i < markerDefs.length; i++) {
-      // 			console.log(markerDefs[i].latLng, markerDefs[i].opts.opacity);
+      //       console.log(markerDefs[i].latLng, markerDefs[i].opts.opacity);
 
       map.setView(new L.LatLng(markerDefs[i].latLng), 18)
       clock.tick(1000)

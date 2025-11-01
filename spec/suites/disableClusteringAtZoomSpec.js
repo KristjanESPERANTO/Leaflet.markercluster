@@ -54,7 +54,7 @@ describe('disableClusteringAtZoom option', function () {
 
     expect(group._maxZoom).to.equal(maxZoom - 1)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(1) // 1 cluster.		map.setZoom(14);
+    expect(map._panes.markerPane.childNodes.length).to.equal(1) // 1 cluster.    map.setZoom(14);
     clock.tick(1000)
     expect(map._panes.markerPane.childNodes.length).to.equal(1) // 1 cluster.
 
