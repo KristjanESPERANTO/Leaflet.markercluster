@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or Help
+    url: https://github.com/KristjanESPERANTO/Leaflet.markercluster/discussions
+    about: For questions and help, please use GitHub Discussions instead
+  - name: Leaflet Forum
+    url: https://groups.google.com/forum/#!forum/leaflet-js
+    about: General Leaflet questions and discussions

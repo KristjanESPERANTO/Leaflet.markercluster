@@ -1,0 +1,106 @@
+name: Bug Report
+description: Report a bug in Leaflet.markercluster
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the form below.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I'm reporting a bug, not asking for help
+          required: true
+        - label: I've searched through existing issues to make sure this isn't a duplicate
+          required: true
+        - label: I'm sure this is a Leaflet.markercluster code issue, not an issue with my own code or the framework I'm using
+          required: true
+
+  - type: input
+    id: leaflet-version
+    attributes:
+      label: Leaflet version
+      placeholder: "e.g., 2.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: markercluster-version
+    attributes:
+      label: Leaflet.markercluster version
+      placeholder: "e.g., 2.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser (with version)
+      placeholder: "e.g., Chrome 120, Firefox 121, Safari 17"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS/Platform (with version)
+      placeholder: "e.g., Windows 11, macOS 14.2, Ubuntu 22.04, iOS 17"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide clear steps to reproduce the bug
+      placeholder: |
+        1. Step 1
+        2. Step 2
+        3. Step 3
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: minimal-example
+    attributes:
+      label: Minimal example reproducing the issue
+      description: |
+        Provide a minimal code example or link to a live demo (JSFiddle, CodePen, etc.)
+        
+        **This example should be:**
+        - As simple as possible
+        - Free of third-party code (except Leaflet and Leaflet.markercluster)
+      placeholder: |
+        ```javascript
+        // Your minimal code example here
+        ```
+        
+        Or link to JSFiddle/CodePen/etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Any other context, screenshots, or information about the problem
