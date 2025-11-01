@@ -1402,8 +1402,9 @@ MarkerClusterGroup.include({
     this._forceLayout()
     cluster._recursivelyBecomeVisible(bounds, newZoomLevel)
 
-    // TODO: Maybe use the transition timing stuff to make this more reliable
-    // When the animations are done, tidy up
+    // Animation cleanup happens after fixed timeout (300ms via _enqueue) instead of listening
+    // to transitionend events. This is simpler and more reliable than tracking all animated
+    // elements and their transition states.
     this._enqueue(function () {
       // This cluster stopped being a cluster before the timeout fired
       if (cluster._childCount === 1) {
