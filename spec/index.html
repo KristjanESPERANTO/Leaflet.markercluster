@@ -18,10 +18,10 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <script src="expect.js"></script>
     <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
     <script type="text/javascript" src="../node_modules/happen/happen.js"></script>
-    <script type="text/javascript" src="sinon.js"></script>
+    <script type="text/javascript" src="../node_modules/expect.js/index.js"></script>
+    <script type="text/javascript" src="../node_modules/sinon/pkg/sinon.js"></script>
     <script type="module">
       import Leaflet from "leaflet";
       import "../dist/leaflet.markercluster.js";
@@ -79,7 +79,7 @@
       console.log("L.MarkerClusterGroup:", typeof L.MarkerClusterGroup);
 
       // NOW run the tests after module is fully loaded
-      const runner = (window.mochaPhantomJS || window.mocha).run();
+      const runner = window.mocha.run();
 
       // Store results for automated testing
       window.mochaResults = null;
@@ -94,6 +94,7 @@
       });
 
       runner.on("end", function () {
+        console.log("End event fired! Stats:", runner.stats);
         window.mochaResults = {
           passes: runner.stats.passes || 0,
           failures: runner.stats.failures || 0,
@@ -103,6 +104,7 @@
         };
 
         console.log("Tests complete:", window.mochaResults.passes, "passed,", window.mochaResults.failures, "failed,", window.mochaResults.pending, "skipped");
+        console.log("mochaResults set:", window.mochaResults);
       });
     </script>
   </body>

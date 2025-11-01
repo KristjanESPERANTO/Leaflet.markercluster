@@ -1,8 +1,9 @@
 import { chromium } from 'playwright'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { readFile } from 'fs/promises'
-import { join, extname } from 'path'
-import { fileURLToPath } from 'url'
+import { join, extname } from 'node:path'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const rootDir = join(__dirname, '..')
@@ -28,7 +29,7 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'text/plain' })
     res.end(content)
   }
-  catch (err) {
+  catch {
     console.log('404:', req.url)
     res.writeHead(404)
     res.end('Not found')
@@ -71,14 +72,19 @@ async function runTests() {
 
         console.log('Waiting for tests to complete...')
 
-        // Wait for mochaResults to be set (using waitForFunction instead of evaluate)
-        try {
-          await page.waitForFunction(() => window.mochaResults !== null && window.mochaResults !== undefined, {
-            timeout: 60000, // 60 seconds
-          })
-        }
-        catch (error) {
-          console.log('\n❌ Timeout waiting for test results')
+        // Wait a bit for tests to finish
+        await page.waitForTimeout(5000) // 5 seconds should be enough
+
+        // Check if results exist
+        const hasResults = await page.evaluate(() => {
+          console.log('Checking results...', typeof window.mochaResults, window.mochaResults)
+          return window.mochaResults && typeof window.mochaResults === 'object'
+        })
+
+        console.log('Has results:', hasResults)
+
+        if (!hasResults) {
+          console.log('\n❌ No test results found')
           await page.screenshot({ path: 'test-timeout.png' })
           console.log('Screenshot saved to test-timeout.png')
           await browser.close()
