@@ -1320,9 +1320,9 @@ MarkerClusterGroup.include({
 
       this._forceLayout()
 
-      // Update opacities
+      // Update cluster opacities recursively through the cluster hierarchy
       this._topClusterLevel._recursivelyBecomeVisible(bounds, newZoomLevel)
-      // TODO Maybe? Update markers in _recursivelyBecomeVisible
+      // Update individual marker opacities (markers may exist outside cluster hierarchy)
       fg.eachLayer(function (n) {
         if (!(n instanceof MarkerCluster) && n._icon) {
           n.clusterShow()
