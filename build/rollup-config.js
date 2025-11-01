@@ -2,7 +2,6 @@
 
 import json from '@rollup/plugin-json'
 import rollupGitVersion from 'rollup-plugin-git-version'
-import terser from '@rollup/plugin-terser'
 import process from 'node:process'
 
 import { readFileSync } from 'fs'
@@ -38,26 +37,33 @@ const banner = `/*! ************************************************************
 `
 
 export default [
+  // ES Module build (for bundlers and import maps)
   {
     input: 'src/index.js',
+    external: ['leaflet'],
     output: {
       banner,
-      file: 'dist/leaflet.markercluster-umd.js',
-      format: 'umd',
-      name: 'Leaflet.markercluster',
+      file: 'dist/leaflet.markercluster.js',
+      format: 'es',
       sourcemap: true,
     },
     plugins: [release ? json() : rollupGitVersion()],
   },
+  // Global/IIFE build (for <script> tags with global L)
   {
     input: 'src/index.js',
+    external: ['leaflet'],
     output: {
       banner,
-      file: 'dist/leaflet.markercluster-esm.js',
-      format: 'es',
-      name: 'Leaflet.markercluster',
+      file: 'dist/leaflet.markercluster-global.js',
+      format: 'iife',
+      name: 'LeafletMarkerCluster',
       sourcemap: true,
+      globals: {
+        leaflet: 'L',
+      },
+      extend: true, // Extend window.L instead of replacing it
     },
-    plugins: [terser()],
+    plugins: [release ? json() : rollupGitVersion()],
   },
 ]

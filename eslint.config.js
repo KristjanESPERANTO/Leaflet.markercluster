@@ -12,11 +12,11 @@ export default defineConfig([
   ]),
   {
     files: ['**/*.js'],
-    languageOptions: { ecmaVersion: 'latest', globals: { ...globals.browser, L: 'readonly' } },
-    plugins: { js, stylistic },
-    extends: [importX.recommended, 'js/recommended', 'stylistic/recommended'],
+    languageOptions: { ecmaVersion: 'latest', globals: { ...globals.browser } },
+    extends: [importX.recommended, js.configs.recommended, stylistic.configs.recommended],
     rules: {
       'no-var': 'error',
+      'prefer-const': 'error',
     },
   },
   { files: ['**/*.md'], plugins: { markdown }, language: 'markdown/gfm', extends: ['markdown/recommended'] },

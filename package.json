@@ -1,20 +1,45 @@
 {
   "name": "leaflet.markercluster",
+  "version": "1.5.5",
+  "description": "Provides beautiful animated Marker clustering functionality for Leaflet.",
+  "homepage": "https://kristjanesperanto.github.io/Leaflet.markercluster/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Leaflet/Leaflet.markercluster"
+    "url": "https://github.com/KristjanESPERANTO/Leaflet.markercluster"
   },
-  "version": "1.5.5",
-  "description": "Provides Beautiful Animated Marker Clustering functionality for Leaflet",
   "bugs": {
-    "url": "https://github.com/Leaflet/Leaflet.markercluster/issues"
+    "url": "https://github.com/KristjanESPERANTO/Leaflet.markercluster/issues"
   },
+  "license": "MIT",
   "type": "module",
+  "main": "dist/leaflet.markercluster.js",
+  "module": "dist/leaflet.markercluster.js",
+  "style": "dist/MarkerCluster.css",
+  "exports": {
+    ".": "./dist/leaflet.markercluster.js",
+    "./*.css": "./dist/*.css"
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENCE.md"
+  ],
+  "keywords": [
+    "gis",
+    "map",
+    "cluster",
+    "leaflet",
+    "markers"
+  ],
+  "peerDependencies": {
+    "leaflet": ">=2.0.0-alpha.1"
+  },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
     "@eslint/markdown": "^7.5.0",
     "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-terser": "^0.4.4",
     "@stylistic/eslint-plugin": "^5.5.0",
     "eslint": "^9.38.0",
     "eslint-plugin-import-x": "^4.16.1",
@@ -28,31 +53,17 @@
     "rollup-plugin-git-version": "0.3.1",
     "stylelint": "^16.25.0",
     "stylelint-config-standard": "^39.0.1",
-    "stylelint-prettier": "^5.0.3",
-    "uglify-js": "3.19.3"
+    "stylelint-prettier": "^5.0.3"
   },
-  "peerDependencies": {
-    "leaflet": ">=2.0.0-alpha.1"
-  },
-  "main": "dist/leaflet.markercluster-src.js",
-  "style": "dist/MarkerCluster.css",
   "scripts": {
-    "test": "npm run lint:code && npm run rollup && node spec/run-tests.mjs",
-    "build": "npm run lint:code && npm run rollup && npm run uglify",
+    "test": "npm run lint:code && npm run build && node spec/run-tests.js",
+    "build": "npm run lint:code && rollup -c build/rollup-config.js",
     "prepublish": "npm run build",
     "lint": "npm run lint:code && npm run lint:style && npm run lint:format",
     "lint:code": "eslint",
     "lint:style": "stylelint **/*.css",
     "lint:format": "prettier --check .",
     "lint:fix": "eslint --fix && stylelint --fix **/*.css && prettier --write .",
-    "release": "npx bumpp --no-push",
-    "rollup": "rollup -c build/rollup-config.mjs",
-    "uglify": "uglifyjs dist/leaflet.markercluster-umd.js -c -m -o dist/leaflet.markercluster.js --source-map 'filename=dist/leaflet.markercluster.js.map,content=dist/leaflet.markercluster-umd.js.map,url=leaflet.markercluster.js.map'"
-  },
-  "keywords": [
-    "gis",
-    "map",
-    "cluster"
-  ],
-  "license": "MIT"
+    "release": "npx bumpp --no-push"
+  }
 }
