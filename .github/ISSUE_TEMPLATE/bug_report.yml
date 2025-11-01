@@ -86,7 +86,7 @@ body:
       label: Minimal example reproducing the issue
       description: |
         Provide a minimal code example or link to a live demo (JSFiddle, CodePen, etc.)
-        
+
         **This example should be:**
         - As simple as possible
         - Free of third-party code (except Leaflet and Leaflet.markercluster)
@@ -94,7 +94,7 @@ body:
         ```javascript
         // Your minimal code example here
         ```
-        
+
         Or link to JSFiddle/CodePen/etc.
     validations:
       required: true

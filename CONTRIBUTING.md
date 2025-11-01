@@ -62,6 +62,7 @@ npm run build
 ```
 
 Output will be in the `dist/` directory:
+
 - `leaflet.markercluster.js` - ES Module for bundlers (Webpack, Vite, etc.)
 - `leaflet.markercluster-global.js` - IIFE build for browsers (extends `window.L`)
 
