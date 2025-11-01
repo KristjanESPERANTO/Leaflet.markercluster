@@ -93,6 +93,10 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     Object.assign(this, animate ? this._withAnimation : this._noAnimation)
     // Remember which MarkerCluster class to instantiate (animated or not).
     this._markerCluster = animate ? MarkerCluster : Leaflet.MarkerClusterNonAnimated
+
+    // Register event listeners for spiderfier lifecycle
+    this.on('add', this._spiderfierSetup, this)
+    this.on('remove', this._spiderfierCleanup, this)
   },
 
   addLayer: function (layer) {
@@ -645,11 +649,10 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     this._map.on('zoomend', this._zoomEnd, this)
     this._map.on('moveend', this._moveEnd, this)
 
-    if (this._spiderfierOnAdd) { // TODO FIXME: Not sure how to have spiderfier add something on here nicely
-      this._spiderfierOnAdd()
-    }
-
     this._bindEvents()
+
+    // Notify that the group has been added to the map
+    this.fire('add', { target: this })
 
     // Actually add our markers to the map:
     l = this._needsClustering
@@ -667,9 +670,8 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     // In case we are in a cluster animation
     this._map._mapPane.className = this._map._mapPane.className.replace(' leaflet-cluster-anim', '')
 
-    if (this._spiderfierOnRemove) { // TODO FIXME: Not sure how to have spiderfier add something on here nicely
-      this._spiderfierOnRemove()
-    }
+    // Notify that the group is being removed from the map
+    this.fire('remove', { target: this })
 
     delete this._maxLat
 

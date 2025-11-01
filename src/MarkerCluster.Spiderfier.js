@@ -397,7 +397,12 @@ MarkerClusterGroup.include({
     this._unspiderfy.apply(this, arguments)
   },
 
-  _spiderfierOnAdd: function () {
+  _spiderfierSetup: function () {
+    // Only setup if we have a map
+    if (!this._map) {
+      return
+    }
+
     this._map.on('click', this._unspiderfyWrapper, this)
 
     if (this._map.options.zoomAnimation) {
@@ -418,7 +423,12 @@ MarkerClusterGroup.include({
     }
   },
 
-  _spiderfierOnRemove: function () {
+  _spiderfierCleanup: function () {
+    // Only cleanup if we have a map
+    if (!this._map) {
+      return
+    }
+
     this._map.off('click', this._unspiderfyWrapper, this)
     this._map.off('zoomstart', this._unspiderfyZoomStart, this)
     this._map.off('zoomanim', this._unspiderfyZoomAnim, this)
