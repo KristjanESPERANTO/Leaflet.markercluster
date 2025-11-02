@@ -377,6 +377,8 @@ If you are in that case, be sure to have a look first at the repository
 [issues](https://github.com/Leaflet/Leaflet.markercluster/issues) in case what
 you are looking for would already be discussed, and some workarounds would be proposed.
 
+**⚠️ Compatibility Note:** The sub-plugins listed below are currently only compatible with Leaflet 1.x and the upstream [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster). They have not been updated for Leaflet 2.0 yet. If you need to use any of these plugins, you'll need to use the upstream version that supports Leaflet 1.x instead of this fork.
+
 Check also the below sub-plugins:
 
 | Plugin                                                                                                               | Description                                                                                                                                                                                                                         | Maintainer                                                                         |
