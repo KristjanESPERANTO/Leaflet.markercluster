@@ -1,5 +1,31 @@
 # Changelog
 
+## 2.1.0 (2025-11-02)
+
+### New Features
+
+- **Batch event for bulk operations:** New `layersadd` event fires once when adding multiple layers via `addLayers()` instead of firing individual `layeradd` events for each layer. This significantly reduces event overhead when loading large numbers of markers.
+
+### Performance Improvements
+
+- **Optimized zoom-in animation:** Marker removal during zoom-in animations now only processes the previous zoom level where markers were actually visible, instead of iterating through all zoom levels. This provides up to 10x fewer iterations for large zoom jumps (e.g., zooming from level 5 to 15).
+
+### Bug Fixes
+
+- **Fixed bounds parameter in zoom-out animation:** The `_recursivelyAnimateChildrenInAndAddSelfToMap` method now correctly passes `previousBounds` instead of current bounds when removing children during single-parent cluster optimization. This ensures semantic consistency with all other calls throughout the codebase and eliminates the risk of pruning clusters using the wrong spatial window.
+
+### Code Quality
+
+- **Refactored spiderfier initialization:** Replaced legacy callback pattern (`_spiderfierOnAdd`, `_spiderfierOnRemove`) with Leaflet's standard event system. The MarkerClusterGroup now fires standard `add` and `remove` events, which the spiderfier listens to. This provides better separation of concerns and makes the code more extensible.
+
+### Documentation
+
+- **Improved code comments:** Removed outdated TODO comments and replaced them with clear explanations:
+  - Animation cleanup timeout: Explained why a fixed 300ms timeout is used instead of transitionend events (simpler, more reliable)
+  - Opacity updates: Clarified why both cluster hierarchy and flat layer iteration are needed
+  - Spiderfier positioning: Improved clarity of icon anchor compensation and animation override logic
+  - Removed unclear TODO about sorting spiderfied markers by distance
+
 ## 2.0.0 (2025-11-01)
 
 ### Breaking Changes
