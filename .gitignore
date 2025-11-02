@@ -12,3 +12,5 @@ dist/*.js.map
 
 # GitHub Pages build directory
 _site
+
+.vscode
