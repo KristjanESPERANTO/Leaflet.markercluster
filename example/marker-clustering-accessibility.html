@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Leaflet debug page</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="example.css" />
+
+    <link rel="stylesheet" href="../dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
+    <script src="../dist/leaflet.markercluster-global.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="index.html" class="back-button">Back to Examples</a>
+      </div>
+
+      <div class="description-content">
+        <h3>Accessibility - Cluster Marker Titles</h3>
+        <p>
+          This example demonstrates the <code>clusterMarkerTitle</code> option for accessibility. Cluster markers will have a <code>title</code> attribute that screen readers can
+          announce and that appears as a tooltip on hover.
+        </p>
+
+        <p><strong>Why is this important?</strong></p>
+        <ul>
+          <li>Since Leaflet 1.8+, interactive markers have <code>role="button"</code></li>
+          <li>WCAG accessibility standards require buttons to have descriptive labels</li>
+          <li>Screen readers need text to announce what the cluster represents</li>
+          <li>Hover tooltips help all users understand cluster contents</li>
+        </ul>
+
+        <p><strong>Configuration:</strong></p>
+        <p>The <code>clusterMarkerTitle</code> option can be:</p>
+        <ul>
+          <li><strong>A string:</strong> <code>"Click to expand cluster"</code></li>
+          <li><strong>A function:</strong> Returns dynamic text based on cluster content</li>
+        </ul>
+
+        <div class="code-block">
+          <pre><code>let markers = new L.MarkerClusterGroup({
+  clusterMarkerTitle: function(cluster) {
+    const count = cluster.getChildCount();
+    return 'Cluster with ' + count + 
+      (count === 1 ? ' marker' : ' markers');
+  }
+});
+
+<span class="code-comment">// Add markers</span>
+for (let i = 0; i &lt; 100; i++) {
+  let marker = L.marker(randomLatLng);
+  marker.bindPopup('Marker ' + (i + 1));
+  markers.addLayer(marker);
+}
+
+map.addLayer(markers);</code></pre>
+        </div>
+
+        <p><strong>Try it:</strong></p>
+        <ul>
+          <li>Hover over cluster markers to see the title tooltip</li>
+          <li>Open DevTools and inspect a cluster marker element</li>
+          <li>Look for the <code>title</code> attribute on the marker's DOM element</li>
+          <li>Use a screen reader to hear the cluster descriptions</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }),
+          latlng = new L.LatLng(51.505, -0.09);
+
+        let map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
+
+        // Example: Using a function to create dynamic titles
+        let markers = new L.MarkerClusterGroup({
+          clusterMarkerTitle: function (cluster) {
+            const count = cluster.getChildCount();
+            return "Cluster with " + count + (count === 1 ? " marker" : " markers");
+          }
+        });
+
+        // Add some random markers
+        for (let i = 0; i < 100; i++) {
+          let marker = new L.Marker([51.5 + Math.random() * 0.1, -0.09 + Math.random() * 0.1]);
+          marker.bindPopup("Marker " + (i + 1));
+          markers.addLayer(marker);
+        }
+
+        map.addLayer(markers);
+
+        // Example with a simple string title (commented out):
+        // let markersSimple = new L.MarkerClusterGroup({
+        //   clusterMarkerTitle: 'Click to expand cluster'
+        // });
+      });
+    </script>
+    <script src="example-nav.js"></script>
+  </body>
+</html>

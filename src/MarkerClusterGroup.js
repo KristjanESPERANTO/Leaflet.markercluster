@@ -31,6 +31,10 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
 
     disableClusteringAtZoom: null,
 
+    // Accessibility: Title for cluster markers (can be a string or function)
+    // Function signature: function(cluster) { return 'title text'; }
+    clusterMarkerTitle: null,
+
     // Setting this to false prevents the removal of any clusters outside of the viewpoint, which
     // is the default behaviour for performance reasons.
     removeOutsideVisibleBounds: true,

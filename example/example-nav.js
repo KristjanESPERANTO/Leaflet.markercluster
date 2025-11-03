@@ -7,6 +7,7 @@ const examples = [
   'marker-clustering-dragging.html',
   'marker-clustering-geojson.html',
   'marker-clustering-pane.html',
+  'marker-clustering-accessibility.html',
   'marker-clustering-zoomtobounds.html',
   'marker-clustering-zoomtoshowlayer.html',
   'marker-clustering-spiderfier.html',

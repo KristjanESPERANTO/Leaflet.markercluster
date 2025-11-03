@@ -53,6 +53,7 @@ export const MarkerCluster = Leaflet.MarkerCluster = Marker.extend({
   onAdd: function (map) {
     Marker.prototype.onAdd.call(this, map)
     this._bindIconEvents()
+    this._setClusterTitle()
   },
 
   // Bind DOM events to icon after it's created
@@ -135,6 +136,21 @@ export const MarkerCluster = Leaflet.MarkerCluster = Marker.extend({
     if (this._icon) {
       this.setIcon(this)
       this._bindIconEvents()
+      this._setClusterTitle()
+    }
+  },
+
+  _setClusterTitle: function () {
+    // Set accessibility title if configured
+    if (this._group.options.clusterMarkerTitle && this._icon) {
+      let title
+      if (typeof this._group.options.clusterMarkerTitle === 'function') {
+        title = this._group.options.clusterMarkerTitle(this)
+      }
+      else {
+        title = this._group.options.clusterMarkerTitle
+      }
+      this._icon.title = title
     }
   },
 
