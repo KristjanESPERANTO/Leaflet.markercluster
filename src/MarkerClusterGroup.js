@@ -53,9 +53,9 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     spiderLegPolylineOptions: { weight: 1.5, color: '#222', opacity: 0.5 },
 
     // When bulk adding layers, adds markers in chunks. Means addLayers may not add all the layers in the call, others will be loaded during setTimeouts
-    chunkedLoading: false,
-    chunkInterval: 200, // process markers for a maximum of ~ n milliseconds (then trigger the chunkProgress callback)
-    chunkDelay: 50, // at the end of each interval, give n milliseconds back to system/browser
+    chunkedLoading: true,
+    chunkInterval: 80, // process markers for a maximum of ~ n milliseconds (then trigger the chunkProgress callback)
+    chunkDelay: 20, // at the end of each interval, give n milliseconds back to system/browser
     chunkProgress: null, // progress callback: function(processed, total, elapsed) (e.g. for a progress indicator)
 
     // Options to pass to the L.Polygon constructor
