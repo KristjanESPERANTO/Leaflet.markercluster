@@ -46,15 +46,15 @@
         </p>
 
         <div class="code-block">
-          <pre><code>// Create custom pane with higher z-index
+          <pre><code><span class="code-comment">// Create custom pane with higher z-index</span>
 map.createPane('paneB').style.zIndex = 610;
 
 let markersA = new L.MarkerClusterGroup({
-  clusterPane: 'markerPane' // default
+  clusterPane: 'markerPane' <span class="code-comment">// default</span>
 });
 
 let markersB = new L.MarkerClusterGroup({
-  clusterPane: 'paneB' // custom pane
+  clusterPane: 'paneB' <span class="code-comment">// custom pane</span>
 });</code></pre>
         </div>
 

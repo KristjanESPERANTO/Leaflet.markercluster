@@ -29,7 +29,7 @@
         </p>
 
         <div class="code-block">
-          <pre><code>// Create GeoJSON layers
+          <pre><code><span class="code-comment">// Create GeoJSON layers</span>
 let m = new L.GeoJSON(geoJsonFeature, {
   pointToLayer: function (feature, latlng) {
     return new L.Marker(latlng);
@@ -37,7 +37,7 @@ let m = new L.GeoJSON(geoJsonFeature, {
 });
 markers.addLayer(m);
 
-// Remove specific marker
+<span class="code-comment">// Remove specific marker</span>
 markers.removeLayer(markersList[0]);</code></pre>
         </div>
 
