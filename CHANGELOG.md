@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.2.0 (2025-11-03)
+
+### Added
+
+- feat: add clusterMarkerTitle option for accessibility (WCAG compliance)
+
+### Changed
+
+- chore: update devDependencies
+- chore: remove unused release script
+- docs: add compatibility note for sub-plugins with Leaflet 1.x
+- perf: enable chunked loading by default for better responsiveness
+
+### Fixed
+
+- docs: fix comment styling in code examples
+
 ## 2.1.0 (2025-11-02)
 
 ### New Features
