@@ -67,7 +67,6 @@
     "lint:code": "eslint",
     "lint:style": "stylelint **/*.css",
     "lint:format": "prettier --check .",
-    "lint:fix": "eslint --fix && stylelint --fix **/*.css && prettier --write .",
-    "release": "npx bumpp --no-push"
+    "lint:fix": "eslint --fix && stylelint --fix **/*.css && prettier --write ."
   }
 }
