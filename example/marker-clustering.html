@@ -11,8 +11,15 @@
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
 
-    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
-    <script src="../dist/leaflet.markercluster-global.js"></script>
+    <!-- Import map for ES modules - in production, use a CDN or bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="map"></div>
@@ -34,11 +41,17 @@
         </ul>
 
         <div class="code-block">
-          <pre><code>let markers = new L.MarkerClusterGroup();
+          <pre><code>import { Map, TileLayer, Marker, LatLng } from 'leaflet';
+import { MarkerClusterGroup } from 'leaflet.markercluster';
+
+const tiles = new TileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png');
+const map = new Map('map', { center: [50.5, 30.51], zoom: 15, layers: [tiles] });
+
+const markers = new MarkerClusterGroup();
 
 <span class="code-comment">// Add markers</span>
 for (let i = 0; i &lt; 100; i++) {
-  let m = new L.Marker(randomLatLng);
+  const m = new Marker(randomLatLng);
   markers.addLayer(m);
 }
 
@@ -51,42 +64,46 @@ map.addLayer(markers);</code></pre>
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import { Map, TileLayer, Marker, LatLng, Polyline, DomUtil } from "leaflet";
+      import { MarkerClusterGroup } from "leaflet.markercluster";
+
       document.addEventListener("DOMContentLoaded", function () {
-        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 18,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          }),
-          latlng = new L.LatLng(50.5, 30.51);
+        const tiles = new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 18,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+        const latlng = new LatLng(50.5, 30.51);
 
-        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        const map = new Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        let markers = new L.MarkerClusterGroup();
-        let markersList = [];
+        const markers = new MarkerClusterGroup();
+        const markersList = [];
 
         function populate() {
           for (let i = 0; i < 100; i++) {
-            let m = new L.Marker(getRandomLatLng(map));
+            const m = new Marker(getRandomLatLng(map));
             markersList.push(m);
             markers.addLayer(m);
           }
           return false;
         }
         function populateRandomVector() {
-          for (let i = 0, latlngs = [], len = 20; i < len; i++) {
+          const latlngs = [];
+          for (let i = 0; i < 20; i++) {
             latlngs.push(getRandomLatLng(map));
           }
-          let path = new L.Polyline(latlngs);
+          const path = new Polyline(latlngs);
           map.addLayer(path);
         }
         function getRandomLatLng(map) {
-          let bounds = map.getBounds(),
-            southWest = bounds.getSouthWest(),
-            northEast = bounds.getNorthEast(),
-            lngSpan = northEast.lng - southWest.lng,
-            latSpan = northEast.lat - southWest.lat;
+          const bounds = map.getBounds();
+          const southWest = bounds.getSouthWest();
+          const northEast = bounds.getNorthEast();
+          const lngSpan = northEast.lng - southWest.lng;
+          const latSpan = northEast.lat - southWest.lat;
 
-          return new L.LatLng(southWest.lat + latSpan * Math.random(), southWest.lng + lngSpan * Math.random());
+          return new LatLng(southWest.lat + latSpan * Math.random(), southWest.lng + lngSpan * Math.random());
         }
 
         markers.on("clusterclick", function (a) {
@@ -99,17 +116,17 @@ map.addLayer(markers);</code></pre>
         populate();
         map.addLayer(markers);
 
-        L.DomUtil.get("populate").onclick = function () {
-          let bounds = map.getBounds(),
-            southWest = bounds.getSouthWest(),
-            northEast = bounds.getNorthEast(),
-            lngSpan = northEast.lng - southWest.lng,
-            latSpan = northEast.lat - southWest.lat;
-          let m = new L.Marker(new L.LatLng(southWest.lat + latSpan * 0.5, southWest.lng + lngSpan * 0.5));
+        DomUtil.get("populate").onclick = function () {
+          const bounds = map.getBounds();
+          const southWest = bounds.getSouthWest();
+          const northEast = bounds.getNorthEast();
+          const lngSpan = northEast.lng - southWest.lng;
+          const latSpan = northEast.lat - southWest.lat;
+          const m = new Marker(new LatLng(southWest.lat + latSpan * 0.5, southWest.lng + lngSpan * 0.5));
           markersList.push(m);
           markers.addLayer(m);
         };
-        L.DomUtil.get("remove").onclick = function () {
+        DomUtil.get("remove").onclick = function () {
           markers.removeLayer(markersList.pop());
         };
       });

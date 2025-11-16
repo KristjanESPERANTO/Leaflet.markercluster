@@ -11,9 +11,16 @@
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
 
+    <!-- Import map for ES modules - in production, use a CDN or bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
     <script src="realworld.388.js"></script>
-    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
-    <script src="../dist/leaflet.markercluster-global.js"></script>
   </head>
   <body>
     <div id="map"></div>
@@ -50,22 +57,25 @@
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import { TileLayer, LatLng, Map, Marker } from "leaflet";
+      import { MarkerClusterGroup } from "leaflet.markercluster";
+
       document.addEventListener("DOMContentLoaded", function () {
-        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        const tiles = new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Points &copy 2012 LINZ'
           }),
-          latlng = new L.LatLng(-37.82, 175.24);
+          latlng = new LatLng(-37.82, 175.24);
 
-        let map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
+        const map = new Map("map", { center: latlng, zoom: 13, layers: [tiles] });
 
-        let markers = new L.MarkerClusterGroup({ disableClusteringAtZoom: 17 });
+        const markers = new MarkerClusterGroup({ disableClusteringAtZoom: 17 });
 
         for (let i = 0; i < addressPoints.length; i++) {
-          let a = addressPoints[i];
-          let title = a[2];
-          let marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
+          const a = addressPoints[i];
+          const title = a[2];
+          const marker = new Marker(new LatLng(a[0], a[1]), { title: title });
           marker.bindPopup(title);
           markers.addLayer(marker);
         }

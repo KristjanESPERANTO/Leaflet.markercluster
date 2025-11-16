@@ -20,8 +20,16 @@
         font-size: 24px;
       }
     </style>
-    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
-    <script src="../dist/leaflet.markercluster-global.js"></script>
+
+    <!-- Import map for ES modules - in production, use a CDN or bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="map"></div>
@@ -83,32 +91,35 @@ let markers = new L.MarkerClusterGroup({
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import { TileLayer, LatLng, Map, Marker, DivIcon, Point } from "leaflet";
+      import { MarkerClusterGroup } from "leaflet.markercluster";
+
       document.addEventListener("DOMContentLoaded", function () {
-        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        const tiles = new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
-          latlng = new L.LatLng(50.5, 30.51);
+          latlng = new LatLng(50.5, 30.51);
 
-        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        const map = new Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
         // Custom radius and icon create function
-        let markers = new L.MarkerClusterGroup({
+        const markers = new MarkerClusterGroup({
           maxClusterRadius: 120,
           iconCreateFunction: function (cluster) {
-            let markers = cluster.getAllChildMarkers();
+            const markers = cluster.getAllChildMarkers();
             let n = 0;
             for (let i = 0; i < markers.length; i++) {
               n += markers[i].number;
             }
-            return new L.DivIcon({ html: n, className: "mycluster", iconSize: new L.Point(40, 40) });
+            return new DivIcon({ html: n, className: "mycluster", iconSize: new Point(40, 40) });
           }
         });
 
         function populate() {
           for (let i = 0; i < 100; i++) {
-            let m = new L.Marker(getRandomLatLng(map), { title: i });
+            const m = new Marker(getRandomLatLng(map), { title: i });
             m.number = i;
             markers.addLayer(m);
           }
@@ -116,13 +127,13 @@ let markers = new L.MarkerClusterGroup({
         }
 
         function getRandomLatLng(map) {
-          let bounds = map.getBounds(),
+          const bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
             latSpan = northEast.lat - southWest.lat;
 
-          return new L.LatLng(southWest.lat + latSpan * Math.random(), southWest.lng + lngSpan * Math.random());
+          return new LatLng(southWest.lat + latSpan * Math.random(), southWest.lng + lngSpan * Math.random());
         }
 
         populate();

@@ -11,8 +11,15 @@
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
 
-    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
-    <script src="../dist/leaflet.markercluster-global.js"></script>
+    <!-- Import map for ES modules - in production, use a CDN or bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="map"></div>
@@ -50,22 +57,25 @@ marker.setLatLng(newLatLng);</code></pre>
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import { TileLayer, LatLng, Map, Marker, Polyline, DomUtil } from "leaflet";
+      import { MarkerClusterGroup } from "leaflet.markercluster";
+
       document.addEventListener("DOMContentLoaded", function () {
-        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        const tiles = new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }),
-          latlng = new L.LatLng(50.5, 30.51);
+          latlng = new LatLng(50.5, 30.51);
 
-        let map = new L.Map("map", { center: latlng, zoom: 15, layers: [tiles] });
+        const map = new Map("map", { center: latlng, zoom: 15, layers: [tiles] });
 
-        let markers = new L.MarkerClusterGroup();
-        let markersList = [];
+        const markers = new MarkerClusterGroup();
+        const markersList = [];
 
         function populate() {
           for (let i = 0; i < 100; i++) {
-            let m = new L.Marker(getRandomLatLng(map), { draggable: true });
+            const m = new Marker(getRandomLatLng(map), { draggable: true });
             markersList.push(m);
             markers.addLayer(m);
           }
@@ -75,17 +85,17 @@ marker.setLatLng(newLatLng);</code></pre>
           for (let i = 0, latlngs = [], len = 20; i < len; i++) {
             latlngs.push(getRandomLatLng(map));
           }
-          let path = new L.Polyline(latlngs);
+          const path = new Polyline(latlngs);
           map.addLayer(path);
         }
         function getRandomLatLng(map) {
-          let bounds = map.getBounds(),
+          const bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
             latSpan = northEast.lat - southWest.lat;
 
-          return new L.LatLng(southWest.lat + latSpan * Math.random(), southWest.lng + lngSpan * Math.random());
+          return new LatLng(southWest.lat + latSpan * Math.random(), southWest.lng + lngSpan * Math.random());
         }
 
         markers.on("clusterclick", function (a) {
@@ -98,14 +108,14 @@ marker.setLatLng(newLatLng);</code></pre>
         populate();
         map.addLayer(markers);
 
-        L.DomUtil.get("moveone").onclick = function (e) {
-          let m = markersList[Math.floor(Math.random() * markersList.length)];
-          let bounds = map.getBounds(),
+        DomUtil.get("moveone").onclick = function (e) {
+          const m = markersList[Math.floor(Math.random() * markersList.length)];
+          const bounds = map.getBounds(),
             southWest = bounds.getSouthWest(),
             northEast = bounds.getNorthEast(),
             lngSpan = northEast.lng - southWest.lng,
             latSpan = northEast.lat - southWest.lat;
-          m.setLatLng(new L.LatLng(southWest.lat + latSpan * 0.5, southWest.lng + lngSpan * 0.5));
+          m.setLatLng(new LatLng(southWest.lat + latSpan * 0.5, southWest.lng + lngSpan * 0.5));
           return false;
         };
       });

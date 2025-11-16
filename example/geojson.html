@@ -11,8 +11,15 @@
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
 
-    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
-    <script src="../dist/leaflet.markercluster-global.js"></script>
+    <!-- Import map for ES modules - in production, use a CDN or bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="map"></div>
@@ -51,9 +58,12 @@ map.fitBounds(markers.getBounds());</code></pre>
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      import { TileLayer, Map, GeoJSON } from "leaflet";
+      import { MarkerClusterGroup } from "leaflet.markercluster";
+
       document.addEventListener("DOMContentLoaded", function () {
-        let geoJsonData = {
+        const geoJsonData = {
           type: "FeatureCollection",
           features: [
             { type: "Feature", id: "1", properties: { address: "2" }, geometry: { type: "Point", coordinates: [175.2209316333, -37.8210922667] } },
@@ -65,16 +75,16 @@ map.fitBounds(markers.getBounds());</code></pre>
           ]
         };
 
-        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        const tiles = new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
           maxZoom: 18,
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         });
 
-        let map = new L.Map("map").addLayer(tiles);
+        const map = new Map("map").addLayer(tiles);
 
-        let markers = new L.MarkerClusterGroup();
+        const markers = new MarkerClusterGroup();
 
-        let geoJsonLayer = new L.GeoJSON(geoJsonData, {
+        const geoJsonLayer = new GeoJSON(geoJsonData, {
           onEachFeature: function (feature, layer) {
             layer.bindPopup(feature.properties.address);
           }

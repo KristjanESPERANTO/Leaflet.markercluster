@@ -11,8 +11,15 @@
     <link rel="stylesheet" href="../dist/MarkerCluster.css" />
     <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
 
-    <script src="../node_modules/leaflet/dist/leaflet-global-src.js"></script>
-    <script src="../dist/leaflet.markercluster-global.js"></script>
+    <!-- Import map for ES modules - in production, use a CDN or bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="map"></div>
@@ -73,18 +80,21 @@ map.addLayer(markers);</code></pre>
       </div>
     </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        let tiles = new L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 18,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          }),
-          latlng = new L.LatLng(51.505, -0.09);
+    <script type="module">
+      import { Map, TileLayer, Marker, LatLng } from "leaflet";
+      import { MarkerClusterGroup } from "leaflet.markercluster";
 
-        let map = new L.Map("map", { center: latlng, zoom: 13, layers: [tiles] });
+      document.addEventListener("DOMContentLoaded", function () {
+        const tiles = new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 18,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+        const latlng = new LatLng(51.505, -0.09);
+
+        const map = new Map("map", { center: latlng, zoom: 13, layers: [tiles] });
 
         // Example: Using a function to create dynamic titles
-        let markers = new L.MarkerClusterGroup({
+        const markers = new MarkerClusterGroup({
           clusterMarkerTitle: function (cluster) {
             const count = cluster.getChildCount();
             return "Cluster with " + count + (count === 1 ? " marker" : " markers");
@@ -93,7 +103,7 @@ map.addLayer(markers);</code></pre>
 
         // Add some random markers
         for (let i = 0; i < 100; i++) {
-          let marker = new L.Marker([51.5 + Math.random() * 0.1, -0.09 + Math.random() * 0.1]);
+          const marker = new Marker([51.5 + Math.random() * 0.1, -0.09 + Math.random() * 0.1]);
           marker.bindPopup("Marker " + (i + 1));
           markers.addLayer(marker);
         }
@@ -101,7 +111,7 @@ map.addLayer(markers);</code></pre>
         map.addLayer(markers);
 
         // Example with a simple string title (commented out):
-        // let markersSimple = new L.MarkerClusterGroup({
+        // const markersSimple = new MarkerClusterGroup({
         //   clusterMarkerTitle: 'Click to expand cluster'
         // });
       });
