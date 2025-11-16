@@ -61,7 +61,7 @@
   },
   "scripts": {
     "test": "npm run lint:code && npm run build && node spec/run-tests.js",
-    "build": "npm run lint:code && rollup -c build/rollup-config.js",
+    "build": "npm run lint:fix && rollup -c build/rollup-config.js",
     "prepublishOnly": "npm run build",
     "lint": "npm run lint:code && npm run lint:style && npm run lint:format",
     "lint:code": "eslint",
