@@ -36,34 +36,14 @@ const banner = `/*! ************************************************************
 ***************************************************************************** */
 `
 
-export default [
-  // ES Module build (for bundlers and import maps)
-  {
-    input: 'src/index.js',
-    external: ['leaflet'],
-    output: {
-      banner,
-      file: 'dist/leaflet.markercluster.js',
-      format: 'es',
-      sourcemap: true,
-    },
-    plugins: [release ? json() : rollupGitVersion()],
+export default {
+  input: 'src/index.js',
+  external: ['leaflet'],
+  output: {
+    banner,
+    file: 'dist/leaflet.markercluster.js',
+    format: 'es',
+    sourcemap: true,
   },
-  // Global/IIFE build (for <script> tags with global L)
-  {
-    input: 'src/index.js',
-    external: ['leaflet'],
-    output: {
-      banner,
-      file: 'dist/leaflet.markercluster-global.js',
-      format: 'iife',
-      name: 'LeafletMarkerCluster',
-      sourcemap: true,
-      globals: {
-        leaflet: 'L',
-      },
-      extend: true, // Extend window.L instead of replacing it
-    },
-    plugins: [release ? json() : rollupGitVersion()],
-  },
-]
+  plugins: [release ? json() : rollupGitVersion()],
+}
