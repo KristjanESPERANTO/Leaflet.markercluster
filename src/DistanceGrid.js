@@ -4,7 +4,7 @@ export const DistanceGrid = Leaflet.DistanceGrid = function (cellSize) {
   this._cellSize = cellSize
   this._sqCellSize = cellSize * cellSize
   this._grid = {}
-  this._objectPoint = { }
+  this._objectPoint = {}
 }
 
 DistanceGrid.prototype = {
@@ -23,32 +23,47 @@ DistanceGrid.prototype = {
   },
 
   updateObject: function (obj, point) {
-    this.removeObject(obj)
+    this.removeObject(obj, point)
     this.addObject(obj, point)
   },
 
-  // Returns true if the object was found
+  /**
+   * Removes an object from the grid at the specified point.
+   * Uses an optimized swap-and-pop pattern for O(1) removal instead of O(n) splice.
+   *
+   * @param {Object} obj - The object to remove
+   * @param {Point} point - The coordinates where the object is located
+   * @returns {boolean} True if the object was found and removed, false otherwise
+   */
   removeObject: function (obj, point) {
     const x = this._getCoord(point.x)
     const y = this._getCoord(point.y)
-    const grid = this._grid,
-      row = grid[y] = grid[y] || {},
-      cell = row[x] = row[x] || []
-    let i, len
+    // Optional chaining: safely access nested grid structure, returns undefined if row doesn't exist
+    const cell = this._grid[y]?.[x]
+
+    if (!cell) return false
 
     delete this._objectPoint[Util.stamp(obj)]
 
-    for (i = 0, len = cell.length; i < len; i++) {
-      if (cell[i] === obj) {
-        cell.splice(i, 1)
+    // Find the object's position in the cell array
+    const idx = cell.indexOf(obj)
+    if (idx === -1) return false
 
-        if (len === 1) {
-          delete row[x]
-        }
-
-        return true
-      }
+    // Optimization: Swap with last element and pop (O(1) instead of splice's O(n))
+    // Array order doesn't matter for spatial lookups, so we can avoid shifting elements
+    if (idx < cell.length - 1) {
+      // Replace target with last element
+      cell[idx] = cell[cell.length - 1]
     }
+    // Remove last element (always O(1))
+    cell.pop()
+
+    // Clean up: Remove empty cell from grid to save memory
+    if (cell.length === 0) {
+      delete this._grid[y][x]
+    }
+
+    return true
   },
 
   eachObject: function (fn, context) {
