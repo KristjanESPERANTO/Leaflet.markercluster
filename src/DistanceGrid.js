@@ -122,6 +122,14 @@ DistanceGrid.prototype = {
     return isFinite(coord) ? coord : x
   },
 
+  /**
+   * Calculates the squared distance between two points.
+   *
+   * @param {Point} p - First point
+   * @param {Point} p2 - Second point
+   * @returns {number} Squared Euclidean distance
+   * @private
+   */
   _sqDist: function (p, p2) {
     const dx = p2.x - p.x,
       dy = p2.y - p.y
