@@ -3,6 +3,7 @@ const examples = [
   'marker-clustering.html',
   'marker-clustering-everything.html',
   'marker-clustering-custom.html',
+  'custom-theme-example.html',
   'marker-clustering-convexhull.html',
   'marker-clustering-dragging.html',
   'marker-clustering-geojson.html',

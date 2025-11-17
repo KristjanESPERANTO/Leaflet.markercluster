@@ -1,53 +1,82 @@
+/* CSS Custom Properties for easy theming */
+:root {
+  /* Cluster colors (RGB values without alpha) */
+  --marker-cluster-small-bg: 181 226 140;
+  --marker-cluster-small-inner-bg: 110 204 57;
+  --marker-cluster-medium-bg: 241 211 87;
+  --marker-cluster-medium-inner-bg: 240 194 12;
+  --marker-cluster-large-bg: 253 156 115;
+  --marker-cluster-large-inner-bg: 241 128 23;
+
+  /* Opacity */
+  --marker-cluster-opacity: 60%;
+
+  /* Sizes */
+  --marker-cluster-size: 40px;
+  --marker-cluster-inner-size: 30px;
+  --marker-cluster-border-radius: 20px;
+  --marker-cluster-inner-border-radius: 15px;
+
+  /* Spacing */
+  --marker-cluster-inner-margin: 5px;
+
+  /* Typography */
+  --marker-cluster-font-size: 12px;
+  --marker-cluster-font-family: "Helvetica Neue", arial, helvetica, sans-serif;
+  --marker-cluster-text-color: #000;
+}
+
+/* Small clusters (fewer markers) */
 .marker-cluster-small {
-  background-color: rgb(181 226 140 / 60%);
+  background-color: rgb(var(--marker-cluster-small-bg) / var(--marker-cluster-opacity));
 }
 
 .marker-cluster-small div {
-  background-color: rgb(110 204 57 / 60%);
+  background-color: rgb(var(--marker-cluster-small-inner-bg) / var(--marker-cluster-opacity));
 }
 
+/* Medium clusters */
 .marker-cluster-medium {
-  background-color: rgb(241 211 87 / 60%);
+  background-color: rgb(var(--marker-cluster-medium-bg) / var(--marker-cluster-opacity));
 }
 
 .marker-cluster-medium div {
-  background-color: rgb(240 194 12 / 60%);
+  background-color: rgb(var(--marker-cluster-medium-inner-bg) / var(--marker-cluster-opacity));
 }
 
+/* Large clusters (many markers) */
 .marker-cluster-large {
-  background-color: rgb(253 156 115 / 60%);
+  background-color: rgb(var(--marker-cluster-large-bg) / var(--marker-cluster-opacity));
 }
 
 .marker-cluster-large div {
-  background-color: rgb(241 128 23 / 60%);
+  background-color: rgb(var(--marker-cluster-large-inner-bg) / var(--marker-cluster-opacity));
 }
 
+/* Base cluster styles */
 .marker-cluster {
   background-clip: padding-box;
-  border-radius: 20px;
+  border-radius: var(--marker-cluster-border-radius);
 }
 
 .marker-cluster div {
-  width: 30px;
-  height: 30px;
-  margin-left: 5px;
-  margin-top: 5px;
+  width: var(--marker-cluster-inner-size);
+  height: var(--marker-cluster-inner-size);
+  margin-left: var(--marker-cluster-inner-margin);
+  margin-top: var(--marker-cluster-inner-margin);
   text-align: center;
-  border-radius: 15px;
-  font:
-    12px "Helvetica Neue",
-    Arial,
-    Helvetica,
-    sans-serif;
-  color: #000;
+  border-radius: var(--marker-cluster-inner-border-radius);
+  font: var(--marker-cluster-font-size) var(--marker-cluster-font-family);
+  color: var(--marker-cluster-text-color);
 }
 
+/* Dark mode support - text stays readable */
 @media (prefers-color-scheme: dark) {
   .marker-cluster div {
-    color: #000;
+    color: var(--marker-cluster-text-color);
   }
 }
 
 .marker-cluster span {
-  line-height: 30px;
+  line-height: var(--marker-cluster-inner-size);
 }

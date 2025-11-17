@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Custom Theme Example - Leaflet.markercluster</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="example.css" />
+
+    <link rel="stylesheet" href="../dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="../dist/MarkerCluster.Default.css" />
+
+    <style>
+      /* Example: Custom theme using CSS Custom Properties */
+      :root {
+        /* Vibrant blue/cyan theme for clusters */
+        --marker-cluster-small-bg: 0 150 255;
+        --marker-cluster-small-inner-bg: 0 100 200;
+        --marker-cluster-medium-bg: 255 140 0;
+        --marker-cluster-medium-inner-bg: 200 100 0;
+        --marker-cluster-large-bg: 255 50 100;
+        --marker-cluster-large-inner-bg: 200 20 70;
+
+        /* Higher opacity for vibrant colors */
+        --marker-cluster-opacity: 85%;
+
+        /* Larger clusters for better visibility */
+        --marker-cluster-size: 55px;
+        --marker-cluster-inner-size: 45px;
+
+        /* White text for contrast */
+        --marker-cluster-text-color: #fff;
+        --marker-cluster-font-size: 14px;
+      }
+
+      /* Optional: Dark mode with neon colors */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme]) {
+          /* Neon colors for dark backgrounds */
+          --marker-cluster-small-bg: 50 255 200;
+          --marker-cluster-small-inner-bg: 20 200 150;
+          --marker-cluster-medium-bg: 255 220 50;
+          --marker-cluster-medium-inner-bg: 200 180 20;
+          --marker-cluster-large-bg: 255 80 150;
+          --marker-cluster-large-inner-bg: 200 40 100;
+          
+          /* Dark text for better contrast with neon colors */
+          --marker-cluster-text-color: #000;
+        }
+      }
+
+      /* Force light mode */
+      :root[data-theme="light"] {
+        --marker-cluster-small-bg: 0 150 255;
+        --marker-cluster-small-inner-bg: 0 100 200;
+        --marker-cluster-medium-bg: 255 140 0;
+        --marker-cluster-medium-inner-bg: 200 100 0;
+        --marker-cluster-large-bg: 255 50 100;
+        --marker-cluster-large-inner-bg: 200 20 70;
+        --marker-cluster-text-color: #fff;
+      }
+
+      /* Force dark mode */
+      :root[data-theme="dark"] {
+        --marker-cluster-small-bg: 50 255 200;
+        --marker-cluster-small-inner-bg: 20 200 150;
+        --marker-cluster-medium-bg: 255 220 50;
+        --marker-cluster-medium-inner-bg: 200 180 20;
+        --marker-cluster-large-bg: 255 80 150;
+        --marker-cluster-large-inner-bg: 200 40 100;
+        --marker-cluster-text-color: #000;
+      }
+
+      /* Theme toggle button */
+      .theme-toggle {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .theme-toggle:hover {
+        background: #2ea043;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgb(35 134 54 / 30%);
+      }
+
+      .theme-toggle::before {
+        content: "🌙 ";
+      }
+
+      :root[data-theme="dark"] .theme-toggle::before {
+        content: "☀️ ";
+      }
+    </style>
+
+    <!-- Import map for ES modules - in production, use a CDN or bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <div id="description">
+      <div class="nav-buttons">
+        <a href="index.html" class="back-button">Back to Examples</a>
+        <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+      </div>
+
+      <h2>Custom Theme Example</h2>
+      <p>
+        This example demonstrates how to customize cluster colors and styling using <strong>CSS Custom Properties</strong> (CSS Variables). The clusters use a vibrant blue → orange
+        → pink color scheme with larger size (55px) and white text for better contrast.
+      </p>
+
+      <p><strong>Try the theme toggle:</strong> Use the button in the navigation above to switch between light mode (blue/orange/pink) and dark mode (neon cyan/yellow/pink)!</p>
+
+      <h3>How to customize:</h3>
+      <div class="code-block">
+        <pre><code><span class="code-comment">/* Add this to your CSS to override cluster colors */</span>
+:root {
+  <span class="code-comment">/* Small clusters: Blue */</span>
+  --marker-cluster-small-bg: 0 150 255;
+  --marker-cluster-small-inner-bg: 0 100 200;
+  
+  <span class="code-comment">/* Medium clusters: Orange */</span>
+  --marker-cluster-medium-bg: 255 140 0;
+  --marker-cluster-medium-inner-bg: 200 100 0;
+  
+  <span class="code-comment">/* Large clusters: Pink */</span>
+  --marker-cluster-large-bg: 255 50 100;
+  --marker-cluster-large-inner-bg: 200 20 70;
+  
+  <span class="code-comment">/* Opacity and sizes */</span>
+  --marker-cluster-opacity: 85%;
+  --marker-cluster-size: 55px;
+  --marker-cluster-inner-size: 45px;
+  
+  <span class="code-comment">/* Text styling */</span>
+  --marker-cluster-text-color: #fff;
+  --marker-cluster-font-size: 14px;
+}
+
+<span class="code-comment">/* Dark mode (automatic based on system preference) */</span>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --marker-cluster-small-bg: 50 255 200;   <span class="code-comment">/* Neon cyan */</span>
+    --marker-cluster-medium-bg: 255 220 50;  <span class="code-comment">/* Neon yellow */</span>
+    --marker-cluster-large-bg: 255 80 150;   <span class="code-comment">/* Neon pink */</span>
+    --marker-cluster-text-color: #000;       <span class="code-comment">/* Dark text for neon */</span>
+  }
+}</code></pre>
+      </div>
+
+      <p>
+        <strong>All available CSS Custom Properties:</strong> Check <code>dist/MarkerCluster.Default.css</code> to see all customizable variables for colors, sizes, opacity, and
+        typography.
+      </p>
+    </div>
+
+    <!-- Import map for ES modules - in production, use a CDN or bundler -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import { Map, TileLayer, Marker, LatLng } from "leaflet";
+      import { MarkerClusterGroup } from "../dist/leaflet.markercluster.js";
+
+      const map = new Map("map").setView(new LatLng(51.5, -0.09), 13);
+
+      new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+      }).addTo(map);
+
+      const markers = new MarkerClusterGroup();
+
+      // Add random markers
+      for (let i = 0; i < 500; i++) {
+        const lat = 51.5 + (Math.random() - 0.5) * 0.2;
+        const lng = -0.09 + (Math.random() - 0.5) * 0.2;
+        const marker = new Marker(new LatLng(lat, lng));
+        markers.addLayer(marker);
+      }
+
+      map.addLayer(markers);
+
+      // Click handlers for interactive demonstration
+      markers.on("clusterclick", function (a) {
+        console.log("cluster clicked:", a.sourceTarget.getAllChildMarkers().length, "markers");
+      });
+
+      markers.on("click", function (a) {
+        alert("marker " + a.sourceTarget.getLatLng());
+      });
+
+      // Theme toggle functionality
+      const themeToggle = document.getElementById("themeToggle");
+      const root = document.documentElement;
+
+      // Check for saved theme preference or default to system preference
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme) {
+        root.setAttribute("data-theme", savedTheme);
+      }
+
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = root.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        
+        root.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      });
+    </script>
+
+    <script type="module" src="example-nav.js"></script>
+  </body>
+</html>
