@@ -196,7 +196,7 @@ export const MarkerCluster = Marker.extend({
 
   /**
    * Makes sure the cluster center is set. If not, uses the child center if it is a cluster, or the marker position.
-   * @param child MarkerCluster|Marker that will be used as cluster center if not defined yet.
+   * @param {object} child - MarkerCluster|Marker that will be used as cluster center if not defined yet
    * @private
    */
   _setClusterCenter: function (child) {

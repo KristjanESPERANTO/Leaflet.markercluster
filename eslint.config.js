@@ -2,6 +2,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import { flatConfigs as importX } from 'eslint-plugin-import-x'
 import js from '@eslint/js'
+import { jsdoc } from 'eslint-plugin-jsdoc'
 import markdown from '@eslint/markdown'
 import stylistic from '@stylistic/eslint-plugin'
 
@@ -19,6 +20,23 @@ export default defineConfig([
       'prefer-const': 'error',
     },
   },
+  jsdoc({
+    files: ['src/**/*.js'],
+    config: 'flat/recommended',
+    rules: {
+      // Only require JSDoc for public methods (not _private)
+      'jsdoc/require-jsdoc': ['warn', {
+        publicOnly: true,
+        require: {
+          FunctionExpression: true,
+        },
+        contexts: ['Property > FunctionExpression'],
+      }],
+      // Make these warnings instead of errors for gradual adoption
+      'jsdoc/require-param-description': 'warn',
+      'jsdoc/require-returns-description': 'warn',
+    },
+  }),
   {
     files: ['spec/**/*.js'],
     languageOptions: {

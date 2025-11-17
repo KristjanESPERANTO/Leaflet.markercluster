@@ -44,7 +44,7 @@
           --marker-cluster-medium-inner-bg: 200 180 20;
           --marker-cluster-large-bg: 255 80 150;
           --marker-cluster-large-inner-bg: 200 40 100;
-          
+
           /* Dark text for better contrast with neon colors */
           --marker-cluster-text-color: #000;
         }
@@ -225,7 +225,7 @@
       themeToggle.addEventListener("click", () => {
         const currentTheme = root.getAttribute("data-theme");
         const newTheme = currentTheme === "dark" ? "light" : "dark";
-        
+
         root.setAttribute("data-theme", newTheme);
         localStorage.setItem("theme", newTheme);
       });

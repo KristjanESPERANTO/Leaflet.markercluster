@@ -24,6 +24,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Retrieved from: http://en.literateprograms.org/Quickhull_(Javascript)?oldid=18434
 */
 
+/**
+ * @typedef {import('leaflet').LatLng} LatLng
+ */
+
 export const QuickHull = {
 
   /*

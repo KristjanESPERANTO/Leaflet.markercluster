@@ -14,6 +14,11 @@ import {
   Polygon,
   Util,
 } from 'leaflet'
+
+/**
+ * @typedef {import('leaflet').Icon} Icon
+ */
+
 import { DistanceGrid } from './DistanceGrid.js'
 import { MarkerCluster } from './MarkerCluster.js'
 import { refreshMethods, setClusterClasses } from './MarkerClusterGroup.Refresh.js'
@@ -718,8 +723,8 @@ export const MarkerClusterGroup = FeatureGroup.extend({
 
   /**
    * Removes a marker from all _gridUnclustered zoom levels, starting at the supplied zoom.
-   * @param marker to be removed from _gridUnclustered.
-   * @param z integer bottom start zoom level (included)
+   * @param {object} marker - Marker to be removed from _gridUnclustered
+   * @param {number} z - Integer bottom start zoom level (included)
    * @private
    */
   _removeFromGridUnclustered: function (marker, z) {
@@ -1169,8 +1174,8 @@ export const MarkerClusterGroup = FeatureGroup.extend({
    * Otherwise, the removeOutsideVisibleBounds option will remove markers beyond that limit, whereas the same markers without
    * this option (or outside MCG) will have their position floored (ceiled) by the projection and rendered at that limit,
    * making the user think that MCG "eats" them and never displays them again.
-   * @param bounds LatLngBounds
-   * @returns {LatLngBounds}
+   * @param {object} bounds - LatLngBounds to check and expand if needed
+   * @returns {object} The modified LatLngBounds
    * @private
    */
   _checkBoundsMaxLat: function (bounds) {
@@ -1207,9 +1212,9 @@ export const MarkerClusterGroup = FeatureGroup.extend({
 
   /**
    * Extracts individual (i.e. non-group) layers from a Layer Group.
-   * @param group to extract layers from.
-   * @param output {Array} in which to store the extracted layers.
-   * @returns {*|Array}
+   * @param {object} group - Layer group to extract layers from
+   * @param {Array} [output] - Array in which to store the extracted layers
+   * @returns {Array} The array of extracted layers
    * @private
    */
   _extractNonGroupLayers: function (group, output) {
@@ -1235,8 +1240,8 @@ export const MarkerClusterGroup = FeatureGroup.extend({
 
   /**
    * Implements the singleMarkerMode option.
-   * @param layer Marker to re-style using the Clusters iconCreateFunction.
-   * @returns {Icon} The newly created icon.
+   * @param {object} layer - Marker to re-style using the Clusters iconCreateFunction
+   * @returns {Icon} The newly created icon
    * @private
    */
   _overrideMarkerIcon: function (layer) {

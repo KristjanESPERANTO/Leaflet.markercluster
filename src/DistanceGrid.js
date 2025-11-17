@@ -1,5 +1,14 @@
 import { Util } from 'leaflet'
 
+/**
+ * @typedef {import('leaflet').Point} Point
+ */
+
+/**
+ * A spatial index structure that divides space into a grid of cells.
+ * Used for efficient spatial queries and nearest neighbor lookups.
+ * @param {number} cellSize - The size of each grid cell in pixels
+ */
 export const DistanceGrid = function (cellSize) {
   this._cellSize = cellSize
   this._sqCellSize = cellSize * cellSize
@@ -9,6 +18,11 @@ export const DistanceGrid = function (cellSize) {
 
 DistanceGrid.prototype = {
 
+  /**
+   * Adds an object to the grid at the specified point.
+   * @param {object} obj - The object to add
+   * @param {Point} point - The coordinates where the object should be added
+   */
   addObject: function (obj, point) {
     const x = this._getCoord(point.x),
       y = this._getCoord(point.y),
@@ -22,6 +36,11 @@ DistanceGrid.prototype = {
     cell.push(obj)
   },
 
+  /**
+   * Updates an object's position in the grid.
+   * @param {object} obj - The object to update
+   * @param {Point} point - The new coordinates for the object
+   */
   updateObject: function (obj, point) {
     this.removeObject(obj, point)
     this.addObject(obj, point)
@@ -30,8 +49,7 @@ DistanceGrid.prototype = {
   /**
    * Removes an object from the grid at the specified point.
    * Uses an optimized swap-and-pop pattern for O(1) removal instead of O(n) splice.
-   *
-   * @param {Object} obj - The object to remove
+   * @param {object} obj - The object to remove
    * @param {Point} point - The coordinates where the object is located
    * @returns {boolean} True if the object was found and removed, false otherwise
    */
@@ -66,6 +84,11 @@ DistanceGrid.prototype = {
     return true
   },
 
+  /**
+   * Iterates over all objects in the grid.
+   * @param {(obj: object) => boolean} fn - Callback function to call for each object
+   * @param {object} context - Context for the callback function
+   */
   eachObject: function (fn, context) {
     let i, j, k, len, row, cell, removed
     const grid = this._grid
@@ -87,6 +110,11 @@ DistanceGrid.prototype = {
     }
   },
 
+  /**
+   * Finds the nearest object to a given point.
+   * @param {Point} point - The reference point
+   * @returns {object|null} The nearest object, or null if none found
+   */
   getNearObject: function (point) {
     const x = this._getCoord(point.x),
       y = this._getCoord(point.y)
@@ -117,6 +145,12 @@ DistanceGrid.prototype = {
     return closest
   },
 
+  /**
+   * Converts a coordinate to a grid cell coordinate.
+   * @param {number} x - The coordinate to convert
+   * @returns {number} The grid cell coordinate
+   * @private
+   */
   _getCoord: function (x) {
     const coord = Math.floor(x / this._cellSize)
     return isFinite(coord) ? coord : x
@@ -124,7 +158,6 @@ DistanceGrid.prototype = {
 
   /**
    * Calculates the squared distance between two points.
-   *
    * @param {Point} p - First point
    * @param {Point} p2 - Second point
    * @returns {number} Squared Euclidean distance

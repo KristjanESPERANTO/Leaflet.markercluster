@@ -9,6 +9,11 @@ import { LayerGroup, Marker, Util } from 'leaflet'
 // Will be set when MarkerClusterGroup imports this - avoids circular dependency
 let MarkerClusterGroup, MarkerCluster
 
+/**
+ * Sets the cluster classes to avoid circular dependency.
+ * @param {object} mcg - MarkerClusterGroup class
+ * @param {object} mc - MarkerCluster class
+ */
 export function setClusterClasses(mcg, mc) {
   MarkerClusterGroup = mcg
   MarkerCluster = mc
@@ -19,10 +24,10 @@ export const refreshMethods = {
   /**
    * Updates the icon of all clusters which are parents of the given marker(s).
    * In singleMarkerMode, also updates the given marker(s) icon.
-   * @param layers MarkerClusterGroup|LayerGroup|Array(Marker)|Map(Marker)|
+   * @param {object|Array|null} layers - MarkerClusterGroup|LayerGroup|Array(Marker)|Map(Marker)|
    * MarkerCluster|Marker (optional) list of markers (or single marker) whose parent
    * clusters need to be updated. If not provided, retrieves all child markers of this.
-   * @returns {MarkerClusterGroup}
+   * @returns {object} The MarkerClusterGroup instance
    */
   refreshClusters: function (layers) {
     if (!layers) {
@@ -53,7 +58,7 @@ export const refreshMethods = {
 
   /**
    * Simply flags all parent clusters of the given markers as having a "dirty" icon.
-   * @param layers Array(Marker)|Map(Marker) list of markers.
+   * @param {object|Array} layers - Array(Marker)|Map(Marker) list of markers
    * @private
    */
   _flagParentsIconsNeedUpdate: function (layers) {
@@ -77,7 +82,7 @@ export const refreshMethods = {
   /**
    * Re-draws the icon of the supplied markers.
    * To be used in singleMarkerMode only.
-   * @param layers Array(Marker)|Map(Marker) list of markers.
+   * @param {object|Array} layers - Array(Marker)|Map(Marker) list of markers
    * @private
    */
   _refreshSingleMarkerModeMarkers: function (layers) {
@@ -99,10 +104,10 @@ export const refreshMethods = {
 Marker.include({
   /**
    * Updates the given options in the marker's icon and refreshes the marker.
-   * @param options map object of icon options.
-   * @param directlyRefreshClusters boolean (optional) true to trigger
-   * MCG.refreshClustersOf() right away with this single marker.
-   * @returns {Marker}
+   * @param {object} options - Map object of icon options
+   * @param {boolean} [directlyRefreshClusters] - True to trigger
+   * MCG.refreshClustersOf() right away with this single marker
+   * @returns {object} The Marker instance
    */
   refreshIconOptions: function (options, directlyRefreshClusters) {
     const icon = this.options.icon
