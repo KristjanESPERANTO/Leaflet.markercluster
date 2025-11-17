@@ -20,8 +20,8 @@ here are some tips for creating a helpful report that will make fixing it much e
 - Include **browser, OS and Leaflet version** info in the description.
 - Create a **simple test case** that demonstrates the bug (e.g. using [JSFiddle](http://jsfiddle.net/) or [JS Bin](http://jsbin.com/)).
 - Check whether the bug can be reproduced in **other browsers**.
-- Check if the bug occurs in the stable version, master, or both.
-- _Bonus tip:_ if the bug only appears in the master version but the stable version is fine,
+- Check if the bug occurs in the stable version, main, or both.
+- _Bonus tip:_ if the bug only appears in the main version but the stable version is fine,
   use `git bisect` to find the exact commit that introduced the bug.
 
 If you just want some help with your project,

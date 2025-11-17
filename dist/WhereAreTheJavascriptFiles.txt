@@ -1,4 +1,4 @@
-We don't ship the .js files in the git master branch.
+We don't ship the .js files in the git main branch.
 They are only present in version tags and in npm.
 
 See how to get the JS files here: https://github.com/Leaflet/Leaflet.markercluster#using-the-plugin

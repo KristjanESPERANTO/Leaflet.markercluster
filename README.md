@@ -221,7 +221,7 @@ Options for the [addLayers](#bulk-adding-and-removing-markers) method. See [#357
 - **chunkedLoading**: Boolean to split the addLayer**s** processing in to small intervals so that the page does not freeze. Defaults to `true`.
 - **chunkInterval**: Time interval (in ms) during which addLayers works before pausing to let the rest of the page process. In particular, this prevents the page from freezing while adding a lot of markers. Defaults to 80ms.
 - **chunkDelay**: Time delay (in ms) between consecutive periods of processing for addLayers. Defaults to 20ms.
-- **chunkProgress**: Callback function that is called at the end of each chunkInterval. Typically used to implement a progress indicator, e.g. [code in RealWorld 50k](https://github.com/Leaflet/Leaflet.markercluster/blob/master/example/marker-clustering-realworld.50000.html#L33-L49). Defaults to null. Arguments:
+- **chunkProgress**: Callback function that is called at the end of each chunkInterval. Typically used to implement a progress indicator, e.g. [code in RealWorld 50k](https://github.com/KristjanESPERANTO/Leaflet.markercluster/blob/main/example/marker-clustering-realworld.50000.html#L104-L117). Defaults to null. Arguments:
   1. Number of processed markers
   2. Total number of markers being added
   3. Elapsed time (in ms)
