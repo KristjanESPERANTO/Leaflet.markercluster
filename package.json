@@ -18,12 +18,15 @@
   "style": "dist/MarkerCluster.css",
   "sideEffects": false,
   "exports": {
-    ".": "./dist/leaflet.markercluster.js",
-    "./*.css": "./dist/*.css"
+    ".": {
+      "import": "./dist/leaflet.markercluster.js",
+      "default": "./dist/leaflet.markercluster.js"
+    },
+    "./dist/MarkerCluster.css": "./dist/MarkerCluster.css",
+    "./dist/MarkerCluster.Default.css": "./dist/MarkerCluster.Default.css"
   },
   "files": [
     "dist/**/*",
-    "src/**/*",
     "README.md",
     "CHANGELOG.md",
     "LICENCE.md"
