@@ -45,7 +45,7 @@ describe('onAdd', function () {
       ex = e
     }
 
-    expect(ex).to.not.be(null)
+    expect(ex).to.not.be.null
   })
 
   it('successfully handles removing and re-adding a layer while not on the map', function () {
@@ -62,7 +62,7 @@ describe('onAdd', function () {
 
     map.addLayer(group)
 
-    expect(map.hasLayer(group)).to.be(true)
-    expect(group.hasLayer(marker)).to.be(true)
+    expect(map.hasLayer(group)).to.be.true
+    expect(group.hasLayer(marker)).to.be.true
   })
 })

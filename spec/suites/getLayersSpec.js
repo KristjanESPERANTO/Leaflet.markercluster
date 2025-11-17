@@ -39,7 +39,7 @@ describe('getLayers', function () {
 
     const layers = group.getLayers()
 
-    expect(layers.length).to.be(2)
+    expect(layers.length).to.equal(2)
     expect(layers).to.contain(marker)
     expect(layers).to.contain(polygon)
   })
@@ -54,7 +54,7 @@ describe('getLayers', function () {
 
     const layers = group.getLayers()
 
-    expect(layers.length).to.be(2)
+    expect(layers.length).to.equal(2)
     expect(layers).to.contain(marker)
     expect(layers).to.contain(polygon)
   })
@@ -73,6 +73,6 @@ describe('getLayers', function () {
 
     const layers = group.getLayers()
 
-    expect(layers.length).to.be(0)
+    expect(layers.length).to.equal(0)
   })
 })

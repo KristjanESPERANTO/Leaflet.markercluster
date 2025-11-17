@@ -45,7 +45,7 @@ describe('clusterMarkerTitle', function () {
 
     // The top cluster should have an icon when there are multiple markers
     if (topCluster._icon) {
-      expect(topCluster._icon.title).to.be('')
+      expect(topCluster._icon.title).to.equal('')
     }
   })
 
@@ -63,7 +63,7 @@ describe('clusterMarkerTitle', function () {
     const topCluster = group._topClusterLevel
 
     if (topCluster._icon) {
-      expect(topCluster._icon.title).to.be('Click to expand cluster')
+      expect(topCluster._icon.title).to.equal('Click to expand cluster')
     }
   })
 
@@ -88,7 +88,7 @@ describe('clusterMarkerTitle', function () {
     if (topCluster._icon) {
       const count = topCluster.getChildCount()
       const expectedTitle = 'Cluster with ' + count + (count === 1 ? ' marker' : ' markers')
-      expect(topCluster._icon.title).to.be(expectedTitle)
+      expect(topCluster._icon.title).to.equal(expectedTitle)
     }
   })
 
@@ -110,7 +110,7 @@ describe('clusterMarkerTitle', function () {
 
     if (topCluster._icon) {
       const initialCount = topCluster.getChildCount()
-      expect(topCluster._icon.title).to.be('Count: ' + initialCount)
+      expect(topCluster._icon.title).to.equal('Count: ' + initialCount)
     }
 
     // Add another marker
@@ -119,7 +119,7 @@ describe('clusterMarkerTitle', function () {
     // Title should update
     if (topCluster._icon) {
       const newCount = topCluster.getChildCount()
-      expect(topCluster._icon.title).to.be('Count: ' + newCount)
+      expect(topCluster._icon.title).to.equal('Count: ' + newCount)
     }
   })
 
@@ -137,7 +137,7 @@ describe('clusterMarkerTitle', function () {
 
     // In singleMarkerMode, even a single marker gets clustered
     if (topCluster._icon) {
-      expect(topCluster._icon.title).to.be('Single marker cluster')
+      expect(topCluster._icon.title).to.equal('Single marker cluster')
     }
   })
 })

@@ -45,8 +45,8 @@ describe('addLayer adding a single marker', function () {
     group.addLayer(marker)
     map.addLayer(group)
 
-    expect(marker._icon).to.not.be(undefined)
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.not.be.undefined
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('appears when added to the group after the group is added to the map', function () {
@@ -57,8 +57,8 @@ describe('addLayer adding a single marker', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon).to.not.be(undefined)
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.not.be.undefined
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('appears (using animations) when added after the group is added to the map', function () {
@@ -69,8 +69,8 @@ describe('addLayer adding a single marker', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon).to.not.be(undefined)
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.not.be.undefined
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('does not appear when too far away when added before the group is added to the map', function () {
@@ -81,7 +81,7 @@ describe('addLayer adding a single marker', function () {
     group.addLayer(marker)
     map.addLayer(group)
 
-    expect(marker._icon).to.be(undefined)
+    expect(marker._icon).to.be.undefined
   })
 
   it('does not appear when too far away when added after the group is added to the map', function () {
@@ -92,7 +92,7 @@ describe('addLayer adding a single marker', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon).to.be(undefined)
+    expect(marker._icon).to.be.undefined
   })
 
   it('passes control to addLayers when marker is a Layer Group', function () {
@@ -107,9 +107,9 @@ describe('addLayer adding a single marker', function () {
 
     expect(group._topClusterLevel.getChildCount()).to.equal(2)
 
-    expect(marker1._icon).to.be(undefined)
-    expect(marker2._icon).to.be(undefined)
+    expect(marker1._icon).to.be.undefined
+    expect(marker2._icon).to.be.undefined
 
-    expect(map._panes.markerPane.childNodes.length).to.be(1)
+    expect(map._panes.markerPane.childNodes.length).to.equal(1)
   })
 })

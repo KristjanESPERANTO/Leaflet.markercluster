@@ -49,7 +49,7 @@ describe('Map pane selection', function () {
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    expect(map._panes.testPane.childNodes.length).to.be(1)
+    expect(map._panes.testPane.childNodes.length).to.equal(1)
   })
 
   it('defaults to default marker pane', function () {
@@ -61,6 +61,6 @@ describe('Map pane selection', function () {
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    expect(map._panes[Marker.prototype.options.pane].childNodes.length).to.be(1)
+    expect(map._panes[Marker.prototype.options.pane].childNodes.length).to.equal(1)
   })
 })

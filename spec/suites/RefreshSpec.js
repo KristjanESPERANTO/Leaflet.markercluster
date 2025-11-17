@@ -73,18 +73,18 @@ describe('refreshClusters', function () {
       marker1cluster5 = getClusterAtZoom(marker1, 5)
 
     // First go to some zoom levels so that Leaflet initializes clusters icons.
-    expect(marker1cluster10._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster10._iconNeedsUpdate).to.be.ok
     map.setZoom(10, { animate: false })
-    expect(marker1cluster10._iconNeedsUpdate).to.not.be.ok()
+    expect(marker1cluster10._iconNeedsUpdate).to.not.be.ok
 
-    expect(marker1cluster2._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster2._iconNeedsUpdate).to.be.ok
     map.setZoom(2, { animate: false })
-    expect(marker1cluster2._iconNeedsUpdate).to.not.be.ok()
+    expect(marker1cluster2._iconNeedsUpdate).to.not.be.ok
 
     // Finish on an intermediate zoom level.
-    expect(marker1cluster5._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster5._iconNeedsUpdate).to.be.ok
     map.setZoom(5, { animate: false })
-    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok()
+    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok
 
     // Run any animation.
     clock.tick(1000)
@@ -94,11 +94,11 @@ describe('refreshClusters', function () {
     group.refreshClusters(marker1)
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster10._iconNeedsUpdate).to.be.ok()
-    expect(marker1cluster2._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster10._iconNeedsUpdate).to.be.ok
+    expect(marker1cluster2._iconNeedsUpdate).to.be.ok
 
     // Also check that visible clusters are "un-flagged" since they should be re-drawn.
-    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok()
+    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok
   })
 
   it('re-draws visible clusters', function () {
@@ -127,9 +127,9 @@ describe('refreshClusters', function () {
     const marker1cluster9 = getClusterAtZoom(marker1, 9)
 
     // First go to some zoom levels so that Leaflet initializes clusters icons.
-    expect(marker1cluster9._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster9._iconNeedsUpdate).to.be.ok
     map.setZoom(9, { animate: false })
-    expect(marker1cluster9._iconNeedsUpdate).to.not.be.ok()
+    expect(marker1cluster9._iconNeedsUpdate).to.not.be.ok
 
     expect(marker1cluster9._icon.className).to.contain('original')
     expect(marker1cluster9._icon.className).to.not.contain('changed')
@@ -269,26 +269,26 @@ describe('refreshClusters', function () {
     expect(marker5cluster3._childCount).to.equal(2)
 
     // First go to some zoom levels so that Leaflet initializes clusters icons.
-    expect(marker1cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok()
+    expect(marker1cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok
 
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok()
-    expect(marker3cluster3._iconNeedsUpdate).to.be.ok()
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
+    expect(marker3cluster3._iconNeedsUpdate).to.be.ok
+    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
     map.setZoom(3, { animate: false })
-    expect(marker1cluster3._iconNeedsUpdate).to.not.be.ok()
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok()
-    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok()
+    expect(marker1cluster3._iconNeedsUpdate).to.not.be.ok
+    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
+    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok
 
     // Finish on an intermediate zoom level.
-    expect(marker1cluster5._iconNeedsUpdate).to.be.ok()
-    expect(marker3cluster5._iconNeedsUpdate).to.be.ok()
-    expect(marker5cluster5._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster5._iconNeedsUpdate).to.be.ok
+    expect(marker3cluster5._iconNeedsUpdate).to.be.ok
+    expect(marker5cluster5._iconNeedsUpdate).to.be.ok
     map.setZoom(5, { animate: false })
-    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok()
-    expect(marker3cluster5._iconNeedsUpdate).to.not.be.ok()
-    expect(marker5cluster5._iconNeedsUpdate).to.not.be.ok()
+    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok
+    expect(marker3cluster5._iconNeedsUpdate).to.not.be.ok
+    expect(marker5cluster5._iconNeedsUpdate).to.not.be.ok
 
     // Run any animation.
     clock.tick(1000)
@@ -304,15 +304,15 @@ describe('refreshClusters', function () {
     group.refreshClusters(marker1)
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
 
     // Finally check that non-involved clusters are not "dirty".
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok()
+    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
 
-    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok()
+    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok
   })
 
   it('processes itself when no argument is passed', function () {
@@ -323,14 +323,14 @@ describe('refreshClusters', function () {
     group.refreshClusters()
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
 
-    expect(marker3cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker3cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker3cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker3cluster3._iconNeedsUpdate).to.be.ok
 
-    expect(marker5cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker5cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
   })
 
   it('accepts an array of markers', function () {
@@ -342,15 +342,15 @@ describe('refreshClusters', function () {
     // Clusters of marker3 and 4 shall not be flagged.
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
 
-    expect(marker5cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker5cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
 
     // Clusters of marker3 and 4 shall not be flagged.
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok()
+    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
   })
 
   it('accepts a mapping of markers', function () {
@@ -364,15 +364,15 @@ describe('refreshClusters', function () {
     }) // Clusters of marker3 and 4 shall not be flagged.
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
 
-    expect(marker5cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker5cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
 
     // Clusters of marker3 and 4 shall not be flagged.
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok()
+    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
   })
 
   it('accepts an LayerGroup', function () {
@@ -385,15 +385,15 @@ describe('refreshClusters', function () {
     // Clusters of marker3 and 4 shall not be flagged.
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
 
-    expect(marker5cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker5cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
 
     // Clusters of marker3 and 4 shall not be flagged.
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok()
+    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
   })
 
   it('accepts an MarkerCluster', function () {
@@ -405,14 +405,14 @@ describe('refreshClusters', function () {
     // Clusters of marker3, 4, 5 and 6 shall not be flagged.
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok()
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok()
+    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
+    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
 
     // Clusters of marker3 and 4 shall not be flagged.
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok()
+    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
 
-    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok()
-    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok()
+    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok
+    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok
   })
 })

@@ -55,11 +55,11 @@ describe('removeLayers', function () {
 
     group.removeLayers(markers)
 
-    expect(group.hasLayer(markers[0])).to.be(false)
-    expect(group.hasLayer(markers[1])).to.be(false)
-    expect(group.hasLayer(markers[2])).to.be(false)
+    expect(group.hasLayer(markers[0])).to.be.false
+    expect(group.hasLayer(markers[1])).to.be.false
+    expect(group.hasLayer(markers[2])).to.be.false
 
-    expect(group.getLayers().length).to.be(0)
+    expect(group.getLayers().length).to.equal(0)
   })
 
   it('removes all the layer given to it even though they move', function () {
@@ -78,12 +78,12 @@ describe('removeLayers', function () {
     markers.forEach(function (marker) {
       marker.setLatLng([1.5, 1.5])
       group.removeLayer(marker)
-      expect(group.getLayers().length).to.be(len - 1)
+      expect(group.getLayers().length).to.equal(len - 1)
       group.addLayer(marker)
-      expect(group.getLayers().length).to.be(len)
+      expect(group.getLayers().length).to.equal(len)
     })
 
-    expect(group.getLayers().length).to.be(len)
+    expect(group.getLayers().length).to.equal(len)
   })
 
   it('removes all the layer given to it even if the group is not on the map', function () {
@@ -101,11 +101,11 @@ describe('removeLayers', function () {
     group.removeLayers(markers)
     map.addLayer(group)
 
-    expect(group.hasLayer(markers[0])).to.be(false)
-    expect(group.hasLayer(markers[1])).to.be(false)
-    expect(group.hasLayer(markers[2])).to.be(false)
+    expect(group.hasLayer(markers[0])).to.be.false
+    expect(group.hasLayer(markers[1])).to.be.false
+    expect(group.hasLayer(markers[2])).to.be.false
 
-    expect(group.getLayers().length).to.be(0)
+    expect(group.getLayers().length).to.equal(0)
   })
 
   it('doesnt break if we are spiderfied', function () {
@@ -128,14 +128,14 @@ describe('removeLayers', function () {
 
     group.removeLayers(markers)
 
-    expect(group.hasLayer(markers[0])).to.be(false)
-    expect(group.hasLayer(markers[1])).to.be(false)
-    expect(group.hasLayer(markers[2])).to.be(false)
+    expect(group.hasLayer(markers[0])).to.be.false
+    expect(group.hasLayer(markers[1])).to.be.false
+    expect(group.hasLayer(markers[2])).to.be.false
 
-    expect(group.getLayers().length).to.be(0)
+    expect(group.getLayers().length).to.equal(0)
 
     group.on('spiderfied', function () {
-      expect(group._spiderfied).to.be(null)
+      expect(group._spiderfied).to.be.null
     })
   })
 
@@ -150,9 +150,9 @@ describe('removeLayers', function () {
 
     group.addLayers([marker1, marker2, marker3])
 
-    expect(group.hasLayer(marker1)).to.be(true)
-    expect(group.hasLayer(marker2)).to.be(true)
-    expect(group.hasLayer(marker3)).to.be(true)
+    expect(group.hasLayer(marker1)).to.be.true
+    expect(group.hasLayer(marker2)).to.be.true
+    expect(group.hasLayer(marker3)).to.be.true
 
     group.removeLayers([
       marker1,
@@ -163,11 +163,11 @@ describe('removeLayers', function () {
       ]),
     ])
 
-    expect(group.hasLayer(marker1)).to.be(false)
-    expect(group.hasLayer(marker2)).to.be(false)
-    expect(group.hasLayer(marker3)).to.be(false)
+    expect(group.hasLayer(marker1)).to.be.false
+    expect(group.hasLayer(marker2)).to.be.false
+    expect(group.hasLayer(marker3)).to.be.false
 
-    expect(group.getLayers().length).to.be(0)
+    expect(group.getLayers().length).to.equal(0)
   })
 
   it('chunked loading zoom out', function () {

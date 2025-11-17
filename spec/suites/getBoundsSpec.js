@@ -37,7 +37,7 @@ describe('getBounds', function () {
 
       group.addLayer(polygon)
 
-      expect(group.getBounds().equals(polygon.getBounds())).to.be(true)
+      expect(group.getBounds().equals(polygon.getBounds())).to.be.true
     })
 
     it('returns the correct bounds after adding to the map after adding polygon', function () {
@@ -47,7 +47,7 @@ describe('getBounds', function () {
       group.addLayer(polygon)
       map.addLayer(group)
 
-      expect(group.getBounds().equals(polygon.getBounds())).to.be(true)
+      expect(group.getBounds().equals(polygon.getBounds())).to.be.true
     })
 
     it('returns the correct bounds after adding to the map before adding polygon', function () {
@@ -57,7 +57,7 @@ describe('getBounds', function () {
       map.addLayer(group)
       group.addLayer(polygon)
 
-      expect(group.getBounds().equals(polygon.getBounds())).to.be(true)
+      expect(group.getBounds().equals(polygon.getBounds())).to.be.true
     })
   })
 
@@ -70,7 +70,7 @@ describe('getBounds', function () {
 
       group.addLayers([marker, marker2, marker3])
 
-      expect(group.getBounds().equals(new LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true)
+      expect(group.getBounds().equals(new LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be.true
     })
 
     it('returns the correct bounds after adding to the map after adding markers', function () {
@@ -82,7 +82,7 @@ describe('getBounds', function () {
       group.addLayers([marker, marker2, marker3])
       map.addLayer(group)
 
-      expect(group.getBounds().equals(new LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true)
+      expect(group.getBounds().equals(new LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be.true
     })
 
     it('returns the correct bounds after adding to the map before adding markers', function () {
@@ -94,7 +94,7 @@ describe('getBounds', function () {
       map.addLayer(group)
       group.addLayers([marker, marker2, marker3])
 
-      expect(group.getBounds().equals(new LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be(true)
+      expect(group.getBounds().equals(new LatLngBounds([1.0, 5.0], [6.0, 1.5]))).to.be.true
     })
   })
 
@@ -106,7 +106,7 @@ describe('getBounds', function () {
 
       group.addLayers([marker, polygon])
 
-      expect(group.getBounds().equals(new LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true)
+      expect(group.getBounds().equals(new LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be.true
     })
 
     it('returns the correct bounds after adding to the map', function () {
@@ -117,7 +117,7 @@ describe('getBounds', function () {
       map.addLayer(group)
       group.addLayers([marker, polygon])
 
-      expect(group.getBounds().equals(new LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be(true)
+      expect(group.getBounds().equals(new LatLngBounds([1.5, 1.5], [6.0, 3.0]))).to.be.true
     })
   })
 
@@ -125,7 +125,7 @@ describe('getBounds', function () {
     it('returns a blank bounds', function () {
       const group = new MarkerClusterGroup()
 
-      expect(group.getBounds().isValid()).to.be(false)
+      expect(group.getBounds().isValid()).to.be.false
     })
   })
 })

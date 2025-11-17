@@ -49,11 +49,11 @@ describe('removeLayer', function () {
 
     group.addLayer(marker)
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
 
     group.removeLayer(marker)
 
-    expect(marker._icon).to.be(null)
+    expect(marker._icon).to.be.null
   })
 
   it('doesnt remove a layer not added to it', function () {
@@ -65,11 +65,11 @@ describe('removeLayer', function () {
 
     map.addLayer(marker)
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
 
     group.removeLayer(marker)
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('removes a layer that was added to it (before being on the map) that is shown in a cluster', function () {
@@ -83,8 +83,8 @@ describe('removeLayer', function () {
 
     group.removeLayer(marker)
 
-    expect(marker._icon).to.be(undefined)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.be.undefined
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('removes a layer that was added to it (after being on the map) that is shown in a cluster', function () {
@@ -99,8 +99,8 @@ describe('removeLayer', function () {
 
     group.removeLayer(marker)
 
-    expect(marker._icon).to.be(null)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.be.null
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('removes a layer that was added to it (before being on the map) that is individually', function () {
@@ -113,13 +113,13 @@ describe('removeLayer', function () {
     group.addLayer(marker)
     group.addLayer(marker2)
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
 
     group.removeLayer(marker)
 
-    expect(marker._icon).to.be(null)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.be.null
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('removes a layer (with animation) that was added to it (after being on the map) that is shown in a cluster', function () {
@@ -135,16 +135,16 @@ describe('removeLayer', function () {
     // Run the the animation
     clock.tick(1000)
 
-    expect(marker._icon).to.be(null)
-    expect(marker2._icon).to.be(null)
+    expect(marker._icon).to.be.null
+    expect(marker2._icon).to.be.null
 
     group.removeLayer(marker)
 
     // Run the the animation
     clock.tick(1000)
 
-    expect(marker._icon).to.be(null)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.be.null
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('removes the layers that are in the given LayerGroup', function () {
@@ -160,8 +160,8 @@ describe('removeLayer', function () {
     layer.addLayer(marker2)
     group.removeLayer(layer)
 
-    expect(marker._icon).to.not.be(undefined)
-    expect(marker2._icon).to.be(undefined)
+    expect(marker._icon).to.not.be.undefined
+    expect(marker2._icon).to.be.undefined
   })
 
   it('removes the layers that are in the given LayerGroup when not on the map', function () {
@@ -176,8 +176,8 @@ describe('removeLayer', function () {
     layer.addLayer(marker2)
     group.removeLayer(layer)
 
-    expect(group.hasLayer(marker)).to.be(true)
-    expect(group.hasLayer(marker2)).to.be(false)
+    expect(group.hasLayer(marker)).to.be.true
+    expect(group.hasLayer(marker2)).to.be.false
   })
 
   it('passes control to removeLayers when marker is a Layer Group', function () {
@@ -192,7 +192,7 @@ describe('removeLayer', function () {
     layer.addLayer(marker2)
     group.removeLayer(new LayerGroup([layer]))
 
-    expect(group.hasLayer(marker1)).to.be(true)
-    expect(group.hasLayer(marker2)).to.be(false)
+    expect(group.hasLayer(marker1)).to.be.true
+    expect(group.hasLayer(marker2)).to.be.false
   })
 })

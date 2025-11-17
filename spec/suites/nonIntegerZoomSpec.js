@@ -44,11 +44,11 @@ describe('non-integer min/max zoom', function () {
 
     group.addLayer(marker3)
 
-    expect(marker._icon).to.be(undefined)
-    expect(marker2._icon).to.be(undefined)
-    expect(marker3._icon).to.be(undefined)
+    expect(marker._icon).to.be.undefined
+    expect(marker2._icon).to.be.undefined
+    expect(marker3._icon).to.be.undefined
 
-    expect(map._panes.markerPane.childNodes.length).to.be(1)
+    expect(map._panes.markerPane.childNodes.length).to.equal(1)
 
     group.removeLayer(marker2)
   })

@@ -21,10 +21,13 @@
     <div id="mocha"></div>
     <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
     <script type="text/javascript" src="../node_modules/happen/happen.js"></script>
-    <script type="text/javascript" src="../node_modules/expect.js/index.js"></script>
     <script type="text/javascript" src="../node_modules/sinon/pkg/sinon.js"></script>
     <script type="module">
       import { Icon } from "leaflet";
+      import * as chai from "../node_modules/chai/index.js";
+
+      // Setup Chai - use expect assertion style
+      window.expect = chai.expect;
 
       Icon.Default.imagePath = "../node_modules/leaflet/dist/images/";
 

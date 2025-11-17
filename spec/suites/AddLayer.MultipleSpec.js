@@ -43,10 +43,10 @@ describe('addLayer adding multiple markers', function () {
     group.addLayer(marker2)
     map.addLayer(group)
 
-    expect(marker._icon).to.be(undefined)
-    expect(marker2._icon).to.be(undefined)
+    expect(marker._icon).to.be.undefined
+    expect(marker2._icon).to.be.undefined
 
-    expect(map._panes.markerPane.childNodes.length).to.be(1)
+    expect(map._panes.markerPane.childNodes.length).to.equal(1)
   })
   it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
     const group = new MarkerClusterGroup()
@@ -57,10 +57,10 @@ describe('addLayer adding multiple markers', function () {
     group.addLayer(marker)
     group.addLayer(marker2)
 
-    expect(marker._icon).to.be(null) // Null as was added and then removed
-    expect(marker2._icon).to.be(undefined)
+    expect(marker._icon).to.be.null // Null as was added and then removed
+    expect(marker2._icon).to.be.undefined
 
-    expect(map._panes.markerPane.childNodes.length).to.be(1)
+    expect(map._panes.markerPane.childNodes.length).to.equal(1)
   })
   it('creates a cluster with an animation when 2 overlapping markers are added after the group is added to the map', function () {
     const group = new MarkerClusterGroup({ animateAddingMarkers: true })
@@ -71,19 +71,19 @@ describe('addLayer adding multiple markers', function () {
     group.addLayer(marker)
     group.addLayer(marker2)
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
 
-    expect(map._panes.markerPane.childNodes.length).to.be(3)
+    expect(map._panes.markerPane.childNodes.length).to.equal(3)
 
     // Run the the animation
     clock.tick(1000)
 
     // Then markers should be removed from map
-    expect(marker._icon).to.be(null)
-    expect(marker2._icon).to.be(null)
+    expect(marker._icon).to.be.null
+    expect(marker2._icon).to.be.null
 
-    expect(map._panes.markerPane.childNodes.length).to.be(1)
+    expect(map._panes.markerPane.childNodes.length).to.equal(1)
   })
 
   it('creates a cluster and marker when 2 overlapping markers and one non-overlapping are added before the group is added to the map', function () {
@@ -97,11 +97,11 @@ describe('addLayer adding multiple markers', function () {
     group.addLayer(marker3)
     map.addLayer(group)
 
-    expect(marker._icon).to.be(undefined)
-    expect(marker2._icon).to.be(undefined)
-    expect(marker3._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.be.undefined
+    expect(marker2._icon).to.be.undefined
+    expect(marker3._icon.parentNode).to.equal(map._panes.markerPane)
 
-    expect(map._panes.markerPane.childNodes.length).to.be(2)
+    expect(map._panes.markerPane.childNodes.length).to.equal(2)
   })
   it('creates a cluster and marker when 2 overlapping markers and one non-overlapping are added after the group is added to the map', function () {
     const group = new MarkerClusterGroup()
@@ -114,11 +114,11 @@ describe('addLayer adding multiple markers', function () {
     group.addLayer(marker2)
     group.addLayer(marker3)
 
-    expect(marker._icon).to.be(null) // Null as was added and then removed
-    expect(marker2._icon).to.be(undefined)
-    expect(marker3._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon).to.be.null // Null as was added and then removed
+    expect(marker2._icon).to.be.undefined
+    expect(marker3._icon.parentNode).to.equal(map._panes.markerPane)
 
-    expect(map._panes.markerPane.childNodes.length).to.be(2)
+    expect(map._panes.markerPane.childNodes.length).to.equal(2)
   })
 
   it('unspiderfies before adding a new Marker', function () {
@@ -131,27 +131,27 @@ describe('addLayer adding multiple markers', function () {
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    expect(marker._icon).to.be(undefined)
-    expect(marker2._icon).to.be(undefined)
+    expect(marker._icon).to.be.undefined
+    expect(marker2._icon).to.be.undefined
 
     group.zoomToShowLayer(marker)
     // Run the the animation
     clock.tick(1000)
 
-    expect(marker._icon).to.not.be(undefined)
-    expect(marker._icon).to.not.be(null)
-    expect(marker2._icon).to.not.be(undefined)
-    expect(marker2._icon).to.not.be(null)
+    expect(marker._icon).to.not.be.undefined
+    expect(marker._icon).to.not.be.null
+    expect(marker2._icon).to.not.be.undefined
+    expect(marker2._icon).to.not.be.null
 
     group.addLayer(marker3)
     // Run the the animation
     clock.tick(1000)
 
-    expect(marker._icon).to.be(null)
-    expect(marker2._icon).to.be(null)
-    expect(marker3._icon).to.be(undefined)
-    expect(marker3.__parent._icon).to.not.be(undefined)
-    expect(marker3.__parent._icon).to.not.be(null)
+    expect(marker._icon).to.be.null
+    expect(marker2._icon).to.be.null
+    expect(marker3._icon).to.be.undefined
+    expect(marker3.__parent._icon).to.not.be.undefined
+    expect(marker3.__parent._icon).to.not.be.null
     expect(marker3.__parent._icon.innerText.trim()).to.equal('3')
   })
 })

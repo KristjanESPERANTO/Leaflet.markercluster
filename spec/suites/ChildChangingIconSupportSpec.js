@@ -42,12 +42,12 @@ describe('support child markers changing icon', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
     expect(marker._icon.innerHTML).to.contain('Inner1Text')
 
     group.addLayer(marker2)
 
-    expect(marker._icon).to.be(null) // Have been removed from the map
+    expect(marker._icon).to.be.null // Have been removed from the map
 
     marker.setIcon(new DivIcon({ html: 'Inner2Text' })) // Change the icon
 

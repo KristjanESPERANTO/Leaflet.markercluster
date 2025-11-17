@@ -50,10 +50,10 @@ describe('onRemove', function () {
     }
 
     group._showCoverage({ sourceTarget: group._topClusterLevel })
-    expect(group._shownPolygon).to.not.be(null)
+    expect(group._shownPolygon).to.not.be.null
 
     map.removeLayer(group)
 
-    expect(group._shownPolygon).to.be(null)
+    expect(group._shownPolygon).to.be.null
   })
 })

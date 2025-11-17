@@ -42,7 +42,7 @@ describe('getVisibleParent', function () {
 
     const vp = group.getVisibleParent(marker)
 
-    expect(vp).to.be(marker)
+    expect(vp).to.equal(marker)
   })
 
   it('gets the visible cluster if it is clustered', function () {
@@ -55,9 +55,9 @@ describe('getVisibleParent', function () {
 
     const vp = group.getVisibleParent(marker)
 
-    expect(vp).to.be.a(MarkerCluster)
-    expect(vp._icon).to.not.be(null)
-    expect(vp._icon).to.not.be(undefined)
+    expect(vp).to.be.an.instanceof(MarkerCluster)
+    expect(vp._icon).to.not.be.null
+    expect(vp._icon).to.not.be.undefined
   })
 
   it('returns null if the marker and parents are all not visible', function () {
@@ -70,6 +70,6 @@ describe('getVisibleParent', function () {
 
     const vp = group.getVisibleParent(marker)
 
-    expect(vp).to.be(null)
+    expect(vp).to.be.null
   })
 })

@@ -61,8 +61,8 @@ describe('Remember opacity', function () {
     map.addLayer(group)
 
     const visibleClusters = group._featureGroup.getLayers()
-    expect(visibleClusters.length).to.be(1)
-    expect(visibleClusters[0].options.opacity).to.be(1)
+    expect(visibleClusters.length).to.equal(1)
+    expect(visibleClusters[0].options.opacity).to.equal(1)
   })
 
   it('unclusters an opaque marker into semitransparent ones', function () {
@@ -79,7 +79,7 @@ describe('Remember opacity', function () {
     clock.tick(1000)
 
     visibleClusters = group._featureGroup.getLayers()
-    expect(visibleClusters.length).to.be(9)
+    expect(visibleClusters.length).to.equal(9)
     for (let i = 0; i < 9; i++) {
       expect(visibleClusters[i].options.opacity).to.be.within(0.2, 0.9)
     }
@@ -92,7 +92,7 @@ describe('Remember opacity', function () {
     clock.tick(1000)
 
     visibleClusters = group._featureGroup.getLayers()
-    expect(visibleClusters.length).to.be(9)
+    expect(visibleClusters.length).to.equal(9)
     for (let i = 0; i < 9; i++) {
       expect(visibleClusters[i].options.opacity).to.be.within(0.2, 0.9)
     }
@@ -113,7 +113,7 @@ describe('Remember opacity', function () {
       clock.tick(1000)
 
       visibleClusters = group._featureGroup.getLayers()
-      expect(visibleClusters.length).to.be(9)
+      expect(visibleClusters.length).to.equal(9)
       for (let i = 0; i < 9; i++) {
         expect(visibleClusters[i].options.opacity).to.be.within(0.2, 0.9)
       }
@@ -122,8 +122,8 @@ describe('Remember opacity', function () {
       clock.tick(1000)
 
       visibleClusters = group._featureGroup.getLayers()
-      expect(visibleClusters.length).to.be(1)
-      expect(visibleClusters[0].options.opacity).to.be(1)
+      expect(visibleClusters.length).to.equal(1)
+      expect(visibleClusters[0].options.opacity).to.equal(1)
     }
   })
 
@@ -152,8 +152,8 @@ describe('Remember opacity', function () {
       map.setView(new LatLng(markerDefs[i].latLng), 18)
       clock.tick(1000)
       visibleClusters = group._featureGroup.getLayers()
-      expect(visibleClusters.length).to.be(1)
-      expect(visibleClusters[0].options.opacity).to.be(markerDefs[i].opts.opacity)
+      expect(visibleClusters.length).to.equal(1)
+      expect(visibleClusters[0].options.opacity).to.equal(markerDefs[i].opts.opacity)
     }
   })
 })

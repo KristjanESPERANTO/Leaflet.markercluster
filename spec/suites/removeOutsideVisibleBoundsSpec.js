@@ -74,9 +74,9 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     prepareGroup()
 
-    expect(marker1._icon).to.be(null)
-    expect(map._panes.markerPane.childNodes.length).to.be(3) // markers 2, 3 and 4.
-    expect(marker5._icon).to.be(null)
+    expect(marker1._icon).to.be.null
+    expect(map._panes.markerPane.childNodes.length).to.equal(3) // markers 2, 3 and 4.
+    expect(marker5._icon).to.be.null
   })
 
   it('removes objects out of view port by default for mobile device', function () {
@@ -86,11 +86,11 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     prepareGroup()
 
-    expect(marker1._icon).to.be(null)
-    expect(marker2._icon).to.be(null)
-    expect(map._panes.markerPane.childNodes.length).to.be(1) // marker 3 only.
-    expect(marker4._icon).to.be(null)
-    expect(marker5._icon).to.be(null)
+    expect(marker1._icon).to.be.null
+    expect(marker2._icon).to.be.null
+    expect(map._panes.markerPane.childNodes.length).to.equal(1) // marker 3 only.
+    expect(marker4._icon).to.be.null
+    expect(marker5._icon).to.be.null
   })
 
   it('leaves all objects on map when set to false', function () {
@@ -100,7 +100,7 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     prepareGroup()
 
-    expect(map._panes.markerPane.childNodes.length).to.be(5) // All 5 markers.
+    expect(map._panes.markerPane.childNodes.length).to.equal(5) // All 5 markers.
   })
 
   // Following tests need markers at very high latitude.
@@ -158,8 +158,8 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     checkProjection(latLngsMaxLatDefault)
 
-    expect(map._panes.markerPane.childNodes.length).to.be(4) // Markers 1, 2, 3 and 4.
-    expect(marker5._icon).to.be(null)
+    expect(map._panes.markerPane.childNodes.length).to.equal(4) // Markers 1, 2, 3 and 4.
+    expect(marker5._icon).to.be.null
   })
 
   it('includes objects below the Web Mercator projection minimum limit by default', function () {
@@ -176,8 +176,8 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     clock.tick(1000)
 
-    expect(map._panes.markerPane.childNodes.length).to.be(4) // Markers 1, 2, 3 and 4.
-    expect(marker5._icon).to.be(null)
+    expect(map._panes.markerPane.childNodes.length).to.equal(4) // Markers 1, 2, 3 and 4.
+    expect(marker5._icon).to.be.null
   })
 
   // The actual map view should be '-1.0986328125,84.92929204957956,1.0986328125,85.11983467698401'
@@ -202,9 +202,9 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     checkProjection(latLngsMaxLatMobile)
 
-    expect(map._panes.markerPane.childNodes.length).to.be(3) // Markers 1, 2 and 3.
-    expect(marker4._icon).to.be(null)
-    expect(marker5._icon).to.be(null)
+    expect(map._panes.markerPane.childNodes.length).to.equal(3) // Markers 1, 2 and 3.
+    expect(marker4._icon).to.be.null
+    expect(marker5._icon).to.be.null
   })
 
   it('includes objects below the Web Mercator projection minimum limit for mobile device', function () {
@@ -223,8 +223,8 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     checkProjection(latLngsMaxLatMobile)
 
-    expect(map._panes.markerPane.childNodes.length).to.be(3) // Markers 1, 2 and 3.
-    expect(marker4._icon).to.be(null)
-    expect(marker5._icon).to.be(null)
+    expect(map._panes.markerPane.childNodes.length).to.equal(3) // Markers 1, 2 and 3.
+    expect(marker4._icon).to.be.null
+    expect(marker5._icon).to.be.null
   })
 })

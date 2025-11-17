@@ -38,8 +38,8 @@ describe('clearLayer', function () {
     group.addLayers([polygon, marker])
     group.clearLayers()
 
-    expect(group.hasLayer(polygon)).to.be(false)
-    expect(group.hasLayer(marker)).to.be(false)
+    expect(group.hasLayer(polygon)).to.be.false
+    expect(group.hasLayer(marker)).to.be.false
   })
 
   it('hits polygons and markers after adding to map', function () {
@@ -51,7 +51,7 @@ describe('clearLayer', function () {
     map.addLayer(group)
     group.clearLayers()
 
-    expect(group.hasLayer(polygon)).to.be(false)
-    expect(group.hasLayer(marker)).to.be(false)
+    expect(group.hasLayer(polygon)).to.be.false
+    expect(group.hasLayer(marker)).to.be.false
   })
 })

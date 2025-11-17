@@ -5,18 +5,18 @@ describe('distance grid', function () {
     const grid = new DistanceGrid(100),
       obj = {}
 
-    expect(grid.addObject(obj, { x: 0, y: 0 })).to.eql(undefined)
-    expect(grid.removeObject(obj, { x: 0, y: 0 })).to.eql(true)
+    expect(grid.addObject(obj, { x: 0, y: 0 })).to.deep.equal(undefined)
+    expect(grid.removeObject(obj, { x: 0, y: 0 })).to.deep.equal(true)
   })
 
   it('eachObject', function (done) {
     const grid = new DistanceGrid(100),
       obj = {}
 
-    expect(grid.addObject(obj, { x: 0, y: 0 })).to.eql(undefined)
+    expect(grid.addObject(obj, { x: 0, y: 0 })).to.deep.equal(undefined)
 
     grid.eachObject(function (o) {
-      expect(o).to.eql(obj)
+      expect(o).to.deep.equal(obj)
       done()
     })
   })

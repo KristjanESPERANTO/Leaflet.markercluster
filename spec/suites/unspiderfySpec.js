@@ -58,8 +58,8 @@ describe('unspiderfy', function () {
 
     clock.tick(1000)
 
-    expect(map.hasLayer(marker)).to.be(false)
-    expect(map.hasLayer(marker2)).to.be(false)
+    expect(map.hasLayer(marker)).to.be.false
+    expect(map.hasLayer(marker2)).to.be.false
   })
 
   it('Unspiderfies 2 CircleMarkers', function () {
@@ -80,8 +80,8 @@ describe('unspiderfy', function () {
 
     clock.tick(1000)
 
-    expect(map.hasLayer(marker)).to.be(false)
-    expect(map.hasLayer(marker2)).to.be(false)
+    expect(map.hasLayer(marker)).to.be.false
+    expect(map.hasLayer(marker2)).to.be.false
   })
 
   it('Unspiderfies 2 Circles', function () {
@@ -102,8 +102,8 @@ describe('unspiderfy', function () {
 
     clock.tick(1000)
 
-    expect(map.hasLayer(marker)).to.be(false)
-    expect(map.hasLayer(marker2)).to.be(false)
+    expect(map.hasLayer(marker)).to.be.false
+    expect(map.hasLayer(marker2)).to.be.false
   })
 
   it('fires unspiderfied event on unspiderfy', function (done) {
@@ -121,10 +121,10 @@ describe('unspiderfy', function () {
 
     // Add event listener
     group.on('unspiderfied', function (event) {
-      expect(event.target).to.be(group)
-      expect(event.cluster).to.be.a(Marker)
-      expect(event.markers[1]).to.be(marker)
-      expect(event.markers[0]).to.be(marker2)
+      expect(event.target).to.equal(group)
+      expect(event.cluster).to.be.an.instanceof(Marker)
+      expect(event.markers[1]).to.equal(marker)
+      expect(event.markers[0]).to.equal(marker2)
 
       done()
     })

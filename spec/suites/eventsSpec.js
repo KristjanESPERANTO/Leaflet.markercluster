@@ -51,7 +51,7 @@ describe('events', function () {
     // In Leaflet 1.0.0, event propagation must be explicitly set by 3rd argument.
     marker.fire('click', null, true)
 
-    expect(callback.called).to.be(true)
+    expect(callback.called).to.be.true
   })
 
   it('is fired for a child polygon', function () {
@@ -67,7 +67,7 @@ describe('events', function () {
 
     polygon.fire('click', null, true)
 
-    expect(callback.called).to.be(true)
+    expect(callback.called).to.be.true
   })
 
   it('is fired for a cluster click', function () {
@@ -83,11 +83,11 @@ describe('events', function () {
     map.addLayer(group)
 
     const cluster = group.getVisibleParent(marker)
-    expect(cluster instanceof MarkerCluster).to.be(true)
+    expect(cluster instanceof MarkerCluster).to.be.true
 
     cluster.fire('click', null, true)
 
-    expect(callback.called).to.be(true)
+    expect(callback.called).to.be.true
   })
 
   describe('after being added, removed, re-added from the map', function () {
@@ -106,7 +106,7 @@ describe('events', function () {
 
       polygon.fire('click', null, true)
 
-      expect(callback.called).to.be(true)
+      expect(callback.called).to.be.true
     })
 
     it('still fires events for point data', function () {
@@ -124,7 +124,7 @@ describe('events', function () {
 
       marker.fire('click', null, true)
 
-      expect(callback.called).to.be(true)
+      expect(callback.called).to.be.true
     })
 
     it('still fires cluster events', function () {
@@ -143,11 +143,11 @@ describe('events', function () {
       map.addLayer(group)
 
       const cluster = group.getVisibleParent(marker)
-      expect(cluster instanceof MarkerCluster).to.be(true)
+      expect(cluster instanceof MarkerCluster).to.be.true
 
       cluster.fire('click', null, true)
 
-      expect(callback.called).to.be(true)
+      expect(callback.called).to.be.true
     })
 
     it('does not break map events', function () {
@@ -163,7 +163,7 @@ describe('events', function () {
 
       map.fire('zoomend')
 
-      expect(callback.called).to.be(true)
+      expect(callback.called).to.be.true
     })
 
     // layeradd
@@ -176,7 +176,7 @@ describe('events', function () {
       const marker = new Marker([1.5, 1.5])
       group.addLayer(marker)
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layeradd when vectors are added while not on the map', function () {
@@ -188,7 +188,7 @@ describe('events', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayer(polygon)
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layeradd when markers are added while on the map', function () {
@@ -201,7 +201,7 @@ describe('events', function () {
       const marker = new Marker([1.5, 1.5])
       group.addLayer(marker)
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layeradd when vectors are added while on the map', function () {
@@ -214,7 +214,7 @@ describe('events', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayer(polygon)
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layersadd (batch event) when markers are added using addLayers while on the map with chunked loading', function () {
@@ -227,8 +227,8 @@ describe('events', function () {
       const marker = new Marker([1.5, 1.5])
       group.addLayers([marker])
 
-      expect(callback.callCount).to.be(1)
-      expect(callback.firstCall.args[0].layers.length).to.be(1)
+      expect(callback.callCount).to.equal(1)
+      expect(callback.firstCall.args[0].layers.length).to.equal(1)
     })
 
     it('fires layersadd (batch event) when vectors are added using addLayers while on the map with chunked loading', function () {
@@ -241,8 +241,8 @@ describe('events', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayers([polygon])
 
-      expect(callback.callCount).to.be(1)
-      expect(callback.firstCall.args[0].layers.length).to.be(1)
+      expect(callback.callCount).to.equal(1)
+      expect(callback.firstCall.args[0].layers.length).to.equal(1)
     })
 
     // layerremove
@@ -256,7 +256,7 @@ describe('events', function () {
       group.addLayer(marker)
       group.removeLayer(marker)
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layerremove when a vector is removed while not on the map', function () {
@@ -269,7 +269,7 @@ describe('events', function () {
       group.addLayer(polygon)
       group.removeLayer(polygon)
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layerremove when a marker is removed while on the map', function () {
@@ -283,7 +283,7 @@ describe('events', function () {
       group.addLayer(marker)
       group.removeLayer(marker)
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layerremove when a vector is removed while on the map', function () {
@@ -297,7 +297,7 @@ describe('events', function () {
       group.addLayer(polygon)
       group.removeLayer(polygon)
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layerremove when a marker is removed using removeLayers while on the map with chunked loading', function () {
@@ -311,7 +311,7 @@ describe('events', function () {
       group.addLayers([marker])
       group.removeLayers([marker])
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layerremove when a vector is removed using removeLayers while on the map with chunked loading', function () {
@@ -325,7 +325,7 @@ describe('events', function () {
       group.addLayers([polygon])
       group.removeLayers([polygon])
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layerremove when a marker is removed using removeLayers while not on the map with chunked loading', function () {
@@ -338,7 +338,7 @@ describe('events', function () {
       group.addLayers([marker])
       group.removeLayers([marker])
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
 
     it('fires layerremove when a vector is removed using removeLayers while not on the map with chunked loading', function () {
@@ -351,7 +351,7 @@ describe('events', function () {
       group.addLayers([polygon])
       group.removeLayers([polygon])
 
-      expect(callback.callCount).to.be(1)
+      expect(callback.callCount).to.equal(1)
     })
   })
 
@@ -371,7 +371,7 @@ describe('events', function () {
 
     marker.fire('click');
 
-    expect(callback.called).to.be(true);
+    expect(callback.called).to.be.true;
   });
   */
 })

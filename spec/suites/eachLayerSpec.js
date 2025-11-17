@@ -43,7 +43,7 @@ describe('eachLayer', function () {
       layers.push(l)
     })
 
-    expect(layers.length).to.be(2)
+    expect(layers.length).to.equal(2)
     expect(layers).to.contain(marker)
     expect(layers).to.contain(polygon)
   })
@@ -61,7 +61,7 @@ describe('eachLayer', function () {
       layers.push(l)
     })
 
-    expect(layers.length).to.be(2)
+    expect(layers.length).to.equal(2)
     expect(layers).to.contain(marker)
     expect(layers).to.contain(polygon)
   })

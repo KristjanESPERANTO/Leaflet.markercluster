@@ -52,8 +52,8 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('Spiderfies 2 CircleMarkers', function () {
@@ -70,8 +70,8 @@ describe('spiderfy', function () {
 
     // Leaflet 1.0.0 now uses an intermediate Renderer.
     // marker > _path > _rootGroup (g) > _container (svg) > pane (div)
-    expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
-    expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
+    expect(marker._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    expect(marker2._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
   })
 
   it('Spiderfies 2 Circles', function () {
@@ -86,8 +86,8 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
-    expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
+    expect(marker._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    expect(marker2._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
   })
 
   it('Spiderfies at current zoom if all child markers are at the exact same position', function () {
@@ -115,8 +115,8 @@ describe('spiderfy', function () {
 
     expect(map.getZoom()).to.equal(zoom)
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('Spiderfies at current zoom if all child markers are still within a single cluster at map maxZoom', function () {
@@ -146,8 +146,8 @@ describe('spiderfy', function () {
 
     expect(map.getZoom()).to.equal(zoom)
 
-    expect(marker._icon.parentNode).to.be(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.be(map._panes.markerPane)
+    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
   })
 
   it('removes all markers and spider legs when group is removed from map', function () {
@@ -161,8 +161,8 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    expect(map._panes.markerPane.childNodes.length).to.be(3) // The 2 markers + semi-transparent cluster.
-    expect(map.getPane('overlayPane').firstChild.firstChild.childNodes.length).to.be(2) // The 2 spider legs.
+    expect(map._panes.markerPane.childNodes.length).to.equal(3) // The 2 markers + semi-transparent cluster.
+    expect(map.getPane('overlayPane').firstChild.firstChild.childNodes.length).to.equal(2) // The 2 spider legs.
   })
 
   it('adds then removes class "leaflet-cluster-anim" from mapPane on spiderfy', function () {
@@ -220,10 +220,10 @@ describe('spiderfy', function () {
 
     // Add event listener
     group.on('unspiderfied', function (event) {
-      expect(event.target).to.be(group)
-      expect(event.cluster).to.be.a(Marker)
-      expect(event.markers[1]).to.be(marker)
-      expect(event.markers[0]).to.be(marker2)
+      expect(event.target).to.equal(group)
+      expect(event.cluster).to.be.an.instanceof(Marker)
+      expect(event.markers[1]).to.equal(marker)
+      expect(event.markers[0]).to.equal(marker2)
 
       done()
     })
@@ -284,12 +284,12 @@ describe('spiderfy', function () {
 
       marker.__parent.spiderfy()
 
-      expect(group._spiderfied).to.not.be(null)
+      expect(group._spiderfied).to.not.be.null
 
       map.fire('zoomend')
 
       // We should unspiderfy with no animation, so this should be null
-      expect(group._spiderfied).to.be(null)
+      expect(group._spiderfied).to.be.null
     })
   })
 
@@ -305,10 +305,10 @@ describe('spiderfy', function () {
 
       // Add event listener
       group.on('spiderfied', function (event) {
-        expect(event.target).to.be(group)
-        expect(event.cluster).to.be.a(Marker)
-        expect(event.markers[1]).to.be(marker)
-        expect(event.markers[0]).to.be(marker2)
+        expect(event.target).to.equal(group)
+        expect(event.cluster).to.be.an.instanceof(Marker)
+        expect(event.markers[1]).to.equal(marker)
+        expect(event.markers[0]).to.equal(marker2)
 
         done()
       })
@@ -329,10 +329,10 @@ describe('spiderfy', function () {
 
       // Add event listener
       group.on('spiderfied', function (event) {
-        expect(event.target).to.be(group)
-        expect(event.cluster).to.be.a(Marker)
-        expect(event.markers[1]).to.be(marker)
-        expect(event.markers[0]).to.be(marker2)
+        expect(event.target).to.equal(group)
+        expect(event.cluster).to.be.an.instanceof(Marker)
+        expect(event.markers[1]).to.equal(marker)
+        expect(event.markers[0]).to.equal(marker2)
 
         done()
       })

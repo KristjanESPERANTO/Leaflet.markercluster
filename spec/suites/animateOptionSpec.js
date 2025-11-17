@@ -44,18 +44,18 @@ describe('animate option', function () {
     let withAnimation = MarkerClusterGroup.prototype._withAnimation
 
     // MCG animated methods.
-    expect(group._animationStart).to.be(withAnimation._animationStart)
-    expect(group._animationZoomIn).to.be(withAnimation._animationZoomIn)
-    expect(group._animationZoomOut).to.be(withAnimation._animationZoomOut)
-    expect(group._animationAddLayer).to.be(withAnimation._animationAddLayer)
+    expect(group._animationStart).to.equal(withAnimation._animationStart)
+    expect(group._animationZoomIn).to.equal(withAnimation._animationZoomIn)
+    expect(group._animationZoomOut).to.equal(withAnimation._animationZoomOut)
+    expect(group._animationAddLayer).to.equal(withAnimation._animationAddLayer)
 
     // MarkerCluster spiderfy animated methods
     const cluster = group._topClusterLevel
 
     withAnimation = MarkerCluster.prototype
 
-    expect(cluster._animationSpiderfy).to.be(withAnimation._animationSpiderfy)
-    expect(cluster._animationUnspiderfy).to.be(withAnimation._animationUnspiderfy)
+    expect(cluster._animationSpiderfy).to.equal(withAnimation._animationSpiderfy)
+    expect(cluster._animationUnspiderfy).to.equal(withAnimation._animationUnspiderfy)
   })
 
   it('hooks non-animated methods version when set to false', function () {
@@ -65,17 +65,17 @@ describe('animate option', function () {
     let noAnimation = MarkerClusterGroup.prototype._noAnimation
 
     // MCG non-animated methods - check they're the same type/name, not reference
-    expect(group._animationStart.name || group._animationStart.toString()).to.be(noAnimation._animationStart.name || noAnimation._animationStart.toString())
-    expect(group._animationZoomIn).to.be(noAnimation._animationZoomIn)
-    expect(group._animationZoomOut).to.be(noAnimation._animationZoomOut)
-    expect(group._animationAddLayer).to.be(noAnimation._animationAddLayer)
+    expect(group._animationStart.name || group._animationStart.toString()).to.equal(noAnimation._animationStart.name || noAnimation._animationStart.toString())
+    expect(group._animationZoomIn).to.equal(noAnimation._animationZoomIn)
+    expect(group._animationZoomOut).to.equal(noAnimation._animationZoomOut)
+    expect(group._animationAddLayer).to.equal(noAnimation._animationAddLayer)
 
     // MarkerCluster spiderfy non-animated methods
     const cluster = group._topClusterLevel
 
     noAnimation = MarkerClusterNonAnimated.prototype
 
-    expect(cluster._animationSpiderfy).to.be(noAnimation._animationSpiderfy)
-    expect(cluster._animationUnspiderfy).to.be(noAnimation._animationUnspiderfy)
+    expect(cluster._animationSpiderfy).to.equal(noAnimation._animationSpiderfy)
+    expect(cluster._animationUnspiderfy).to.equal(noAnimation._animationUnspiderfy)
   })
 })

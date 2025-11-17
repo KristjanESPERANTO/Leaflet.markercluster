@@ -51,7 +51,7 @@ describe('moving markers', function () {
     marker.setLatLng([1.5, 1.5])
     map.addLayer(group)
 
-    expect(group.getLayers().length).to.be(1)
+    expect(group.getLayers().length).to.equal(1)
   })
 
   it('moves multiple markers that were moved while off the map', function () {
@@ -72,6 +72,6 @@ describe('moving markers', function () {
     }
     map.addLayer(group)
 
-    expect(group.getLayers().length).to.be(10)
+    expect(group.getLayers().length).to.equal(10)
   })
 })
