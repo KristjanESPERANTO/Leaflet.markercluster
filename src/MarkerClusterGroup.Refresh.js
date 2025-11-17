@@ -1,15 +1,21 @@
 /**
- * Adds 1 public method to MCG and 1 to Marker to facilitate changing
- * markers' icon options and refreshing their icon and their parent clusters
- * accordingly (case where their iconCreateFunction uses data of childMarkers
- * to make up the cluster icon).
+ * Adds refresh functionality to MarkerClusterGroup and Marker.
+ * MarkerClusterGroup gets refreshClusters() via ES6 spread.
+ * Marker gets refreshIconOptions() via .include() (must extend Leaflet's Marker).
  */
 
 import { LayerGroup, Marker, Util } from 'leaflet'
-import { MarkerClusterGroup } from './MarkerClusterGroup.js'
-import { MarkerCluster } from './MarkerCluster.js'
 
-MarkerClusterGroup.include({
+// Will be set when MarkerClusterGroup imports this - avoids circular dependency
+let MarkerClusterGroup, MarkerCluster
+
+export function setClusterClasses(mcg, mc) {
+  MarkerClusterGroup = mcg
+  MarkerCluster = mc
+}
+
+// Methods for MarkerClusterGroup (imported via spread in MarkerClusterGroup.js)
+export const refreshMethods = {
   /**
    * Updates the icon of all clusters which are parents of the given marker(s).
    * In singleMarkerMode, also updates the given marker(s) icon.
@@ -87,8 +93,9 @@ MarkerClusterGroup.include({
       }
     }
   },
-})
+}
 
+// Extend Leaflet's Marker with refreshIconOptions
 Marker.include({
   /**
    * Updates the given options in the marker's icon and refreshes the marker.

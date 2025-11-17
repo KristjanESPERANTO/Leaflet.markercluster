@@ -1,6 +1,9 @@
 import { Icon, LatLng, LatLngBounds, Marker } from 'leaflet'
+import { quickHullMethods } from './MarkerCluster.QuickHull.js'
 
 export const MarkerCluster = Marker.extend({
+  ...quickHullMethods,
+
   options: Icon.prototype.options,
 
   initialize: function (group, zoom, a, b) {

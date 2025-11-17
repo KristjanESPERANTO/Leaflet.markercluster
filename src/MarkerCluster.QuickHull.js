@@ -24,8 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Retrieved from: http://en.literateprograms.org/Quickhull_(Javascript)?oldid=18434
 */
 
-import { MarkerCluster } from './MarkerCluster.js'
-
 export const QuickHull = {
 
   /*
@@ -151,7 +149,13 @@ export const QuickHull = {
   },
 }
 
-MarkerCluster.include({
+// Export methods for MarkerCluster (using ES6 spread instead of .include())
+export const quickHullMethods = {
+  /**
+   * Returns the convex hull of all child markers as an array of LatLng points.
+   * Uses the QuickHull algorithm.
+   * @returns {LatLng[]} Array of LatLng points forming the convex hull
+   */
   getConvexHull: function () {
     const childMarkers = this.getAllChildMarkers(),
       points = []
@@ -164,4 +168,4 @@ MarkerCluster.include({
 
     return QuickHull.getConvexHull(points)
   },
-})
+}
