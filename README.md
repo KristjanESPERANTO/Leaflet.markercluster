@@ -67,10 +67,10 @@ When consuming as ES module with a bundler:
 
 ```js
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import { Map, TileLayer, Marker } from "leaflet";
 import "@kristjan.esperanto/leaflet.markercluster/dist/MarkerCluster.css";
 import "@kristjan.esperanto/leaflet.markercluster/dist/MarkerCluster.Default.css";
-import "@kristjan.esperanto/leaflet.markercluster/dist/leaflet.markercluster.js";
+import { MarkerClusterGroup } from "@kristjan.esperanto/leaflet.markercluster";
 ```
 
 ### For browser usage with script tags
@@ -112,8 +112,11 @@ Or check out the [custom example](https://kristjanesperanto.github.io/Leaflet.ma
 Create a new MarkerClusterGroup, add your markers to it, then add it to the map
 
 ```javascript
-let markers = L.markerClusterGroup();
-markers.addLayer(L.marker(getRandomLatLng(map)));
+import { Map, TileLayer, Marker, LatLng } from "leaflet";
+import { MarkerClusterGroup } from "leaflet.markercluster";
+
+let markers = new MarkerClusterGroup();
+markers.addLayer(new Marker(getRandomLatLng(map)));
 ... Add more layers ...
 map.addLayer(markers);
 ```
@@ -133,7 +136,7 @@ By default the Clusterer enables some nice defaults for you:
 You can disable any of these as you want in the options when you create the MarkerClusterGroup:
 
 ```javascript
-let markers = L.markerClusterGroup({
+let markers = new MarkerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false
@@ -148,9 +151,11 @@ You do not need to include the .Default css if you go this way.
 You are passed a MarkerCluster object, you'll probably want to use `getChildCount()` or `getAllChildMarkers()` to work out the icon to show.
 
 ```javascript
-let markers = L.markerClusterGroup({
+import { DivIcon } from "leaflet";
+
+let markers = new MarkerClusterGroup({
   iconCreateFunction: function (cluster) {
-    return L.divIcon({ html: "<b>" + cluster.getChildCount() + "</b>" });
+    return new DivIcon({ html: "<b>" + cluster.getChildCount() + "</b>" });
   }
 });
 ```
@@ -164,7 +169,9 @@ If you need to update the clusters icon (e.g. they are based on markers real-tim
 You can also provide a custom function as an option to MarkerClusterGroup to override the spiderfy shape positions. The example below implements linear spiderfy positions which overrides the default circular shape.
 
 ```javascript
-let markers = L.markerClusterGroup({
+import { Point } from "leaflet";
+
+let markers = new MarkerClusterGroup({
   spiderfyShapePositions: function (count, centerPt) {
     let distanceFromCenter = 35,
       markerDistance = 45,
@@ -199,13 +206,13 @@ let markers = L.markerClusterGroup({
 - **animateAddingMarkers**: If set to true (and `animate` option is also true) then adding individual markers to the MarkerClusterGroup after it has been added to the map will add the marker and animate it into the cluster. Defaults to false as this gives better performance when bulk adding markers. addLayers does not support this, only addLayer with individual Markers.
 - **disableClusteringAtZoom**: If set, at this zoom level and below, markers will not be clustered. This defaults to disabled. [See Example](https://kristjanesperanto.github.io/Leaflet.markercluster/example/marker-clustering-realworld-maxzoom.388.html). Note: you may be interested in disabling `spiderfyOnMaxZoom` option when using `disableClusteringAtZoom`.
 - **maxClusterRadius**: The maximum radius that a cluster will cover from the central marker (in pixels). Default 80. Decreasing will make more, smaller clusters. You can also use a function that accepts the current map zoom and returns the maximum cluster radius in pixels.
-- **polygonOptions**: Options to pass when creating the L.Polygon(points, options) to show the bounds of a cluster. Defaults to empty, which lets Leaflet use the [default Path options](http://leafletjs.com/reference.html#path-options).
+- **polygonOptions**: Options to pass when creating the `Polygon(points, options)` to show the bounds of a cluster. Defaults to empty, which lets Leaflet use the [default Path options](http://leafletjs.com/reference.html#path-options).
 - **singleMarkerMode**: If set to true, overrides the icon for all added markers to make them appear as a 1 size cluster. Note: the markers are not replaced by cluster objects, only their icon is replaced. Hence they still react to normal events, and option `disableClusteringAtZoom` does not restore their previous icon (see [#391](https://github.com/Leaflet/Leaflet.markercluster/issues/391)).
 - **spiderLegPolylineOptions**: Allows you to specify [PolylineOptions](http://leafletjs.com/reference.html#polyline-options) to style spider legs. By default, they are `{ weight: 1.5, color: '#222', opacity: 0.5 }`.
 - **spiderfyDistanceMultiplier**: Increase from 1 to increase the distance away from the center that spiderfied markers are placed. Use if you are using big marker icons (Default: 1).
 - **iconCreateFunction**: Function used to create the cluster icon. See [the default implementation](https://github.com/Leaflet/Leaflet.markercluster/blob/15ed12654acdc54a4521789c498e4603fe4bf781/src/MarkerClusterGroup.js#L542) or the [custom example](https://kristjanesperanto.github.io/Leaflet.markercluster/example/marker-clustering-custom.html).
 - **spiderfyShapePositions**: Function used to override spiderfy default shape positions.
-- **clusterPane**: Map pane where the cluster icons will be added. Defaults to L.Marker's default (currently 'markerPane'). [See the pane example](https://kristjanesperanto.github.io/Leaflet.markercluster/example/marker-clustering-pane.html).
+- **clusterPane**: Map pane where the cluster icons will be added. Defaults to `Marker`'s default (currently 'markerPane'). [See the pane example](https://kristjanesperanto.github.io/Leaflet.markercluster/example/marker-clustering-pane.html).
 
 #### Chunked addLayers options
 
@@ -279,7 +286,7 @@ You can use the method:
 
 - without arguments to force all cluster icons in the Marker Cluster Group to be re-drawn.
 - with an array or a mapping of markers to force only their parent clusters to be re-drawn.
-- with an L.LayerGroup. The method will look for all markers in it. Make sure it contains only markers which are also within this Marker Cluster Group.
+- with a `LayerGroup`. The method will look for all markers in it. Make sure it contains only markers which are also within this Marker Cluster Group.
 - with a single marker.
 
 ```javascript
@@ -290,7 +297,7 @@ markers.refreshClusters(myLayerGroup);
 markers.refreshClusters(myMarker);
 ```
 
-The plugin also adds a method on L.Marker to easily update the underlying icon options and refresh the icon.
+The plugin also adds a method on `Marker` to easily update the underlying icon options and refresh the icon.
 If passing a second argument that evaluates to `true`, the method will also trigger a `refreshCluster` on the parent MarkerClusterGroup for that single marker.
 
 ```javascript
@@ -329,8 +336,10 @@ You can also query for the bounding convex polygon.
 See [example/marker-clustering-convexhull.html](https://kristjanesperanto.github.io/Leaflet.markercluster/example/marker-clustering-convexhull.html) for a working example.
 
 ```javascript
+import { Polygon } from "leaflet";
+
 markers.on("clusterclick", function (a) {
-  map.addLayer(L.polygon(a.layer.getConvexHull()));
+  map.addLayer(new Polygon(a.layer.getConvexHull()));
 });
 ```
 

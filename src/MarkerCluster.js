@@ -1,6 +1,6 @@
-import Leaflet, { Icon, LatLng, LatLngBounds, Marker } from 'leaflet'
+import { Icon, LatLng, LatLngBounds, Marker } from 'leaflet'
 
-export const MarkerCluster = Leaflet.MarkerCluster = Marker.extend({
+export const MarkerCluster = Marker.extend({
   options: Icon.prototype.options,
 
   initialize: function (group, zoom, a, b) {
@@ -193,7 +193,7 @@ export const MarkerCluster = Leaflet.MarkerCluster = Marker.extend({
 
   /**
    * Makes sure the cluster center is set. If not, uses the child center if it is a cluster, or the marker position.
-   * @param child L.MarkerCluster|L.Marker that will be used as cluster center if not defined yet.
+   * @param child MarkerCluster|Marker that will be used as cluster center if not defined yet.
    * @private
    */
   _setClusterCenter: function (child) {
@@ -205,7 +205,7 @@ export const MarkerCluster = Leaflet.MarkerCluster = Marker.extend({
 
   /**
    * Assigns impossible bounding values so that the next extend entirely determines the new bounds.
-   * This method avoids having to trash the previous L.LatLngBounds object and to create a new one, which is much slower for this class.
+   * This method avoids having to trash the previous LatLngBounds object and to create a new one, which is much slower for this class.
    * As long as the bounds are not extended, most other methods would probably fail, as they would with bounds initialized but not extended.
    * @private
    */
@@ -433,11 +433,11 @@ export const MarkerCluster = Leaflet.MarkerCluster = Marker.extend({
   },
 
   // Run the given functions recursively to this and child clusters
-  // boundsToApplyTo: a L.LatLngBounds representing the bounds of what clusters to recurse in to
+  // boundsToApplyTo: a LatLngBounds representing the bounds of what clusters to recurse in to
   // zoomLevelToStart: zoom level to start running functions (inclusive)
   // zoomLevelToStop: zoom level to stop running functions (inclusive)
-  // runAtEveryLevel: function that takes an L.MarkerCluster as an argument that should be applied on every level
-  // runAtBottomLevel: function that takes an L.MarkerCluster as an argument that should be applied at only the bottom level
+  // runAtEveryLevel: function that takes an MarkerCluster as an argument that should be applied on every level
+  // runAtBottomLevel: function that takes an MarkerCluster as an argument that should be applied at only the bottom level
   _recursively: function (boundsToApplyTo, zoomLevelToStart, zoomLevelToStop, runAtEveryLevel, runAtBottomLevel) {
     const childClusters = this._childClusters,
       zoom = this._zoom

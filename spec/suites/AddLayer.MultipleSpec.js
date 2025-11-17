@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('addLayer adding multiple markers', function () {
   /////////////////////////////
@@ -14,9 +15,9 @@ describe('addLayer adding multiple markers', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
@@ -34,9 +35,9 @@ describe('addLayer adding multiple markers', function () {
   // TESTS
   /////////////////////////////
   it('creates a cluster when 2 overlapping markers are added before the group is added to the map', function () {
-    const group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -48,9 +49,9 @@ describe('addLayer adding multiple markers', function () {
     expect(map._panes.markerPane.childNodes.length).to.be(1)
   })
   it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
-    const group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -62,9 +63,9 @@ describe('addLayer adding multiple markers', function () {
     expect(map._panes.markerPane.childNodes.length).to.be(1)
   })
   it('creates a cluster with an animation when 2 overlapping markers are added after the group is added to the map', function () {
-    const group = new L.MarkerClusterGroup({ animateAddingMarkers: true })
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const group = new MarkerClusterGroup({ animateAddingMarkers: true })
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -86,10 +87,10 @@ describe('addLayer adding multiple markers', function () {
   })
 
   it('creates a cluster and marker when 2 overlapping markers and one non-overlapping are added before the group is added to the map', function () {
-    const group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
-    const marker3 = new L.Marker([3.0, 1.5])
+    const group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
+    const marker3 = new Marker([3.0, 1.5])
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -103,10 +104,10 @@ describe('addLayer adding multiple markers', function () {
     expect(map._panes.markerPane.childNodes.length).to.be(2)
   })
   it('creates a cluster and marker when 2 overlapping markers and one non-overlapping are added after the group is added to the map', function () {
-    const group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
-    const marker3 = new L.Marker([3.0, 1.5])
+    const group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
+    const marker3 = new Marker([3.0, 1.5])
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -121,11 +122,11 @@ describe('addLayer adding multiple markers', function () {
   })
 
   it('unspiderfies before adding a new Marker', function () {
-    const group = new L.MarkerClusterGroup()
+    const group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
-    const marker3 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
+    const marker3 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)

@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map } from 'leaflet'
+import { MarkerCluster, MarkerClusterGroup, MarkerClusterNonAnimated } from 'leaflet.markercluster'
 
 describe('animate option', function () {
   /////////////////////////////
@@ -12,17 +13,17 @@ describe('animate option', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.removeLayers(group.getLayers())
       map.removeLayer(group)
     }
@@ -38,9 +39,9 @@ describe('animate option', function () {
   /////////////////////////////
   it('hooks animated methods version by default', function () {
     // Need to add to map so that we have the top cluster level created.
-    group = L.markerClusterGroup().addTo(map)
+    group = new MarkerClusterGroup().addTo(map)
 
-    let withAnimation = L.MarkerClusterGroup.prototype._withAnimation
+    let withAnimation = MarkerClusterGroup.prototype._withAnimation
 
     // MCG animated methods.
     expect(group._animationStart).to.be(withAnimation._animationStart)
@@ -51,7 +52,7 @@ describe('animate option', function () {
     // MarkerCluster spiderfy animated methods
     const cluster = group._topClusterLevel
 
-    withAnimation = L.MarkerCluster.prototype
+    withAnimation = MarkerCluster.prototype
 
     expect(cluster._animationSpiderfy).to.be(withAnimation._animationSpiderfy)
     expect(cluster._animationUnspiderfy).to.be(withAnimation._animationUnspiderfy)
@@ -59,9 +60,9 @@ describe('animate option', function () {
 
   it('hooks non-animated methods version when set to false', function () {
     // Need to add to map so that we have the top cluster level created.
-    group = L.markerClusterGroup({ animate: false }).addTo(map)
+    group = new MarkerClusterGroup({ animate: false }).addTo(map)
 
-    let noAnimation = L.MarkerClusterGroup.prototype._noAnimation
+    let noAnimation = MarkerClusterGroup.prototype._noAnimation
 
     // MCG non-animated methods - check they're the same type/name, not reference
     expect(group._animationStart.name || group._animationStart.toString()).to.be(noAnimation._animationStart.name || noAnimation._animationStart.toString())
@@ -72,7 +73,7 @@ describe('animate option', function () {
     // MarkerCluster spiderfy non-animated methods
     const cluster = group._topClusterLevel
 
-    noAnimation = L.MarkerClusterNonAnimated.prototype
+    noAnimation = MarkerClusterNonAnimated.prototype
 
     expect(cluster._animationSpiderfy).to.be(noAnimation._animationSpiderfy)
     expect(cluster._animationUnspiderfy).to.be(noAnimation._animationUnspiderfy)

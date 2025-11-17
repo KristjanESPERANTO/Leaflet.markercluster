@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { Icon, LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('singleMarkerMode option', function () {
   /////////////////////////////
@@ -12,22 +13,22 @@ describe('singleMarkerMode option', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
 
-    defaultIcon = new L.Icon.Default()
-    clusterIcon = new L.Icon.Default()
-    marker = new L.Marker([1.5, 1.5])
+    defaultIcon = new Icon.Default()
+    clusterIcon = new Icon.Default()
+    marker = new Marker([1.5, 1.5])
     marker.setIcon(defaultIcon)
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.removeLayers(group.getLayers())
       map.removeLayer(group)
     }
@@ -42,7 +43,7 @@ describe('singleMarkerMode option', function () {
   // TESTS
   /////////////////////////////
   it('overrides marker icons when set to true', function () {
-    group = L.markerClusterGroup({
+    group = new MarkerClusterGroup({
       singleMarkerMode: true,
       iconCreateFunction: function () {
         return clusterIcon
@@ -57,7 +58,7 @@ describe('singleMarkerMode option', function () {
   })
 
   it('does not modify marker icons by default (or set to false)', function () {
-    group = L.markerClusterGroup({
+    group = new MarkerClusterGroup({
       iconCreateFunction: function () {
         return clusterIcon
       },

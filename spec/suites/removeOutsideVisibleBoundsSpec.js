@@ -1,20 +1,20 @@
-import L from 'leaflet'
+import { Browser, CRS, LatLngBounds, Map, Marker, Projection } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('Option removeOutsideVisibleBounds', function () {
   /////////////////////////////
   // SETUP FOR EACH TEST
   /////////////////////////////
-  let marker1, marker2, marker3, marker4, marker5, markers, div, map, group, clock, realBrowser
+  let marker1, marker2, marker3, marker4, marker5, markers, div, map, group, clock, browserMobileStub
 
   beforeEach(function () {
-    realBrowser = L.Browser
     clock = sinon.useFakeTimers()
 
-    marker1 = new L.Marker([1.5, -0.4]) // 2 screens width away.
-    marker2 = new L.Marker([1.5, 0.6]) // 1 screen width away.
-    marker3 = new L.Marker([1.5, 1.5]) // In view port.
-    marker4 = new L.Marker([1.5, 2.4]) // 1 screen width away.
-    marker5 = new L.Marker([1.5, 3.4]) // 2 screens width away.
+    marker1 = new Marker([1.5, -0.4]) // 2 screens width away.
+    marker2 = new Marker([1.5, 0.6]) // 1 screen width away.
+    marker3 = new Marker([1.5, 1.5]) // In view port.
+    marker4 = new Marker([1.5, 2.4]) // 1 screen width away.
+    marker5 = new Marker([1.5, 3.4]) // 2 screens width away.
     markers = [marker1, marker2, marker3, marker4, marker5]
 
     div = document.createElement('div')
@@ -22,10 +22,10 @@ describe('Option removeOutsideVisibleBounds', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
@@ -37,7 +37,12 @@ describe('Option removeOutsideVisibleBounds', function () {
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (browserMobileStub) {
+      browserMobileStub.restore()
+      browserMobileStub = null
+    }
+
+    if (group instanceof MarkerClusterGroup) {
       // group.removeLayers(group.getLayers());
       group.clearLayers()
       map.removeLayer(group)
@@ -58,19 +63,14 @@ describe('Option removeOutsideVisibleBounds', function () {
   }
 
   function setBrowserToMobile() {
-    const fakeBrowser = {}
-    for (const k in realBrowser) {
-      fakeBrowser[k] = realBrowser[k]
-    }
-    fakeBrowser.mobile = true
-    L.Browser = fakeBrowser
+    browserMobileStub = sinon.stub(Browser, 'mobile').value(true)
   }
 
   /////////////////////////////
   // TESTS
   /////////////////////////////
   it('removes objects more than 1 screen away from view port by default', function () {
-    group = L.markerClusterGroup()
+    group = new MarkerClusterGroup()
 
     prepareGroup()
 
@@ -81,24 +81,20 @@ describe('Option removeOutsideVisibleBounds', function () {
 
   it('removes objects out of view port by default for mobile device', function () {
     setBrowserToMobile()
-    try {
-      group = L.markerClusterGroup()
 
-      prepareGroup()
+    group = new MarkerClusterGroup()
 
-      expect(marker1._icon).to.be(null)
-      expect(marker2._icon).to.be(null)
-      expect(map._panes.markerPane.childNodes.length).to.be(1) // marker 3 only.
-      expect(marker4._icon).to.be(null)
-      expect(marker5._icon).to.be(null)
-    }
-    finally {
-      L.Browser = realBrowser
-    }
+    prepareGroup()
+
+    expect(marker1._icon).to.be(null)
+    expect(marker2._icon).to.be(null)
+    expect(map._panes.markerPane.childNodes.length).to.be(1) // marker 3 only.
+    expect(marker4._icon).to.be(null)
+    expect(marker5._icon).to.be(null)
   })
 
   it('leaves all objects on map when set to false', function () {
-    group = L.markerClusterGroup({
+    group = new MarkerClusterGroup({
       removeOutsideVisibleBounds: false,
     })
 
@@ -136,9 +132,9 @@ describe('Option removeOutsideVisibleBounds', function () {
   }
 
   function checkProjection() {
-    expect(map.options.crs).to.equal(L.CRS.EPSG3857)
-    expect(L.CRS.EPSG3857.projection).to.equal(L.Projection.SphericalMercator)
-    expect(L.Projection.SphericalMercator.MAX_LATITUDE).to.be.a('number')
+    expect(map.options.crs).to.equal(CRS.EPSG3857)
+    expect(CRS.EPSG3857.projection).to.equal(Projection.SphericalMercator)
+    expect(Projection.SphericalMercator.MAX_LATITUDE).to.be.a('number')
 
     const mapZoom = map.getZoom()
 
@@ -156,7 +152,7 @@ describe('Option removeOutsideVisibleBounds', function () {
   it('includes objects above the Web Mercator projection maximum limit by default', function () {
     moveMarkersAndMapToMaxLat(latLngsMaxLatDefault)
 
-    group = L.markerClusterGroup()
+    group = new MarkerClusterGroup()
 
     prepareGroup()
 
@@ -172,7 +168,7 @@ describe('Option removeOutsideVisibleBounds', function () {
     // Make sure we are really in Southern hemisphere.
     expect(map.getBounds().getNorth()).to.be.below(-80)
 
-    group = L.markerClusterGroup()
+    group = new MarkerClusterGroup()
 
     prepareGroup()
 
@@ -195,48 +191,40 @@ describe('Option removeOutsideVisibleBounds', function () {
 
   it('includes objects above the Web Mercator projection maximum limit for mobile device', function () {
     setBrowserToMobile()
-    try {
-      moveMarkersAndMapToMaxLat(latLngsMaxLatMobile)
 
-      group = L.markerClusterGroup({
-        maxClusterRadius: 10,
-      })
+    moveMarkersAndMapToMaxLat(latLngsMaxLatMobile)
 
-      prepareGroup()
+    group = new MarkerClusterGroup({
+      maxClusterRadius: 10,
+    })
 
-      checkProjection(latLngsMaxLatMobile)
+    prepareGroup()
 
-      expect(map._panes.markerPane.childNodes.length).to.be(3) // Markers 1, 2 and 3.
-      expect(marker4._icon).to.be(null)
-      expect(marker5._icon).to.be(null)
-    }
-    finally {
-      L.Browser = realBrowser
-    }
+    checkProjection(latLngsMaxLatMobile)
+
+    expect(map._panes.markerPane.childNodes.length).to.be(3) // Markers 1, 2 and 3.
+    expect(marker4._icon).to.be(null)
+    expect(marker5._icon).to.be(null)
   })
 
   it('includes objects below the Web Mercator projection minimum limit for mobile device', function () {
     setBrowserToMobile()
-    try {
-      moveMarkersAndMapToMaxLat(latLngsMaxLatMobile, true)
 
-      // Make sure we are really in Southern hemisphere.
-      expect(map.getBounds().getNorth()).to.be.below(-80)
+    moveMarkersAndMapToMaxLat(latLngsMaxLatMobile, true)
 
-      group = L.markerClusterGroup({
-        maxClusterRadius: 10,
-      })
+    // Make sure we are really in Southern hemisphere.
+    expect(map.getBounds().getNorth()).to.be.below(-80)
 
-      prepareGroup()
+    group = new MarkerClusterGroup({
+      maxClusterRadius: 10,
+    })
 
-      checkProjection(latLngsMaxLatMobile)
+    prepareGroup()
 
-      expect(map._panes.markerPane.childNodes.length).to.be(3) // Markers 1, 2 and 3.
-      expect(marker4._icon).to.be(null)
-      expect(marker5._icon).to.be(null)
-    }
-    finally {
-      L.Browser = realBrowser
-    }
+    checkProjection(latLngsMaxLatMobile)
+
+    expect(map._panes.markerPane.childNodes.length).to.be(3) // Markers 1, 2 and 3.
+    expect(marker4._icon).to.be(null)
+    expect(marker5._icon).to.be(null)
   })
 })

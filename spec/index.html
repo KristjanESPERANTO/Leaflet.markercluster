@@ -11,7 +11,8 @@
     <script type="importmap">
       {
         "imports": {
-          "leaflet": "../node_modules/leaflet/dist/leaflet-src.js"
+          "leaflet": "../node_modules/leaflet/dist/leaflet-src.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
         }
       }
     </script>
@@ -23,10 +24,9 @@
     <script type="text/javascript" src="../node_modules/expect.js/index.js"></script>
     <script type="text/javascript" src="../node_modules/sinon/pkg/sinon.js"></script>
     <script type="module">
-      import Leaflet from "leaflet";
-      import "../dist/leaflet.markercluster.js";
+      import { Icon } from "leaflet";
 
-      Leaflet.Icon.Default.imagePath = "../node_modules/leaflet/dist/images/";
+      Icon.Default.imagePath = "../node_modules/leaflet/dist/images/";
 
       mocha.setup("bdd");
 
@@ -76,8 +76,6 @@
       window.scriptsLoaded = true;
 
       console.log("Module loaded, starting tests...");
-      console.log("L.DistanceGrid:", typeof L.DistanceGrid);
-      console.log("L.MarkerClusterGroup:", typeof L.MarkerClusterGroup);
 
       // NOW run the tests after module is fully loaded
       const runner = window.mocha.run();

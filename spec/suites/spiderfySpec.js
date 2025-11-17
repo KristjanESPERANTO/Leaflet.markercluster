@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { Circle, CircleMarker, LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('spiderfy', function () {
   /////////////////////////////
@@ -14,17 +15,17 @@ describe('spiderfy', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.removeLayers(group.getLayers())
       map.removeLayer(group)
     }
@@ -40,10 +41,10 @@ describe('spiderfy', function () {
   // TESTS
   /////////////////////////////
   it('Spiderfies 2 Markers', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -56,10 +57,10 @@ describe('spiderfy', function () {
   })
 
   it('Spiderfies 2 CircleMarkers', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.CircleMarker([1.5, 1.5])
-    const marker2 = new L.CircleMarker([1.5, 1.5])
+    const marker = new CircleMarker([1.5, 1.5])
+    const marker2 = new CircleMarker([1.5, 1.5])
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -67,17 +68,17 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    // Leaflet 1.0.0 now uses an intermediate L.Renderer.
+    // Leaflet 1.0.0 now uses an intermediate Renderer.
     // marker > _path > _rootGroup (g) > _container (svg) > pane (div)
     expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
     expect(marker2._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
   })
 
   it('Spiderfies 2 Circles', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Circle([1.5, 1.5], 10)
-    const marker2 = new L.Circle([1.5, 1.5], 10)
+    const marker = new Circle([1.5, 1.5], 10)
+    const marker2 = new Circle([1.5, 1.5], 10)
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -90,10 +91,10 @@ describe('spiderfy', function () {
   })
 
   it('Spiderfies at current zoom if all child markers are at the exact same position', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -119,10 +120,10 @@ describe('spiderfy', function () {
   })
 
   it('Spiderfies at current zoom if all child markers are still within a single cluster at map maxZoom', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.50001])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.50001])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -150,10 +151,10 @@ describe('spiderfy', function () {
   })
 
   it('removes all markers and spider legs when group is removed from map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -165,10 +166,10 @@ describe('spiderfy', function () {
   })
 
   it('adds then removes class "leaflet-cluster-anim" from mapPane on spiderfy', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -183,10 +184,10 @@ describe('spiderfy', function () {
   })
 
   it('adds then removes class "leaflet-cluster-anim" from mapPane on unspiderfy', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -205,10 +206,10 @@ describe('spiderfy', function () {
   })
 
   it('fires unspiderfied event on unspiderfy', function (done) {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -220,7 +221,7 @@ describe('spiderfy', function () {
     // Add event listener
     group.on('unspiderfied', function (event) {
       expect(event.target).to.be(group)
-      expect(event.cluster).to.be.a(L.Marker)
+      expect(event.cluster).to.be.a(Marker)
       expect(event.markers[1]).to.be(marker)
       expect(event.markers[0]).to.be(marker2)
 
@@ -233,10 +234,10 @@ describe('spiderfy', function () {
   })
 
   it('does not leave class "leaflet-cluster-anim" on mapPane when group is removed while spiderfied', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -251,15 +252,15 @@ describe('spiderfy', function () {
   })
 
   it('overrides spiderfy shape positions when custom function has been provided', function () {
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     const spiderfyShapePositionsFuntion = sinon.spy(function () {
       return [{ x: 1.6, y: 1.6 }, { x: 1.6, y: 1.6 }]
     },
     )
 
-    group = new L.MarkerClusterGroup({ spiderfyShapePositions: spiderfyShapePositionsFuntion })
+    group = new MarkerClusterGroup({ spiderfyShapePositions: spiderfyShapePositionsFuntion })
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -272,10 +273,10 @@ describe('spiderfy', function () {
 
   describe('zoomend event listener', function () {
     it('unspiderfies correctly', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const marker = new L.Circle([1.5, 1.5], 10)
-      const marker2 = new L.Circle([1.5, 1.5], 10)
+      const marker = new Circle([1.5, 1.5], 10)
+      const marker2 = new Circle([1.5, 1.5], 10)
 
       group.addLayer(marker)
       group.addLayer(marker2)
@@ -294,9 +295,9 @@ describe('spiderfy', function () {
 
   describe('spiderfied event listener', function () {
     it('Spiderfies 2 Markers', function (done) {
-      group = new L.MarkerClusterGroup()
-      const marker = new L.Marker([1.5, 1.5])
-      const marker2 = new L.Marker([1.5, 1.5])
+      group = new MarkerClusterGroup()
+      const marker = new Marker([1.5, 1.5])
+      const marker2 = new Marker([1.5, 1.5])
 
       group.addLayer(marker)
       group.addLayer(marker2)
@@ -305,7 +306,7 @@ describe('spiderfy', function () {
       // Add event listener
       group.on('spiderfied', function (event) {
         expect(event.target).to.be(group)
-        expect(event.cluster).to.be.a(L.Marker)
+        expect(event.cluster).to.be.a(Marker)
         expect(event.markers[1]).to.be(marker)
         expect(event.markers[0]).to.be(marker2)
 
@@ -318,9 +319,9 @@ describe('spiderfy', function () {
     })
 
     it('Spiderfies 2 Circles', function (done) {
-      group = new L.MarkerClusterGroup()
-      const marker = new L.Circle([1.5, 1.5], 10)
-      const marker2 = new L.Circle([1.5, 1.5], 10)
+      group = new MarkerClusterGroup()
+      const marker = new Circle([1.5, 1.5], 10)
+      const marker2 = new Circle([1.5, 1.5], 10)
 
       group.addLayer(marker)
       group.addLayer(marker2)
@@ -329,7 +330,7 @@ describe('spiderfy', function () {
       // Add event listener
       group.on('spiderfied', function (event) {
         expect(event.target).to.be(group)
-        expect(event.cluster).to.be.a(L.Marker)
+        expect(event.cluster).to.be.a(Marker)
         expect(event.markers[1]).to.be(marker)
         expect(event.markers[0]).to.be(marker2)
 

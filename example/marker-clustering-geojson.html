@@ -38,13 +38,13 @@
         </p>
 
         <div class="code-block">
-          <pre><code>let geojson = new L.GeoJSON(data, {
+          <pre><code>let geojson = new GeoJSON(data, {
   onEachFeature: function(feature, layer) {
     layer.bindPopup(feature.properties.name);
   }
 });
 
-let markers = new L.MarkerClusterGroup();
+let markers = new MarkerClusterGroup();
 markers.addLayer(geojson);
 
 map.addLayer(markers);</code></pre>

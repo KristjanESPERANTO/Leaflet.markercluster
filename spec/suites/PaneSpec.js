@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('Map pane selection', function () {
   /////////////////////////////
@@ -12,20 +13,20 @@ describe('Map pane selection', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Create map pane
     map.createPane('testPane')
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.clearLayers()
       map.removeLayer(group)
     }
@@ -40,10 +41,10 @@ describe('Map pane selection', function () {
   // TESTS
   /////////////////////////////
   it('recognizes and applies option', function () {
-    group = new L.MarkerClusterGroup({ clusterPane: 'testPane' })
+    group = new MarkerClusterGroup({ clusterPane: 'testPane' })
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -52,14 +53,14 @@ describe('Map pane selection', function () {
   })
 
   it('defaults to default marker pane', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    expect(map._panes[L.Marker.prototype.options.pane].childNodes.length).to.be(1)
+    expect(map._panes[Marker.prototype.options.pane].childNodes.length).to.be(1)
   })
 })

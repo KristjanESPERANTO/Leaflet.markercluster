@@ -1,5 +1,5 @@
 /*
- * Extends L.Marker with clusterHide/clusterShow helpers that toggle visibility
+ * Extends Marker with clusterHide/clusterShow helpers that toggle visibility
  * without permanently mutating the marker's configured opacity option.
  */
 

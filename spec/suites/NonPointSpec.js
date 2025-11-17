@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Polygon } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('adding non point data works', function () {
   /////////////////////////////
@@ -12,17 +13,17 @@ describe('adding non point data works', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.clearLayers()
       map.removeLayer(group)
     }
@@ -37,14 +38,14 @@ describe('adding non point data works', function () {
   // TESTS
   /////////////////////////////
   it('Allows adding a polygon before via addLayer', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+    const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
     group.addLayer(polygon)
     map.addLayer(group)
 
-    // Leaflet 1.0.0 now uses an intermediate L.Renderer.
+    // Leaflet 1.0.0 now uses an intermediate Renderer.
     // polygon > _path > _rootGroup (g) > _container (svg) > pane (div)
     expect(polygon._path).to.not.be(undefined)
     expect(polygon._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
@@ -53,9 +54,9 @@ describe('adding non point data works', function () {
   })
 
   it('Allows adding a polygon before via addLayers([])', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+    const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
     group.addLayers([polygon])
     map.addLayer(group)
@@ -65,9 +66,9 @@ describe('adding non point data works', function () {
   })
 
   it('Removes polygons from map when removed', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+    const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
     group.addLayer(polygon)
     map.addLayer(group)
@@ -78,9 +79,9 @@ describe('adding non point data works', function () {
 
   describe('hasLayer', function () {
     it('returns false when not added', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       expect(group.hasLayer(polygon)).to.be(false)
 
@@ -94,9 +95,9 @@ describe('adding non point data works', function () {
     })
 
     it('returns true before adding to map', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayers([polygon])
 
@@ -104,9 +105,9 @@ describe('adding non point data works', function () {
     })
 
     it('returns true after adding to map after adding polygon', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayer(polygon)
       map.addLayer(group)
@@ -115,9 +116,9 @@ describe('adding non point data works', function () {
     })
 
     it('returns true after adding to map before adding polygon', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       map.addLayer(group)
       group.addLayer(polygon)
@@ -128,9 +129,9 @@ describe('adding non point data works', function () {
 
   describe('removeLayer', function () {
     it('removes before adding to map', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayer(polygon)
       expect(group.hasLayer(polygon)).to.be(true)
@@ -140,9 +141,9 @@ describe('adding non point data works', function () {
     })
 
     it('removes before adding to map', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayers([polygon])
       expect(group.hasLayer(polygon)).to.be(true)
@@ -152,9 +153,9 @@ describe('adding non point data works', function () {
     })
 
     it('removes after adding to map after adding polygon', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayer(polygon)
       map.addLayer(group)
@@ -165,9 +166,9 @@ describe('adding non point data works', function () {
     })
 
     it('removes after adding to map before adding polygon', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       map.addLayer(group)
       group.addLayer(polygon)
@@ -180,9 +181,9 @@ describe('adding non point data works', function () {
 
   describe('removeLayers', function () {
     it('removes before adding to map', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayer(polygon)
       expect(group.hasLayer(polygon)).to.be(true)
@@ -192,9 +193,9 @@ describe('adding non point data works', function () {
     })
 
     it('removes before adding to map', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayers([polygon])
       expect(group.hasLayer(polygon)).to.be(true)
@@ -204,9 +205,9 @@ describe('adding non point data works', function () {
     })
 
     it('removes after adding to map after adding polygon', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayer(polygon)
       map.addLayer(group)
@@ -217,9 +218,9 @@ describe('adding non point data works', function () {
     })
 
     it('removes after adding to map before adding polygon', function () {
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       map.addLayer(group)
       group.addLayer(polygon)

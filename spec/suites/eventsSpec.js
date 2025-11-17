@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Marker, Polygon } from 'leaflet'
+import { MarkerCluster, MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('events', function () {
   /////////////////////////////
@@ -12,17 +13,17 @@ describe('events', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.removeLayers(group.getLayers())
       map.removeLayer(group)
     }
@@ -39,9 +40,9 @@ describe('events', function () {
   it('is fired for a single child marker', function () {
     const callback = sinon.spy()
 
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
 
     group.on('click', callback)
     group.addLayer(marker)
@@ -56,9 +57,9 @@ describe('events', function () {
   it('is fired for a child polygon', function () {
     const callback = sinon.spy()
 
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+    const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
     group.on('click', callback)
     group.addLayer(polygon)
@@ -72,17 +73,17 @@ describe('events', function () {
   it('is fired for a cluster click', function () {
     const callback = sinon.spy()
 
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.on('clusterclick', callback)
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
     const cluster = group.getVisibleParent(marker)
-    expect(cluster instanceof L.MarkerCluster).to.be(true)
+    expect(cluster instanceof MarkerCluster).to.be(true)
 
     cluster.fire('click', null, true)
 
@@ -93,9 +94,9 @@ describe('events', function () {
     it('still fires events for nonpoint data', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.on('click', callback)
       group.addLayer(polygon)
@@ -111,9 +112,9 @@ describe('events', function () {
     it('still fires events for point data', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const marker = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
 
       group.on('click', callback)
       group.addLayer(marker)
@@ -129,10 +130,10 @@ describe('events', function () {
     it('still fires cluster events', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
-      const marker = new L.Marker([1.5, 1.5])
-      const marker2 = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
+      const marker2 = new Marker([1.5, 1.5])
 
       group.on('clusterclick', callback)
       group.addLayers([marker, marker2])
@@ -142,7 +143,7 @@ describe('events', function () {
       map.addLayer(group)
 
       const cluster = group.getVisibleParent(marker)
-      expect(cluster instanceof L.MarkerCluster).to.be(true)
+      expect(cluster instanceof MarkerCluster).to.be(true)
 
       cluster.fire('click', null, true)
 
@@ -152,7 +153,7 @@ describe('events', function () {
     it('does not break map events', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
 
       map.on('zoomend', callback)
       map.addLayer(group)
@@ -169,10 +170,10 @@ describe('events', function () {
     it('fires layeradd when markers are added while not on the map', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
       group.on('layeradd', callback)
 
-      const marker = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
       group.addLayer(marker)
 
       expect(callback.callCount).to.be(1)
@@ -181,10 +182,10 @@ describe('events', function () {
     it('fires layeradd when vectors are added while not on the map', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
       group.on('layeradd', callback)
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayer(polygon)
 
       expect(callback.callCount).to.be(1)
@@ -193,11 +194,11 @@ describe('events', function () {
     it('fires layeradd when markers are added while on the map', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
       group.on('layeradd', callback)
       map.addLayer(group)
 
-      const marker = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
       group.addLayer(marker)
 
       expect(callback.callCount).to.be(1)
@@ -206,11 +207,11 @@ describe('events', function () {
     it('fires layeradd when vectors are added while on the map', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
       group.on('layeradd', callback)
       map.addLayer(group)
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayer(polygon)
 
       expect(callback.callCount).to.be(1)
@@ -219,11 +220,11 @@ describe('events', function () {
     it('fires layersadd (batch event) when markers are added using addLayers while on the map with chunked loading', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup({ chunkedLoading: true })
+      group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layersadd', callback)
       map.addLayer(group)
 
-      const marker = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
       group.addLayers([marker])
 
       expect(callback.callCount).to.be(1)
@@ -233,11 +234,11 @@ describe('events', function () {
     it('fires layersadd (batch event) when vectors are added using addLayers while on the map with chunked loading', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup({ chunkedLoading: true })
+      group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layersadd', callback)
       map.addLayer(group)
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayers([polygon])
 
       expect(callback.callCount).to.be(1)
@@ -248,10 +249,10 @@ describe('events', function () {
     it('fires layerremove when a marker is removed while not on the map', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
       group.on('layerremove', callback)
 
-      const marker = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
       group.addLayer(marker)
       group.removeLayer(marker)
 
@@ -261,10 +262,10 @@ describe('events', function () {
     it('fires layerremove when a vector is removed while not on the map', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
       group.on('layerremove', callback)
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayer(polygon)
       group.removeLayer(polygon)
 
@@ -274,11 +275,11 @@ describe('events', function () {
     it('fires layerremove when a marker is removed while on the map', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
       group.on('layerremove', callback)
       map.addLayer(group)
 
-      const marker = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
       group.addLayer(marker)
       group.removeLayer(marker)
 
@@ -288,11 +289,11 @@ describe('events', function () {
     it('fires layerremove when a vector is removed while on the map', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup()
+      group = new MarkerClusterGroup()
       group.on('layerremove', callback)
       map.addLayer(group)
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayer(polygon)
       group.removeLayer(polygon)
 
@@ -302,11 +303,11 @@ describe('events', function () {
     it('fires layerremove when a marker is removed using removeLayers while on the map with chunked loading', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup({ chunkedLoading: true })
+      group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layerremove', callback)
       map.addLayer(group)
 
-      const marker = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
       group.addLayers([marker])
       group.removeLayers([marker])
 
@@ -316,11 +317,11 @@ describe('events', function () {
     it('fires layerremove when a vector is removed using removeLayers while on the map with chunked loading', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup({ chunkedLoading: true })
+      group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layerremove', callback)
       map.addLayer(group)
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayers([polygon])
       group.removeLayers([polygon])
 
@@ -330,10 +331,10 @@ describe('events', function () {
     it('fires layerremove when a marker is removed using removeLayers while not on the map with chunked loading', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup({ chunkedLoading: true })
+      group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layerremove', callback)
 
-      const marker = new L.Marker([1.5, 1.5])
+      const marker = new Marker([1.5, 1.5])
       group.addLayers([marker])
       group.removeLayers([marker])
 
@@ -343,10 +344,10 @@ describe('events', function () {
     it('fires layerremove when a vector is removed using removeLayers while not on the map with chunked loading', function () {
       const callback = sinon.spy()
 
-      group = new L.MarkerClusterGroup({ chunkedLoading: true })
+      group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layerremove', callback)
 
-      const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+      const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayers([polygon])
       group.removeLayers([polygon])
 
@@ -359,10 +360,10 @@ describe('events', function () {
   it('is fired for a clustered child marker', function() {
     let callback = sinon.spy();
 
-    group = new L.MarkerClusterGroup();
+    group = new MarkerClusterGroup();
 
-    let marker = new L.Marker([1.5, 1.5]);
-    let marker2 = new L.Marker([1.5, 1.5]);
+    let marker = new Marker([1.5, 1.5]);
+    let marker2 = new Marker([1.5, 1.5]);
 
     group.on('click', callback);
     group.addLayers([marker, marker2]);

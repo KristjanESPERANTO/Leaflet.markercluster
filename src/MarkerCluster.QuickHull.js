@@ -24,10 +24,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Retrieved from: http://en.literateprograms.org/Quickhull_(Javascript)?oldid=18434
 */
 
-import Leaflet from 'leaflet'
 import { MarkerCluster } from './MarkerCluster.js'
 
-export const QuickHull = Leaflet.QuickHull = {
+export const QuickHull = {
 
   /*
    * @param {Object} cpt a point to be measured from the baseline

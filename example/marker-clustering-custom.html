@@ -48,7 +48,7 @@
 
         <div class="code-block">
           <pre><code><span class="code-comment">// Create cluster group with custom icon function</span>
-let markers = new L.MarkerClusterGroup({
+let markers = new MarkerClusterGroup({
   maxClusterRadius: 120,
   iconCreateFunction: function(cluster) {
     let markers = cluster.getAllChildMarkers();
@@ -60,10 +60,10 @@ let markers = new L.MarkerClusterGroup({
     }
     
     <span class="code-comment">// Return custom DivIcon with sum</span>
-    return new L.DivIcon({
+    return new DivIcon({
       html: sum,
       className: 'mycluster',
-      iconSize: new L.Point(40, 40)
+      iconSize: new Point(40, 40)
     });
   }
 });</code></pre>

@@ -36,7 +36,7 @@
         <div class="code-block">
           <pre><code><span class="code-comment">// Load 388 real addresses</span>
 for (let i = 0; i &lt; addressPoints.length; i++) {
-  let marker = new L.Marker([lat, lng]);
+  let marker = new Marker([lat, lng]);
   marker.bindPopup(address);
   markers.addLayer(marker);
 }

@@ -1,8 +1,9 @@
 /*
- * L.MarkerClusterGroup extends L.FeatureGroup by clustering the markers contained within
+ * MarkerClusterGroup extends FeatureGroup by clustering the markers contained within
  */
 
-import Leaflet, {
+import {
+  Browser,
   DivIcon,
   FeatureGroup,
   LatLng,
@@ -16,7 +17,7 @@ import Leaflet, {
 import { DistanceGrid } from './DistanceGrid.js'
 import { MarkerCluster } from './MarkerCluster.js'
 
-export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.extend({
+export const MarkerClusterGroup = FeatureGroup.extend({
 
   options: {
     maxClusterRadius: 80, // A cluster will cover at most this many pixels from its center
@@ -62,7 +63,7 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     chunkDelay: 20, // at the end of each interval, give n milliseconds back to system/browser
     chunkProgress: null, // progress callback: function(processed, total, elapsed) (e.g. for a progress indicator)
 
-    // Options to pass to the L.Polygon constructor
+    // Options to pass to the Polygon constructor
     polygonOptions: {},
   },
 
@@ -95,8 +96,6 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     // Hook the appropriate animation methods.
     const animate = this.options.animate
     Object.assign(this, animate ? this._withAnimation : this._noAnimation)
-    // Remember which MarkerCluster class to instantiate (animated or not).
-    this._markerCluster = animate ? MarkerCluster : Leaflet.MarkerClusterNonAnimated
 
     // Register event listeners for spiderfier lifecycle
     this.on('add', this._spiderfierSetup, this)
@@ -834,7 +833,7 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     return false
   },
 
-  // Override L.Evented.fire
+  // Override Evented.fire
   fire: function (type, data, propagate) {
     // Determine the originating layer (Leaflet 2 uses `sourceTarget`)
     const srcLayer = (data && (data.sourceTarget || data.layer)) || null
@@ -850,7 +849,7 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     FeatureGroup.prototype.fire.call(this, type, data, propagate)
   },
 
-  // Override L.Evented.listens
+  // Override Evented.listens
   listens: function (type, propagate) {
     return FeatureGroup.prototype.listens.call(this, type, propagate) || FeatureGroup.prototype.listens.call(this, 'cluster' + type, propagate)
   },
@@ -1025,7 +1024,8 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
     }
 
     // Instantiate the appropriate MarkerCluster class (animated or not).
-    this._topClusterLevel = new this._markerCluster(this, minZoom - 1)
+    const ClusterClass = this.options.animate ? MarkerCluster : MarkerCluster.NonAnimated
+    this._topClusterLevel = new ClusterClass(this, minZoom - 1)
   },
 
   // Zoom: Zoom to start adding at (Pass this._maxZoom to start at the bottom)
@@ -1063,7 +1063,8 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
 
         // Create new cluster with these 2 in it
 
-        const newCluster = new this._markerCluster(this, zoom, closest, layer)
+        const ClusterClass = this.options.animate ? MarkerCluster : MarkerCluster.NonAnimated
+        const newCluster = new ClusterClass(this, zoom, closest, layer)
         gridClusters[zoom].addObject(newCluster, this._map.project(newCluster._cLatLng, zoom))
         closest.__parent = newCluster
         layer.__parent = newCluster
@@ -1071,7 +1072,8 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
         // First create any new intermediate parent clusters that don't exist
         let lastParent = newCluster
         for (z = zoom - 1; z > parent._zoom; z--) {
-          lastParent = new this._markerCluster(this, z, lastParent)
+          const ClusterClass = this.options.animate ? MarkerCluster : MarkerCluster.NonAnimated
+          lastParent = new ClusterClass(this, z, lastParent)
           gridClusters[z].addObject(lastParent, this._map.project(closest.getLatLng(), z))
         }
         parent._addChild(lastParent)
@@ -1147,14 +1149,10 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
 
   // Gets the maps visible bounds expanded in each direction by the size of the screen (so the user cannot see an area we do not cover in one pan)
   _getExpandedVisibleBounds: function () {
-    const browser = typeof globalThis !== 'undefined' && globalThis.L
-      ? globalThis.L.Browser
-      : undefined
-
     if (!this.options.removeOutsideVisibleBounds) {
       return this._mapBoundsInfinite
     }
-    else if (browser && browser.mobile) {
+    else if (Browser.mobile) {
       return this._checkBoundsMaxLat(this._map.getBounds())
     }
 
@@ -1167,8 +1165,8 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
    * Otherwise, the removeOutsideVisibleBounds option will remove markers beyond that limit, whereas the same markers without
    * this option (or outside MCG) will have their position floored (ceiled) by the projection and rendered at that limit,
    * making the user think that MCG "eats" them and never displays them again.
-   * @param bounds L.LatLngBounds
-   * @returns {L.LatLngBounds}
+   * @param bounds LatLngBounds
+   * @returns {LatLngBounds}
    * @private
    */
   _checkBoundsMaxLat: function (bounds) {
@@ -1234,7 +1232,7 @@ export const MarkerClusterGroup = Leaflet.MarkerClusterGroup = FeatureGroup.exte
   /**
    * Implements the singleMarkerMode option.
    * @param layer Marker to re-style using the Clusters iconCreateFunction.
-   * @returns {L.Icon} The newly created icon.
+   * @returns {Icon} The newly created icon.
    * @private
    */
   _overrideMarkerIcon: function (layer) {
@@ -1453,7 +1451,3 @@ MarkerClusterGroup.include({
     void document.body.offsetWidth
   },
 })
-
-Leaflet.markerClusterGroup = function (options) {
-  return new MarkerClusterGroup(options)
-}

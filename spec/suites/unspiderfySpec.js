@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { Circle, CircleMarker, LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('unspiderfy', function () {
   /////////////////////////////
@@ -14,17 +15,17 @@ describe('unspiderfy', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.removeLayers(group.getLayers())
       map.removeLayer(group)
     }
@@ -40,10 +41,10 @@ describe('unspiderfy', function () {
   // TESTS
   /////////////////////////////
   it('Unspiderfies 2 Markers', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -62,10 +63,10 @@ describe('unspiderfy', function () {
   })
 
   it('Unspiderfies 2 CircleMarkers', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.CircleMarker([1.5, 1.5])
-    const marker2 = new L.CircleMarker([1.5, 1.5])
+    const marker = new CircleMarker([1.5, 1.5])
+    const marker2 = new CircleMarker([1.5, 1.5])
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -84,10 +85,10 @@ describe('unspiderfy', function () {
   })
 
   it('Unspiderfies 2 Circles', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Circle([1.5, 1.5], 10)
-    const marker2 = new L.Circle([1.5, 1.5], 10)
+    const marker = new Circle([1.5, 1.5], 10)
+    const marker2 = new Circle([1.5, 1.5], 10)
 
     group.addLayer(marker)
     group.addLayer(marker2)
@@ -106,10 +107,10 @@ describe('unspiderfy', function () {
   })
 
   it('fires unspiderfied event on unspiderfy', function (done) {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -121,7 +122,7 @@ describe('unspiderfy', function () {
     // Add event listener
     group.on('unspiderfied', function (event) {
       expect(event.target).to.be(group)
-      expect(event.cluster).to.be.a(L.Marker)
+      expect(event.cluster).to.be.a(Marker)
       expect(event.markers[1]).to.be(marker)
       expect(event.markers[0]).to.be(marker2)
 

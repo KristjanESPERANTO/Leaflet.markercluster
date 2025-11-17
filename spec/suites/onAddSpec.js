@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('onAdd', function () {
   /////////////////////////////
@@ -12,9 +13,9 @@ describe('onAdd', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { trackResize: false })
+    map = new Map(div, { trackResize: false })
 
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
@@ -31,8 +32,8 @@ describe('onAdd', function () {
   // TESTS
   /////////////////////////////
   it('throws an error if maxZoom is not specified', function () {
-    const group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
+    const group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
 
     group.addLayer(marker)
 
@@ -49,8 +50,8 @@ describe('onAdd', function () {
 
   it('successfully handles removing and re-adding a layer while not on the map', function () {
     map.options.maxZoom = 18
-    const group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
+    const group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
 
     map.addLayer(group)
     group.addLayer(marker)

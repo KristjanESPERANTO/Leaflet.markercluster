@@ -52,7 +52,7 @@
         </ul>
 
         <div class="code-block">
-          <pre><code>let markers = new L.MarkerClusterGroup({
+          <pre><code>let markers = new MarkerClusterGroup({
   clusterMarkerTitle: function(cluster) {
     const count = cluster.getChildCount();
     return 'Cluster with ' + count + 
@@ -62,7 +62,7 @@
 
 <span class="code-comment">// Add markers</span>
 for (let i = 0; i &lt; 100; i++) {
-  let marker = L.marker(randomLatLng);
+  let marker = new Marker(randomLatLng);
   marker.bindPopup('Marker ' + (i + 1));
   markers.addLayer(marker);
 }

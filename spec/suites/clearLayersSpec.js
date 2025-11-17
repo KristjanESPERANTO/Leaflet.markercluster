@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Marker, Polygon } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('clearLayer', function () {
   /////////////////////////////
@@ -12,9 +13,9 @@ describe('clearLayer', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
@@ -30,9 +31,9 @@ describe('clearLayer', function () {
   // TESTS
   /////////////////////////////
   it('clears everything before adding to map', function () {
-    const group = new L.MarkerClusterGroup()
-    const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
-    const marker = new L.Marker([1.5, 1.5])
+    const group = new MarkerClusterGroup()
+    const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+    const marker = new Marker([1.5, 1.5])
 
     group.addLayers([polygon, marker])
     group.clearLayers()
@@ -42,9 +43,9 @@ describe('clearLayer', function () {
   })
 
   it('hits polygons and markers after adding to map', function () {
-    const group = new L.MarkerClusterGroup()
-    const polygon = new L.Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
-    const marker = new L.Marker([1.5, 1.5])
+    const group = new MarkerClusterGroup()
+    const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
+    const marker = new Marker([1.5, 1.5])
 
     group.addLayers([polygon, marker])
     map.addLayer(group)

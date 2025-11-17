@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLng, LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('Remember opacity', function () {
   /////////////////////////////
@@ -18,8 +19,8 @@ describe('Remember opacity', function () {
     { latLng: [-1, -1], opts: { opacity: 0.2 } },
   ]
 
-  const bounds = new L.LatLngBounds(new L.LatLng(-1.1, -1.1),
-    new L.LatLng(1.1, 1.1))
+  const bounds = new LatLngBounds(new LatLng(-1.1, -1.1),
+    new LatLng(1.1, 1.1))
 
   beforeEach(function () {
     clock = sinon.useFakeTimers()
@@ -29,11 +30,11 @@ describe('Remember opacity', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     markers = []
     for (let i = 0; i < markerDefs.length; i++) {
-      markers.push(new L.Marker(markerDefs[i].latLng, markerDefs[i].opts))
+      markers.push(new Marker(markerDefs[i].latLng, markerDefs[i].opts))
     }
   })
 
@@ -51,9 +52,9 @@ describe('Remember opacity', function () {
   // TESTS
   /////////////////////////////
   it('clusters semitransparent markers into an opaque one', function () {
-    map.setView(new L.LatLng(0, 0), 1)
+    map.setView(new LatLng(0, 0), 1)
 
-    group = new L.MarkerClusterGroup({
+    group = new MarkerClusterGroup({
       maxClusterRadius: 20,
     })
     group.addLayers(markers)
@@ -65,10 +66,10 @@ describe('Remember opacity', function () {
   })
 
   it('unclusters an opaque marker into semitransparent ones', function () {
-    map.setView(new L.LatLng(0, 0), 1)
+    map.setView(new LatLng(0, 0), 1)
     let visibleClusters
 
-    group = new L.MarkerClusterGroup({
+    group = new MarkerClusterGroup({
       maxClusterRadius: 20,
     })
     group.addLayers(markers)
@@ -84,7 +85,7 @@ describe('Remember opacity', function () {
     }
 
     // It shall also work after zooming in/out a second time.
-    map.setView(new L.LatLng(0, 0), 1)
+    map.setView(new LatLng(0, 0), 1)
     clock.tick(1000)
 
     map.fitBounds(bounds)
@@ -100,7 +101,7 @@ describe('Remember opacity', function () {
   it('has no problems zooming in and out several times', function () {
     let visibleClusters
 
-    group = new L.MarkerClusterGroup({
+    group = new MarkerClusterGroup({
       maxClusterRadius: 20,
     })
     group.addLayers(markers)
@@ -117,7 +118,7 @@ describe('Remember opacity', function () {
         expect(visibleClusters[i].options.opacity).to.be.within(0.2, 0.9)
       }
 
-      map.setView(new L.LatLng(0, 0), 1)
+      map.setView(new LatLng(0, 0), 1)
       clock.tick(1000)
 
       visibleClusters = group._featureGroup.getLayers()
@@ -127,10 +128,10 @@ describe('Remember opacity', function () {
   })
 
   it('retains the opacity of each individual marker', function () {
-    map.setView(new L.LatLng(0, 0), 1)
+    map.setView(new LatLng(0, 0), 1)
 
     let visibleClusters
-    group = new L.MarkerClusterGroup({
+    group = new MarkerClusterGroup({
       maxClusterRadius: 20,
     })
     group.addLayers(markers)
@@ -141,14 +142,14 @@ describe('Remember opacity', function () {
       map.fitBounds(bounds)
       clock.tick(1000)
 
-      map.setView(new L.LatLng(0, 0), 1)
+      map.setView(new LatLng(0, 0), 1)
       clock.tick(1000)
     }
 
     for (let i = 0; i < markerDefs.length; i++) {
       //       console.log(markerDefs[i].latLng, markerDefs[i].opts.opacity);
 
-      map.setView(new L.LatLng(markerDefs[i].latLng), 18)
+      map.setView(new LatLng(markerDefs[i].latLng), 18)
       clock.tick(1000)
       visibleClusters = group._featureGroup.getLayers()
       expect(visibleClusters.length).to.be(1)

@@ -36,13 +36,13 @@
 
         <div class="code-block">
           <pre><code><span class="code-comment">// Enable chunked loading for better performance</span>
-let markers = new L.MarkerClusterGroup({
+let markers = new MarkerClusterGroup({
   chunkedLoading: true
 });
 
 <span class="code-comment">// Add 10,000 real address points</span>
 addressPoints.forEach(function(a) {
-  let marker = new L.Marker([a[0], a[1]], { 
+  let marker = new Marker([a[0], a[1]], { 
     title: a[2] 
   });
   markers.addLayer(marker);

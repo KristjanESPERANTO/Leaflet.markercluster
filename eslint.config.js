@@ -37,6 +37,7 @@ export default defineConfig([
     },
     rules: {
       'import-x/no-named-as-default-member': 'off',
+      'import-x/no-unresolved': ['error', { ignore: ['^leaflet.markercluster$'] }],
     },
   },
   { files: ['**/*.md'], plugins: { markdown }, language: 'markdown/gfm', extends: ['markdown/recommended'] },

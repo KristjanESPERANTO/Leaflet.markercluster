@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('disableClusteringAtZoom option', function () {
   /////////////////////////////
@@ -14,10 +15,10 @@ describe('disableClusteringAtZoom option', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
@@ -39,13 +40,13 @@ describe('disableClusteringAtZoom option', function () {
   it('unclusters at zoom level equal or higher', function () {
     const maxZoom = 15
 
-    group = new L.MarkerClusterGroup({
+    group = new MarkerClusterGroup({
       disableClusteringAtZoom: maxZoom,
     })
 
     group.addLayers([
-      new L.Marker([1.5, 1.5]),
-      new L.Marker([1.5, 1.5]),
+      new Marker([1.5, 1.5]),
+      new Marker([1.5, 1.5]),
     ])
     map.addLayer(group)
 

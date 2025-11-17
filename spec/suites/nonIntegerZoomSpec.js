@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('non-integer min/max zoom', function () {
   /////////////////////////////
@@ -14,9 +15,9 @@ describe('non-integer min/max zoom', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { minZoom: 0.5, maxZoom: 18.5, trackResize: false })
+    map = new Map(div, { minZoom: 0.5, maxZoom: 18.5, trackResize: false })
 
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
@@ -32,10 +33,10 @@ describe('non-integer min/max zoom', function () {
   // TESTS
   /////////////////////////////
   it('dont break adding and removing markers', function () {
-    const group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
-    const marker3 = new L.Marker([1.5, 1.5])
+    const group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
+    const marker3 = new Marker([1.5, 1.5])
 
     group.addLayer(marker)
     group.addLayer(marker2)

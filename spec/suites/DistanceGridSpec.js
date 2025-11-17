@@ -1,8 +1,8 @@
-import L from 'leaflet'
+import { DistanceGrid } from 'leaflet.markercluster'
 
 describe('distance grid', function () {
   it('addObject', function () {
-    const grid = new L.DistanceGrid(100),
+    const grid = new DistanceGrid(100),
       obj = {}
 
     expect(grid.addObject(obj, { x: 0, y: 0 })).to.eql(undefined)
@@ -10,7 +10,7 @@ describe('distance grid', function () {
   })
 
   it('eachObject', function (done) {
-    const grid = new L.DistanceGrid(100),
+    const grid = new DistanceGrid(100),
       obj = {}
 
     expect(grid.addObject(obj, { x: 0, y: 0 })).to.eql(undefined)
@@ -22,7 +22,7 @@ describe('distance grid', function () {
   })
 
   it('getNearObject', function () {
-    const grid = new L.DistanceGrid(100),
+    const grid = new DistanceGrid(100),
       obj = {}
 
     grid.addObject(obj, { x: 0, y: 0 })
@@ -32,7 +32,7 @@ describe('distance grid', function () {
   })
 
   it('getNearObject with cellSize 0', function () {
-    const grid = new L.DistanceGrid(0),
+    const grid = new DistanceGrid(0),
       obj = {}
 
     grid.addObject(obj, { x: 0, y: 0 })

@@ -37,9 +37,9 @@
 
         <div class="code-block">
           <pre><code><span class="code-comment">// Create GeoJSON layers</span>
-let m = new L.GeoJSON(geoJsonFeature, {
+let m = new GeoJSON(geoJsonFeature, {
   pointToLayer: function (feature, latlng) {
-    return new L.Marker(latlng);
+    return new Marker(latlng);
   }
 });
 markers.addLayer(m);

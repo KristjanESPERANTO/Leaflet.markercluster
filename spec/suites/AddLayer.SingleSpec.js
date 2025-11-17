@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, LayerGroup, Map, Marker } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('addLayer adding a single marker', function () {
   /////////////////////////////
@@ -12,17 +13,17 @@ describe('addLayer adding a single marker', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.clearLayers()
       map.removeLayer(group)
     }
@@ -37,9 +38,9 @@ describe('addLayer adding a single marker', function () {
   // TESTS
   /////////////////////////////
   it('appears when added to the group before the group is added to the map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
 
     group.addLayer(marker)
     map.addLayer(group)
@@ -49,9 +50,9 @@ describe('addLayer adding a single marker', function () {
   })
 
   it('appears when added to the group after the group is added to the map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -61,9 +62,9 @@ describe('addLayer adding a single marker', function () {
   })
 
   it('appears (using animations) when added after the group is added to the map', function () {
-    group = new L.MarkerClusterGroup({ animateAddingMarkers: true })
+    group = new MarkerClusterGroup({ animateAddingMarkers: true })
 
-    const marker = new L.Marker([1.5, 1.5])
+    const marker = new Marker([1.5, 1.5])
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -73,9 +74,9 @@ describe('addLayer adding a single marker', function () {
   })
 
   it('does not appear when too far away when added before the group is added to the map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([3.5, 1.5])
+    const marker = new Marker([3.5, 1.5])
 
     group.addLayer(marker)
     map.addLayer(group)
@@ -84,9 +85,9 @@ describe('addLayer adding a single marker', function () {
   })
 
   it('does not appear when too far away when added after the group is added to the map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Marker([3.5, 1.5])
+    const marker = new Marker([3.5, 1.5])
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -95,11 +96,11 @@ describe('addLayer adding a single marker', function () {
   })
 
   it('passes control to addLayers when marker is a Layer Group', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker1 = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
-    const layerGroup = new L.LayerGroup([marker1, marker2])
+    const marker1 = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
+    const layerGroup = new LayerGroup([marker1, marker2])
 
     map.addLayer(group)
     group.addLayer(layerGroup)

@@ -49,7 +49,7 @@ markers.on("clustermouseover", function(a) {
   let hull = a.sourceTarget.getConvexHull();
   
   <span class="code-comment">// Create custom red polygon</span>
-  polygon = new L.Polygon(hull, {
+  polygon = new Polygon(hull, {
     color: '#ff0000',
     weight: 3,
     fillColor: '#ff0000',
@@ -69,7 +69,7 @@ markers.on("clustermouseout", function() {
         <ul>
           <li><code>showCoverageOnHover: false</code> – Disable built-in polygon</li>
           <li><code>a.sourceTarget.getConvexHull()</code> – Get convex hull points</li>
-          <li><code>new L.Polygon(hull, {...})</code> – Create custom styled polygon</li>
+          <li><code>new Polygon(hull, {...})</code> – Create custom styled polygon</li>
           <li><code>map.addLayer(polygon)</code> – Display on map</li>
         </ul>
       </div>

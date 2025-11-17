@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import L from 'leaflet'
+import { DivIcon, LatLngBounds, LayerGroup, Map, Marker } from 'leaflet'
+import { MarkerCluster, MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('refreshClusters', function () {
   /////////////////////////////
@@ -15,17 +16,17 @@ describe('refreshClusters', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.clearLayers()
       map.removeLayer(group)
     }
@@ -50,7 +51,7 @@ describe('refreshClusters', function () {
   function setMapView() {
     // Now look at the markers to force cluster icons drawing.
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
@@ -60,10 +61,10 @@ describe('refreshClusters', function () {
   // TESTS
   /////////////////////////////
   it('flags all non-visible parent clusters of a given marker', function () {
-    group = L.markerClusterGroup().addTo(map)
+    group = new MarkerClusterGroup().addTo(map)
 
-    const marker1 = new L.Marker([1.5, 1.5]).addTo(group),
-      marker2 = new L.Marker([1.5, 1.5]).addTo(group) // Needed to force a cluster.
+    const marker1 = new Marker([1.5, 1.5]).addTo(group),
+      marker2 = new Marker([1.5, 1.5]).addTo(group) // Needed to force a cluster.
 
     setMapView()
 
@@ -101,25 +102,25 @@ describe('refreshClusters', function () {
   })
 
   it('re-draws visible clusters', function () {
-    group = L.markerClusterGroup({
+    group = new MarkerClusterGroup({
       iconCreateFunction: function (cluster) {
         const markers = cluster.getAllChildMarkers()
 
         for (const i in markers) {
           if (markers[i].changed) {
-            return new L.DivIcon({
+            return new DivIcon({
               className: 'changed',
             })
           }
         }
-        return new L.DivIcon({
+        return new DivIcon({
           className: 'original',
         })
       },
     }).addTo(map)
 
-    const marker1 = new L.Marker([1.5, 1.5]).addTo(group),
-      marker2 = new L.Marker([1.5, 1.5]).addTo(group) // Needed to force a cluster.
+    const marker1 = new Marker([1.5, 1.5]).addTo(group),
+      marker2 = new Marker([1.5, 1.5]).addTo(group) // Needed to force a cluster.
 
     setMapView()
 
@@ -153,23 +154,23 @@ describe('refreshClusters', function () {
 
     for (const i in markers) {
       if (markers[i].changed) {
-        return new L.DivIcon({
+        return new DivIcon({
           className: 'changed',
         })
       }
     }
-    return new L.DivIcon({
+    return new DivIcon({
       className: 'original',
     })
   }
 
   it('re-draws markers in singleMarkerMode', function () {
-    group = L.markerClusterGroup({
+    group = new MarkerClusterGroup({
       singleMarkerMode: true,
       iconCreateFunction: iconCreateFunction,
     }).addTo(map)
 
-    const marker1 = new L.Marker([1.5, 1.5]).addTo(group)
+    const marker1 = new Marker([1.5, 1.5]).addTo(group)
 
     setMapView()
 
@@ -186,14 +187,14 @@ describe('refreshClusters', function () {
   })
 
   it('does not modify markers that do not belong to the current group (in singleMarkerMode)', function () {
-    group = L.markerClusterGroup({
+    group = new MarkerClusterGroup({
       singleMarkerMode: true,
       iconCreateFunction: iconCreateFunction,
     }).addTo(map)
 
-    const marker1 = new L.Marker([1.5, 1.5]).addTo(group)
+    const marker1 = new Marker([1.5, 1.5]).addTo(group)
 
-    const marker2 = new L.Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
     marker2.setIcon(iconCreateFunction({
       getAllChildMarkers: function () {
         return marker2
@@ -221,12 +222,12 @@ describe('refreshClusters', function () {
   })
 
   // Shared code for below tests.
-  const marker1 = new L.Marker([1.5, 1.5]),
-    marker2 = new L.Marker([1.5, 1.5]), // Needed to force a cluster.
-    marker3 = new L.Marker([1.1, 1.1]),
-    marker4 = new L.Marker([1.1, 1.1]), // Needed to force a cluster.
-    marker5 = new L.Marker([1.9, 1.9]),
-    marker6 = new L.Marker([1.9, 1.9]) // Needed to force a cluster.
+  const marker1 = new Marker([1.5, 1.5]),
+    marker2 = new Marker([1.5, 1.5]), // Needed to force a cluster.
+    marker3 = new Marker([1.1, 1.1]),
+    marker4 = new Marker([1.1, 1.1]), // Needed to force a cluster.
+    marker5 = new Marker([1.9, 1.9]),
+    marker6 = new Marker([1.9, 1.9]) // Needed to force a cluster.
   let marker1cluster8,
     marker1cluster3,
     marker1cluster5,
@@ -238,7 +239,7 @@ describe('refreshClusters', function () {
     marker5cluster5
 
   function init3clusterBranches() {
-    group = L.markerClusterGroup({
+    group = new MarkerClusterGroup({
       maxClusterRadius: 2, // Make sure we keep distinct clusters.
     }).addTo(map)
 
@@ -374,12 +375,12 @@ describe('refreshClusters', function () {
     expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok()
   })
 
-  it('accepts an L.LayerGroup', function () {
+  it('accepts an LayerGroup', function () {
     init3clusterBranches()
 
     // Then request clusters refresh.
     // No need to actually modify the markers.
-    const layerGroup = new L.LayerGroup([marker1, marker5])
+    const layerGroup = new LayerGroup([marker1, marker5])
     group.refreshClusters(layerGroup)
     // Clusters of marker3 and 4 shall not be flagged.
 
@@ -395,7 +396,7 @@ describe('refreshClusters', function () {
     expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok()
   })
 
-  it('accepts an L.MarkerCluster', function () {
+  it('accepts an MarkerCluster', function () {
     init3clusterBranches()
 
     // Then request clusters refresh.

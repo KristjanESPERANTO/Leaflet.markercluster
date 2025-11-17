@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { Circle, LatLngBounds, Map } from 'leaflet'
+import { MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('support for Circle elements', function () {
   /////////////////////////////
@@ -14,17 +15,17 @@ describe('support for Circle elements', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
   })
 
   afterEach(function () {
-    if (group instanceof L.MarkerClusterGroup) {
+    if (group instanceof MarkerClusterGroup) {
       group.clearLayers()
       map.removeLayer(group)
     }
@@ -40,14 +41,14 @@ describe('support for Circle elements', function () {
   // TESTS
   /////////////////////////////
   it('appears when added to the group before the group is added to the map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], 200)
 
     group.addLayer(marker)
     map.addLayer(group)
 
-    // Leaflet 1.0.0 now uses an intermediate L.Renderer.
+    // Leaflet 1.0.0 now uses an intermediate Renderer.
     // marker > _path > _rootGroup (g) > _container (svg) > pane (div)
     expect(marker._path.parentNode).to.not.be(undefined)
     expect(marker._path.parentNode.parentNode.parentNode).to.be(map.getPane('overlayPane'))
@@ -56,9 +57,9 @@ describe('support for Circle elements', function () {
   })
 
   it('appears when added to the group after the group is added to the map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], 200)
 
     group.addLayer(marker)
     map.addLayer(group)
@@ -70,10 +71,10 @@ describe('support for Circle elements', function () {
   })
 
   it('appears animated when added to the group after the group is added to the map', function () {
-    group = new L.MarkerClusterGroup({ animateAddingMarkers: true })
+    group = new MarkerClusterGroup({ animateAddingMarkers: true })
 
-    const marker = new L.Circle([1.5, 1.5], 200)
-    const marker2 = new L.Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], 200)
+    const marker2 = new Circle([1.5, 1.5], 200)
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -86,10 +87,10 @@ describe('support for Circle elements', function () {
   })
 
   it('creates a cluster when 2 overlapping markers are added before the group is added to the map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Circle([1.5, 1.5], 200)
-    const marker2 = new L.Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], 200)
+    const marker2 = new Circle([1.5, 1.5], 200)
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -103,10 +104,10 @@ describe('support for Circle elements', function () {
   })
 
   it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Circle([1.5, 1.5], 200)
-    const marker2 = new L.Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], 200)
+    const marker2 = new Circle([1.5, 1.5], 200)
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -121,9 +122,9 @@ describe('support for Circle elements', function () {
   })
 
   it('disappears when removed from the group', function () {
-    group = new L.MarkerClusterGroup()
+    group = new MarkerClusterGroup()
 
-    const marker = new L.Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], 200)
 
     group.addLayer(marker)
     map.addLayer(group)

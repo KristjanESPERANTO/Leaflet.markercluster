@@ -1,11 +1,12 @@
 // This code is 100% based on https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet
 // Huge thanks to jawj for implementing it first to make my job easy :-)
 
-import Leaflet, { Path, Point, Polyline } from 'leaflet'
+import { Browser, Path, Point, Polyline } from 'leaflet'
 import { MarkerCluster } from './MarkerCluster.js'
 import { MarkerClusterGroup } from './MarkerClusterGroup.js'
 
-MarkerCluster.include({
+// Spiderfier methods for MarkerCluster
+const MarkerClusterSpiderfierMethods = {
 
   _2PI: Math.PI * 2,
   _circleFootSeparation: 25, // related to circumference of circle
@@ -135,10 +136,10 @@ MarkerCluster.include({
     group._ignoreMove = false
     group._spiderfied = null
   },
-})
+}
 
 // Non Animated versions of everything
-export const MarkerClusterNonAnimated = Leaflet.MarkerClusterNonAnimated = MarkerCluster.extend({
+export const MarkerClusterNonAnimated = MarkerCluster.extend({
   _animationSpiderfy: function (childMarkers, positions) {
     const group = this._group,
       map = group._map,
@@ -182,8 +183,8 @@ export const MarkerClusterNonAnimated = Leaflet.MarkerClusterNonAnimated = Marke
   },
 })
 
-// Animated versions here
-MarkerCluster.include({
+// Animated spiderfier methods for MarkerCluster
+const MarkerClusterAnimatedSpiderfierMethods = {
 
   _animationSpiderfy: function (childMarkers, positions) {
     const me = this,
@@ -198,7 +199,8 @@ MarkerCluster.include({
       i, m, leg, legPath, legLength, newPos
 
     if (finalLegOpacity === undefined) {
-      finalLegOpacity = MarkerClusterGroup.prototype.options.spiderLegPolylineOptions.opacity
+      // Default opacity from MarkerClusterGroup options
+      finalLegOpacity = 0.5
     }
 
     if (svg) {
@@ -385,9 +387,10 @@ MarkerCluster.include({
       })
     }, 200)
   },
-})
+}
 
-MarkerClusterGroup.include({
+// Spiderfier methods for MarkerClusterGroup
+const MarkerClusterGroupSpiderfierMethods = {
   // The MarkerCluster currently spiderfied (if any)
   _spiderfied: null,
 
@@ -409,11 +412,7 @@ MarkerClusterGroup.include({
     // Browsers without zoomAnimation or a big zoom don't fire zoomstart
     this._map.on('zoomend', this._noanimationUnspiderfy, this)
 
-    const browser = typeof globalThis !== 'undefined' && globalThis.L
-      ? globalThis.L.Browser
-      : undefined
-
-    if (!(browser && browser.touch)) {
+    if (!Browser.touch) {
       this._map.getRenderer(this)
       // Needs to happen in the pageload, not after, or animations don't work in webkit
       //  http://stackoverflow.com/questions/8455200/svg-animate-with-dynamically-added-elements
@@ -491,4 +490,13 @@ MarkerClusterGroup.include({
       delete layer._spiderLeg
     }
   },
-})
+}
+
+// Apply the methods to their respective classes
+MarkerCluster.include(MarkerClusterSpiderfierMethods)
+MarkerCluster.include(MarkerClusterAnimatedSpiderfierMethods)
+MarkerClusterGroup.include(MarkerClusterGroupSpiderfierMethods)
+
+// Make MarkerClusterNonAnimated accessible via MarkerCluster for runtime access
+// This avoids circular dependency issues during module initialization
+MarkerCluster.NonAnimated = MarkerClusterNonAnimated

@@ -1,4 +1,5 @@
-import L from 'leaflet'
+import { LatLngBounds, Map, Marker } from 'leaflet'
+import { MarkerCluster, MarkerClusterGroup } from 'leaflet.markercluster'
 
 describe('getVisibleParent', function () {
   /////////////////////////////
@@ -12,9 +13,9 @@ describe('getVisibleParent', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new L.Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false })
 
-    map.fitBounds(new L.LatLngBounds([
+    map.fitBounds(new LatLngBounds([
       [1, 1],
       [2, 2],
     ]))
@@ -33,8 +34,8 @@ describe('getVisibleParent', function () {
   // TESTS
   /////////////////////////////
   it('gets the marker if the marker is visible', function () {
-    group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
+    group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
 
     group.addLayer(marker)
     map.addLayer(group)
@@ -45,24 +46,24 @@ describe('getVisibleParent', function () {
   })
 
   it('gets the visible cluster if it is clustered', function () {
-    group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([1.5, 1.5])
-    const marker2 = new L.Marker([1.5, 1.5])
+    group = new MarkerClusterGroup()
+    const marker = new Marker([1.5, 1.5])
+    const marker2 = new Marker([1.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
     const vp = group.getVisibleParent(marker)
 
-    expect(vp).to.be.a(L.MarkerCluster)
+    expect(vp).to.be.a(MarkerCluster)
     expect(vp._icon).to.not.be(null)
     expect(vp._icon).to.not.be(undefined)
   })
 
   it('returns null if the marker and parents are all not visible', function () {
-    group = new L.MarkerClusterGroup()
-    const marker = new L.Marker([5.5, 1.5])
-    const marker2 = new L.Marker([5.5, 1.5])
+    group = new MarkerClusterGroup()
+    const marker = new Marker([5.5, 1.5])
+    const marker2 = new Marker([5.5, 1.5])
 
     group.addLayers([marker, marker2])
     map.addLayer(group)

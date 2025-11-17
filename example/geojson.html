@@ -33,7 +33,7 @@
         <p>A minimal example showing how to cluster GeoJSON point features. This demonstrates the basic pattern of adding a GeoJSON layer to a MarkerClusterGroup.</p>
 
         <div class="code-block">
-          <pre><code>let geoJsonLayer = new L.GeoJSON(geoJsonData, {
+          <pre><code>let geoJsonLayer = new GeoJSON(geoJsonData, {
   onEachFeature: function (feature, layer) {
     layer.bindPopup(feature.properties.address);
   }

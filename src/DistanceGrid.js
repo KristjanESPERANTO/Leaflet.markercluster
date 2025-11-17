@@ -1,6 +1,6 @@
-import Leaflet, { Util } from 'leaflet'
+import { Util } from 'leaflet'
 
-export const DistanceGrid = Leaflet.DistanceGrid = function (cellSize) {
+export const DistanceGrid = function (cellSize) {
   this._cellSize = cellSize
   this._sqCellSize = cellSize * cellSize
   this._grid = {}
