@@ -1,5 +1,13 @@
 # Leaflet.markercluster
 
+> **⚠️ ALPHA RELEASE - v3.0.0-alpha.1**  
+> This is an alpha version tested against Leaflet 2.x (alpha). Not recommended for production yet.
+> For stable releases, use [v2.x](https://github.com/Leaflet/Leaflet.markercluster/tree/v2.x) or the [upstream project](https://github.com/Leaflet/Leaflet.markercluster/).
+> Install with `npm install @kristjan.esperanto/leaflet.markercluster@next`.
+> Release 3.0.0 will be released as stable once Leaflet 2.0 is officially released.
+
+---
+
 Provides Beautiful Animated Marker Clustering functionality for [Leaflet](http://leafletjs.com), a JS library for interactive maps.
 
 _Requires Leaflet ≥ 2.0.0._

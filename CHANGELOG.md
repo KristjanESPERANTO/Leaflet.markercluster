@@ -1,5 +1,80 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 3.0.0-alpha.1 - 2025-11-18
+
+### ⚠️ ALPHA RELEASE
+
+**This is an alpha release tested against Leaflet 2.x (alpha).** Not recommended for production.
+
+### 💥 BREAKING CHANGES
+
+**Pure ES6 Modules - No global `L.*` namespace anymore:**
+
+```javascript
+// ❌ Old (v2.x) - no longer works
+var mcg = L.markerClusterGroup();
+
+// ✅ New (v3.x) - ES6 imports
+import { MarkerClusterGroup } from "leaflet.markercluster";
+const mcg = new MarkerClusterGroup();
+```
+
+**What's removed:**
+
+- Global namespace: `L.MarkerClusterGroup`, `L.markerClusterGroup()`, `L.MarkerCluster`, `L.DistanceGrid`, `L.QuickHull`, `L.MarkerClusterNonAnimated`
+- IIFE/UMD build - only ES module build now
+- Support for older browsers - requires ES6 modules + Import Maps (Chrome 89+, Firefox 108+, Safari 16.4+)
+
+**Migration:** Use ES6 imports. For browser usage without bundler, use `<script type="module">` and Import Maps (see examples). For older browsers, stay on v2.x.
+
+### Added
+
+- **feat: add CSS Custom Properties for easy theming + theme example**  
+  Customize cluster styles via CSS variables (`--leaflet-cluster-bg-small`, etc.).
+
+- **feat: modernize package.json exports**  
+  Modern `exports` field with explicit CSS paths and `"type": "module"`.
+
+- **feat: expose QuickHull and MarkerClusterNonAnimated as named exports**
+
+### Changed
+
+- **refactor!: remove all global Leaflet.\* namespace registrations**  
+  Pure ES6 named exports only. This is the main breaking change.
+
+- **build(rollup)!: remove IIFE build**  
+  Only ES module build provided. Enables proper tree-shaking with `"sideEffects": false`.
+
+- **refactor(examples): migrate all examples to ES6 modules with import maps**  
+  All 19 examples now use modern ES6 syntax with Import Maps.
+
+- **refactor: eliminate .include() pattern with ES6 spread operator**  
+  Replaced Leaflet's monkey-patching with modern ES6 spread. Animation, QuickHull, Refresh, and Spiderfier remain in separate files but use spread composition.
+
+- **refactor(tests): migrate from Expect.js to Chai**  
+  Migrated assertions across 35 test files to modern Chai (ES6 module import).
+
+- **docs: complete JSDoc documentation with eslint-plugin-jsdoc**  
+  All public methods documented. Better IDE autocomplete.
+
+- **chore: update devDependencies**
+
+- **perf: optimize removeObject with modern swap-and-pop pattern**
+
+### Removed
+
+- **chore(tests): remove unused happen dependency**
+
+- **chore(build): remove obsolete rollup-plugin-git-version**  
+  Redundant - git version already generated manually in build.
+
+---
+
 ## 2.2.0 (2025-11-03)
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "@kristjan.esperanto/leaflet.markercluster",
-  "version": "2.2.0",
+  "version": "3.0.0-alpha.1",
   "description": "Provides beautiful animated Marker clustering functionality for Leaflet.",
   "homepage": "https://kristjanesperanto.github.io/Leaflet.markercluster/",
   "repository": {
@@ -17,6 +17,10 @@
   "module": "dist/leaflet.markercluster.js",
   "style": "dist/MarkerCluster.css",
   "sideEffects": false,
+  "publishConfig": {
+    "tag": "next",
+    "access": "public"
+  },
   "exports": {
     ".": {
       "import": "./dist/leaflet.markercluster.js",
