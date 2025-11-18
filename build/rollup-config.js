@@ -1,10 +1,9 @@
 // Config file for running Rollup in "normal" mode (non-watch)
 
-import json from '@rollup/plugin-json'
 import process from 'node:process'
-
 import { readFileSync } from 'fs'
 import { execSync } from 'child_process'
+
 const pkg = JSON.parse(readFileSync('./package.json'))
 
 let version = pkg.version
@@ -39,5 +38,4 @@ export default {
     format: 'es',
     sourcemap: true,
   },
-  plugins: [json()],
 }
