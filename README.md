@@ -383,7 +383,7 @@ Note: these two examples rely on the default `chunkedLoading` behavior to avoid 
 
 ## License
 
-Leaflet.markercluster is free software, and may be redistributed under the MIT-LICENSE.
+This software is licensed under the MIT License (MIT). See [LICENSE.md](LICENSE.md) for details.
 
 ## Sub-plugins
 

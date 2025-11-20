@@ -33,7 +33,7 @@
     "dist/**/*",
     "README.md",
     "CHANGELOG.md",
-    "LICENCE.md"
+    "LICENSE.md"
   ],
   "keywords": [
     "gis",
