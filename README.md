@@ -81,6 +81,26 @@ import "@kristjan.esperanto/leaflet.markercluster/dist/MarkerCluster.Default.css
 import { MarkerClusterGroup } from "@kristjan.esperanto/leaflet.markercluster";
 ```
 
+### TypeScript
+
+This package includes TypeScript declarations. No need to install `@types/leaflet.markercluster`.
+
+```typescript
+import { Map, TileLayer, Marker, LatLng } from "leaflet";
+import { MarkerClusterGroup } from "@kristjan.esperanto/leaflet.markercluster";
+
+const map = new Map("map").setView([51.505, -0.09], 13);
+new TileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+const markers: MarkerClusterGroup = new MarkerClusterGroup({
+  maxClusterRadius: 80,
+  spiderfyOnMaxZoom: true
+});
+
+markers.addLayer(new Marker(new LatLng(51.5, -0.09)));
+map.addLayer(markers);
+```
+
 ### For browser usage (without bundler)
 
 For browser usage without a bundler, use [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) which are supported in all modern browsers:
