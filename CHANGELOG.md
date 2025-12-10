@@ -5,13 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.0.0-alpha.1 - 2025-11-18
-
-### ⚠️ ALPHA RELEASE
-
-**This is an alpha release tested against Leaflet 2.x (alpha).** Not recommended for production.
+## 3.0.0 - 2025-12-10
 
 ### 💥 BREAKING CHANGES
+
+**Requires Leaflet ≥2.0.0** - This version is designed for Leaflet 2.x and may not work with Leaflet 1.x.
 
 **Pure ES6 Modules - No global `L.*` namespace anymore:**
 
@@ -30,9 +28,12 @@ const mcg = new MarkerClusterGroup();
 - IIFE/UMD build - only ES module build now
 - Support for older browsers - requires ES6 modules + Import Maps (Chrome 89+, Firefox 108+, Safari 16.4+)
 
-**Migration:** Use ES6 imports. For browser usage without bundler, use `<script type="module">` and Import Maps (see examples). For older browsers, stay on v2.x.
+**Migration:** Use ES6 imports. For browser usage without bundler, use `<script type="module">` and Import Maps (see examples). For older browsers or Leaflet 1.x, stay on v2.x.
 
 ### Added
+
+- **feat: add TypeScript declarations**  
+  Full type definitions in `types/index.d.ts` for MarkerClusterGroup, MarkerCluster, and all options.
 
 - **feat: add CSS Custom Properties for easy theming + theme example**  
   Customize cluster styles via CSS variables (`--leaflet-cluster-bg-small`, etc.).
