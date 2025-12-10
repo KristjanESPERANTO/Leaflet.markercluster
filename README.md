@@ -1,5 +1,9 @@
 # Leaflet.markercluster
 
+[![npm version](https://img.shields.io/npm/v/@kristjan.esperanto/leaflet.markercluster?color=blue)](https://www.npmjs.com/package/@kristjan.esperanto/leaflet.markercluster)
+[![CI](https://github.com/KristjanESPERANTO/Leaflet.markercluster/actions/workflows/ci.yml/badge.svg)](https://github.com/KristjanESPERANTO/Leaflet.markercluster/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+
 Provides Beautiful Animated Marker Clustering functionality for [Leaflet](http://leafletjs.com), a JS library for interactive maps.
 
 _Requires Leaflet ≥ 2.0.0._
