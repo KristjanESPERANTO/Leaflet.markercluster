@@ -15,6 +15,7 @@
   "type": "module",
   "main": "dist/leaflet.markercluster.js",
   "module": "dist/leaflet.markercluster.js",
+  "types": "types/index.d.ts",
   "style": "dist/MarkerCluster.css",
   "sideEffects": false,
   "publishConfig": {
@@ -23,6 +24,7 @@
   },
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./dist/leaflet.markercluster.js",
       "default": "./dist/leaflet.markercluster.js"
     },
@@ -31,6 +33,7 @@
   },
   "files": [
     "dist/**/*",
+    "types/**/*",
     "README.md",
     "CHANGELOG.md",
     "LICENSE.md"
