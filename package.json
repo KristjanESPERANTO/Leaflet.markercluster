@@ -19,7 +19,7 @@
   "style": "dist/MarkerCluster.css",
   "sideEffects": false,
   "publishConfig": {
-    "tag": "next",
+    "tag": "latest",
     "access": "public"
   },
   "exports": {
