@@ -1,3 +1,4 @@
+import css from '@eslint/css'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import { flatConfigs as importX } from 'eslint-plugin-import-x'
@@ -11,6 +12,7 @@ export default defineConfig([
     'dist/*',
     'test-results/*',
   ]),
+  { files: ['**/*.css'], plugins: { css }, language: 'css/css', extends: ['css/recommended'], rules: { 'css/font-family-fallbacks': 'off' } },
   {
     files: ['**/*.js'],
     languageOptions: { ecmaVersion: 'latest', globals: { ...globals.browser } },

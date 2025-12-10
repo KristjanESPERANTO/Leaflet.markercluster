@@ -49,6 +49,7 @@
     "leaflet": ">=2.0.0-alpha.1"
   },
   "devDependencies": {
+    "@eslint/css": "^0.14.1",
     "@eslint/js": "^9.39.1",
     "@eslint/markdown": "^7.5.1",
     "@stylistic/eslint-plugin": "^5.6.1",
@@ -62,19 +63,13 @@
     "playwright": "^1.57.0",
     "prettier": "^3.7.4",
     "rollup": "4.53.3",
-    "sinon": "^21.0.0",
-    "stylelint": "^16.26.1",
-    "stylelint-config-standard": "^39.0.1",
-    "stylelint-prettier": "^5.0.3"
+    "sinon": "^21.0.0"
   },
   "scripts": {
-    "test": "npm run lint:code && npm run build && node spec/run-tests.js",
+    "test": "npm run lint && npm run build && node spec/run-tests.js",
     "build": "npm run lint:fix && rollup -c build/rollup-config.js",
     "prepublishOnly": "npm run build",
-    "lint": "npm run lint:code && npm run lint:style && npm run lint:format",
-    "lint:code": "eslint",
-    "lint:style": "stylelint **/*.css",
-    "lint:format": "prettier --check .",
-    "lint:fix": "eslint --fix && stylelint --fix **/*.css && prettier --write ."
+    "lint": "eslint && prettier --check .",
+    "lint:fix": "eslint --fix && prettier --write ."
   }
 }
