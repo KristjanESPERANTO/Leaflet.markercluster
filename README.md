@@ -1,13 +1,5 @@
 # Leaflet.markercluster
 
-> **⚠️ ALPHA RELEASE - v3.0.0-alpha.1**  
-> This is an alpha version tested against Leaflet 2.x (alpha). Not recommended for production yet.
-> For stable releases, use [v2.x](https://github.com/Leaflet/Leaflet.markercluster/tree/v2.x) or the [upstream project](https://github.com/Leaflet/Leaflet.markercluster/).
-> Install with `npm install @kristjan.esperanto/leaflet.markercluster@next`.
-> Release 3.0.0 will be released as stable once Leaflet 2.0 is officially released.
-
----
-
 Provides Beautiful Animated Marker Clustering functionality for [Leaflet](http://leafletjs.com), a JS library for interactive maps.
 
 _Requires Leaflet ≥ 2.0.0._
@@ -17,6 +9,10 @@ _Requires Leaflet ≥ 2.0.0._
 ![cluster map example](example/map.png)
 
 For a Leaflet 1.x compatible version, use the [upstream project](https://github.com/Leaflet/Leaflet.markercluster/).
+
+> **📌 This is a fork**  
+> This project is a fork of [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) by Dave Leaver.
+> It has been modernized for Leaflet 2.x with ES6 modules, TypeScript declarations, and CSS Custom Properties for theming.
 
 ## Table of Contents
 
@@ -81,23 +77,46 @@ import "@kristjan.esperanto/leaflet.markercluster/dist/MarkerCluster.Default.css
 import { MarkerClusterGroup } from "@kristjan.esperanto/leaflet.markercluster";
 ```
 
-### For browser usage with script tags
+### For browser usage (without bundler)
 
-Include Leaflet and the plugin CSS and JS files on your page using script tags:
+For browser usage without a bundler, use [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) which are supported in all modern browsers:
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/leaflet@2/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@2/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@2/dist/MarkerCluster.Default.css" />
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@2/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@3/dist/MarkerCluster.Default.css" />
 
-<script src="https://unpkg.com/leaflet@2/dist/leaflet.js"></script>
-<script src="https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@2/dist/leaflet.markercluster-global.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "https://unpkg.com/leaflet@2/dist/leaflet.js",
+          "leaflet.markercluster": "https://unpkg.com/@kristjan.esperanto/leaflet.markercluster@3/dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="map" style="height: 400px;"></div>
+
+    <script type="module">
+      import { Map, TileLayer, Marker, LatLng } from "leaflet";
+      import { MarkerClusterGroup } from "leaflet.markercluster";
+
+      const map = new Map("map").setView([51.505, -0.09], 13);
+      new TileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+      const markers = new MarkerClusterGroup();
+      markers.addLayer(new Marker(new LatLng(51.5, -0.09)));
+      markers.addLayer(new Marker(new LatLng(51.51, -0.1)));
+      markers.addLayer(new Marker(new LatLng(51.49, -0.08)));
+      map.addLayer(markers);
+    </script>
+  </body>
+</html>
 ```
-
-**Note:** The plugin provides two builds:
-
-- `dist/leaflet.markercluster.js` - ES Module for bundlers (with tree-shaking support)
-- `dist/leaflet.markercluster-global.js` - IIFE build that extends the global `L` object for browser usage
 
 ### Building, testing and linting scripts
 
