@@ -1,5 +1,5 @@
 import { describe, it } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { DistanceGrid } from '../../dist/leaflet.markercluster.js'
 
@@ -8,18 +8,18 @@ describe('distance grid', function () {
     const grid = new DistanceGrid(100),
       obj = {}
 
-    expect(grid.addObject(obj, { x: 0, y: 0 })).to.deep.equal(undefined)
-    expect(grid.removeObject(obj, { x: 0, y: 0 })).to.deep.equal(true)
+    assert.deepStrictEqual(grid.addObject(obj, { x: 0, y: 0 }), undefined)
+    assert.deepStrictEqual(grid.removeObject(obj, { x: 0, y: 0 }), true)
   })
 
   it('eachObject', function (t, done) {
     const grid = new DistanceGrid(100),
       obj = {}
 
-    expect(grid.addObject(obj, { x: 0, y: 0 })).to.deep.equal(undefined)
+    assert.deepStrictEqual(grid.addObject(obj, { x: 0, y: 0 }), undefined)
 
     grid.eachObject(function (o) {
-      expect(o).to.deep.equal(obj)
+      assert.deepStrictEqual(o, obj)
       done()
     })
   })
@@ -30,8 +30,8 @@ describe('distance grid', function () {
 
     grid.addObject(obj, { x: 0, y: 0 })
 
-    expect(grid.getNearObject({ x: 50, y: 50 })).to.equal(obj)
-    expect(grid.getNearObject({ x: 100, y: 0 })).to.equal(obj)
+    assert.strictEqual(grid.getNearObject({ x: 50, y: 50 }), obj)
+    assert.strictEqual(grid.getNearObject({ x: 100, y: 0 }), obj)
   })
 
   it('getNearObject with cellSize 0', function () {
@@ -40,7 +40,7 @@ describe('distance grid', function () {
 
     grid.addObject(obj, { x: 0, y: 0 })
 
-    expect(grid.getNearObject({ x: 50, y: 50 })).to.equal(null)
-    expect(grid.getNearObject({ x: 0, y: 0 })).to.equal(obj)
+    assert.strictEqual(grid.getNearObject({ x: 50, y: 50 }), null)
+    assert.strictEqual(grid.getNearObject({ x: 0, y: 0 }), obj)
   })
 })

@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { Icon, LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -53,11 +53,11 @@ describe('singleMarkerMode option', function () {
       },
     }).addTo(map)
 
-    expect(marker.options.icon).to.equal(defaultIcon)
+    assert.strictEqual(marker.options.icon, defaultIcon)
 
     marker.addTo(group)
 
-    expect(marker.options.icon).to.equal(clusterIcon)
+    assert.strictEqual(marker.options.icon, clusterIcon)
   })
 
   it('does not modify marker icons by default (or set to false)', function () {
@@ -67,10 +67,10 @@ describe('singleMarkerMode option', function () {
       },
     }).addTo(map)
 
-    expect(marker.options.icon).to.equal(defaultIcon)
+    assert.strictEqual(marker.options.icon, defaultIcon)
 
     marker.addTo(group)
 
-    expect(marker.options.icon).to.equal(defaultIcon)
+    assert.strictEqual(marker.options.icon, defaultIcon)
   })
 })

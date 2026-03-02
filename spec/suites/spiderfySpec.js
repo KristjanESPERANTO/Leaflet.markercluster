@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { Circle, CircleMarker, LatLngBounds, Map, Marker } from 'leaflet'
@@ -36,8 +36,8 @@ describe('spiderfy', function () {
 
     map.remove()
     div.remove()
-    clock.restore()
 
+    clock.restore()
     div = map = group = clock = null
   })
 
@@ -56,8 +56,8 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
+    assert.strictEqual(marker2._icon.parentNode, map._panes.markerPane)
   })
 
   it('Spiderfies 2 CircleMarkers', function () {
@@ -74,8 +74,8 @@ describe('spiderfy', function () {
 
     // Leaflet 1.0.0 now uses an intermediate Renderer.
     // marker > _path > _rootGroup (g) > _container (svg) > pane (div)
-    expect(marker._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
-    expect(marker2._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    assert.strictEqual(marker._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
+    assert.strictEqual(marker2._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
   })
 
   it('Spiderfies 2 Circles', function () {
@@ -90,8 +90,8 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    expect(marker._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
-    expect(marker2._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    assert.strictEqual(marker._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
+    assert.strictEqual(marker2._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
   })
 
   it('Spiderfies at current zoom if all child markers are at the exact same position', function () {
@@ -111,16 +111,16 @@ describe('spiderfy', function () {
       cluster = cluster.__parent
     }
 
-    expect(zoom).to.be.lessThan(10)
+    assert.ok(zoom < 10)
 
     cluster.fire('click', null, true)
 
     clock.tick(1000)
 
-    expect(map.getZoom()).to.equal(zoom)
+    assert.strictEqual(map.getZoom(), zoom)
 
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
+    assert.strictEqual(marker2._icon.parentNode, map._panes.markerPane)
   })
 
   it('Spiderfies at current zoom if all child markers are still within a single cluster at map maxZoom', function () {
@@ -132,7 +132,7 @@ describe('spiderfy', function () {
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    expect(marker.__parent._zoom).to.equal(18)
+    assert.strictEqual(marker.__parent._zoom, 18)
 
     // Get the appropriate cluster.
     let cluster = marker.__parent
@@ -142,16 +142,16 @@ describe('spiderfy', function () {
       cluster = cluster.__parent
     }
 
-    expect(zoom).to.be.lessThan(10)
+    assert.ok(zoom < 10)
 
     cluster.fire('click', null, true)
 
     clock.tick(1000)
 
-    expect(map.getZoom()).to.equal(zoom)
+    assert.strictEqual(map.getZoom(), zoom)
 
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
+    assert.strictEqual(marker2._icon.parentNode, map._panes.markerPane)
   })
 
   it('removes all markers and spider legs when group is removed from map', function () {
@@ -165,8 +165,8 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(3) // The 2 markers + semi-transparent cluster.
-    expect(map.getPane('overlayPane').firstChild.firstChild.childNodes.length).to.equal(2) // The 2 spider legs.
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 3) // The 2 markers + semi-transparent cluster.
+    assert.strictEqual(map.getPane('overlayPane').firstChild.firstChild.childNodes.length, 2) // The 2 spider legs.
   })
 
   it('adds then removes class "leaflet-cluster-anim" from mapPane on spiderfy', function () {
@@ -180,11 +180,11 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    expect(map._panes.mapPane.className).to.contain('leaflet-cluster-anim')
+    assert.ok(map._panes.mapPane.className.includes('leaflet-cluster-anim'))
 
     clock.tick(1000)
 
-    expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim')
+    assert.ok(!map._panes.mapPane.className.includes('leaflet-cluster-anim'))
   })
 
   it('adds then removes class "leaflet-cluster-anim" from mapPane on unspiderfy', function () {
@@ -202,11 +202,11 @@ describe('spiderfy', function () {
 
     marker.__parent.unspiderfy()
 
-    expect(map._panes.mapPane.className).to.contain('leaflet-cluster-anim')
+    assert.ok(map._panes.mapPane.className.includes('leaflet-cluster-anim'))
 
     clock.tick(1000)
 
-    expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim')
+    assert.ok(!map._panes.mapPane.className.includes('leaflet-cluster-anim'))
   })
 
   it('fires unspiderfied event on unspiderfy', function (t, done) {
@@ -224,10 +224,10 @@ describe('spiderfy', function () {
 
     // Add event listener
     group.on('unspiderfied', function (event) {
-      expect(event.target).to.equal(group)
-      expect(event.cluster).to.be.an.instanceof(Marker)
-      expect(event.markers[1]).to.equal(marker)
-      expect(event.markers[0]).to.equal(marker2)
+      assert.strictEqual(event.target, group)
+      assert.ok(event.cluster instanceof Marker)
+      assert.strictEqual(event.markers[1], marker)
+      assert.strictEqual(event.markers[0], marker2)
 
       done()
     })
@@ -252,14 +252,14 @@ describe('spiderfy', function () {
 
     map.removeLayer(group)
 
-    expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim')
+    assert.ok(!map._panes.mapPane.className.includes('leaflet-cluster-anim'))
   })
 
-  it('overrides spiderfy shape positions when custom function has been provided', function () {
+  it('overrides spiderfy shape positions when custom function has been provided', function (t) {
     const marker = new Marker([1.5, 1.5])
     const marker2 = new Marker([1.5, 1.5])
 
-    const spiderfyShapePositionsFuntion = sinon.spy(function () {
+    const spiderfyShapePositionsFuntion = t.mock.fn(function () {
       return [{ x: 1.6, y: 1.6 }, { x: 1.6, y: 1.6 }]
     },
     )
@@ -272,7 +272,7 @@ describe('spiderfy', function () {
 
     marker.__parent.spiderfy()
 
-    sinon.assert.calledOnce(spiderfyShapePositionsFuntion)
+    assert.strictEqual(spiderfyShapePositionsFuntion.mock.calls.length, 1)
   })
 
   describe('zoomend event listener', function () {
@@ -288,12 +288,12 @@ describe('spiderfy', function () {
 
       marker.__parent.spiderfy()
 
-      expect(group._spiderfied).to.not.be.null
+      assert.notStrictEqual(group._spiderfied, null)
 
       map.fire('zoomend')
 
       // We should unspiderfy with no animation, so this should be null
-      expect(group._spiderfied).to.be.null
+      assert.strictEqual(group._spiderfied, null)
     })
   })
 
@@ -309,10 +309,10 @@ describe('spiderfy', function () {
 
       // Add event listener
       group.on('spiderfied', function (event) {
-        expect(event.target).to.equal(group)
-        expect(event.cluster).to.be.an.instanceof(Marker)
-        expect(event.markers[1]).to.equal(marker)
-        expect(event.markers[0]).to.equal(marker2)
+        assert.strictEqual(event.target, group)
+        assert.ok(event.cluster instanceof Marker)
+        assert.strictEqual(event.markers[1], marker)
+        assert.strictEqual(event.markers[0], marker2)
 
         done()
       })
@@ -333,10 +333,10 @@ describe('spiderfy', function () {
 
       // Add event listener
       group.on('spiderfied', function (event) {
-        expect(event.target).to.equal(group)
-        expect(event.cluster).to.be.an.instanceof(Marker)
-        expect(event.markers[1]).to.equal(marker)
-        expect(event.markers[0]).to.equal(marker2)
+        assert.strictEqual(event.target, group)
+        assert.ok(event.cluster instanceof Marker)
+        assert.strictEqual(event.markers[1], marker)
+        assert.strictEqual(event.markers[0], marker2)
 
         done()
       })

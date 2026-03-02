@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map } from 'leaflet'
 import { MarkerCluster, MarkerClusterGroup, MarkerClusterNonAnimated } from '../../dist/leaflet.markercluster.js'
@@ -47,18 +47,18 @@ describe('animate option', function () {
     let withAnimation = MarkerClusterGroup.prototype._withAnimation
 
     // MCG animated methods.
-    expect(group._animationStart).to.equal(withAnimation._animationStart)
-    expect(group._animationZoomIn).to.equal(withAnimation._animationZoomIn)
-    expect(group._animationZoomOut).to.equal(withAnimation._animationZoomOut)
-    expect(group._animationAddLayer).to.equal(withAnimation._animationAddLayer)
+    assert.strictEqual(group._animationStart, withAnimation._animationStart)
+    assert.strictEqual(group._animationZoomIn, withAnimation._animationZoomIn)
+    assert.strictEqual(group._animationZoomOut, withAnimation._animationZoomOut)
+    assert.strictEqual(group._animationAddLayer, withAnimation._animationAddLayer)
 
     // MarkerCluster spiderfy animated methods
     const cluster = group._topClusterLevel
 
     withAnimation = MarkerCluster.prototype
 
-    expect(cluster._animationSpiderfy).to.equal(withAnimation._animationSpiderfy)
-    expect(cluster._animationUnspiderfy).to.equal(withAnimation._animationUnspiderfy)
+    assert.strictEqual(cluster._animationSpiderfy, withAnimation._animationSpiderfy)
+    assert.strictEqual(cluster._animationUnspiderfy, withAnimation._animationUnspiderfy)
   })
 
   it('hooks non-animated methods version when set to false', function () {
@@ -68,17 +68,17 @@ describe('animate option', function () {
     let noAnimation = MarkerClusterGroup.prototype._noAnimation
 
     // MCG non-animated methods - check they're the same type/name, not reference
-    expect(group._animationStart.name || group._animationStart.toString()).to.equal(noAnimation._animationStart.name || noAnimation._animationStart.toString())
-    expect(group._animationZoomIn).to.equal(noAnimation._animationZoomIn)
-    expect(group._animationZoomOut).to.equal(noAnimation._animationZoomOut)
-    expect(group._animationAddLayer).to.equal(noAnimation._animationAddLayer)
+    assert.strictEqual(group._animationStart.name || group._animationStart.toString(), noAnimation._animationStart.name || noAnimation._animationStart.toString())
+    assert.strictEqual(group._animationZoomIn, noAnimation._animationZoomIn)
+    assert.strictEqual(group._animationZoomOut, noAnimation._animationZoomOut)
+    assert.strictEqual(group._animationAddLayer, noAnimation._animationAddLayer)
 
     // MarkerCluster spiderfy non-animated methods
     const cluster = group._topClusterLevel
 
     noAnimation = MarkerClusterNonAnimated.prototype
 
-    expect(cluster._animationSpiderfy).to.equal(noAnimation._animationSpiderfy)
-    expect(cluster._animationUnspiderfy).to.equal(noAnimation._animationUnspiderfy)
+    assert.strictEqual(cluster._animationSpiderfy, noAnimation._animationSpiderfy)
+    assert.strictEqual(cluster._animationUnspiderfy, noAnimation._animationUnspiderfy)
   })
 })

@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker, Polygon } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -41,8 +41,8 @@ describe('clearLayer', function () {
     group.addLayers([polygon, marker])
     group.clearLayers()
 
-    expect(group.hasLayer(polygon)).to.be.false
-    expect(group.hasLayer(marker)).to.be.false
+    assert.ok(!(group.hasLayer(polygon)))
+    assert.ok(!(group.hasLayer(marker)))
   })
 
   it('hits polygons and markers after adding to map', function () {
@@ -54,7 +54,7 @@ describe('clearLayer', function () {
     map.addLayer(group)
     group.clearLayers()
 
-    expect(group.hasLayer(polygon)).to.be.false
-    expect(group.hasLayer(marker)).to.be.false
+    assert.ok(!(group.hasLayer(polygon)))
+    assert.ok(!(group.hasLayer(marker)))
   })
 })

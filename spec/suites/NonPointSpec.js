@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Polygon } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -50,10 +50,10 @@ describe('adding non point data works', function () {
 
     // Leaflet 1.0.0 now uses an intermediate Renderer.
     // polygon > _path > _rootGroup (g) > _container (svg) > pane (div)
-    expect(polygon._path).to.not.be.undefined
-    expect(polygon._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    assert.notStrictEqual(polygon._path, undefined)
+    assert.strictEqual(polygon._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
 
-    expect(group.hasLayer(polygon))
+    assert.ok(group.hasLayer(polygon))
   })
 
   it('Allows adding a polygon before via addLayers([])', function () {
@@ -64,8 +64,8 @@ describe('adding non point data works', function () {
     group.addLayers([polygon])
     map.addLayer(group)
 
-    expect(polygon._path).to.not.be.undefined
-    expect(polygon._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    assert.notStrictEqual(polygon._path, undefined)
+    assert.strictEqual(polygon._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
   })
 
   it('Removes polygons from map when removed', function () {
@@ -77,7 +77,7 @@ describe('adding non point data works', function () {
     map.addLayer(group)
     map.removeLayer(group)
 
-    expect(polygon._path.parentNode).to.be.null
+    assert.strictEqual(polygon._path.parentNode, null)
   })
 
   describe('hasLayer', function () {
@@ -86,15 +86,15 @@ describe('adding non point data works', function () {
 
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
 
       map.addLayer(group)
 
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
 
       map.addLayer(polygon)
 
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
 
     it('returns true before adding to map', function () {
@@ -104,7 +104,7 @@ describe('adding non point data works', function () {
 
       group.addLayers([polygon])
 
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
     })
 
     it('returns true after adding to map after adding polygon', function () {
@@ -115,7 +115,7 @@ describe('adding non point data works', function () {
       group.addLayer(polygon)
       map.addLayer(group)
 
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
     })
 
     it('returns true after adding to map before adding polygon', function () {
@@ -126,7 +126,7 @@ describe('adding non point data works', function () {
       map.addLayer(group)
       group.addLayer(polygon)
 
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
     })
   })
 
@@ -137,10 +137,10 @@ describe('adding non point data works', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayer(polygon)
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
 
       group.removeLayer(polygon)
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
 
     it('removes before adding to map', function () {
@@ -149,10 +149,10 @@ describe('adding non point data works', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayers([polygon])
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
 
       group.removeLayer(polygon)
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
 
     it('removes after adding to map after adding polygon', function () {
@@ -162,10 +162,10 @@ describe('adding non point data works', function () {
 
       group.addLayer(polygon)
       map.addLayer(group)
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
 
       group.removeLayer(polygon)
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
 
     it('removes after adding to map before adding polygon', function () {
@@ -175,10 +175,10 @@ describe('adding non point data works', function () {
 
       map.addLayer(group)
       group.addLayer(polygon)
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
 
       group.removeLayer(polygon)
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
   })
 
@@ -189,10 +189,10 @@ describe('adding non point data works', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayer(polygon)
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
 
       group.removeLayers([polygon])
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
 
     it('removes before adding to map', function () {
@@ -201,10 +201,10 @@ describe('adding non point data works', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
 
       group.addLayers([polygon])
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
 
       group.removeLayers([polygon])
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
 
     it('removes after adding to map after adding polygon', function () {
@@ -214,10 +214,10 @@ describe('adding non point data works', function () {
 
       group.addLayer(polygon)
       map.addLayer(group)
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
 
       group.removeLayers([polygon])
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
 
     it('removes after adding to map before adding polygon', function () {
@@ -227,10 +227,10 @@ describe('adding non point data works', function () {
 
       map.addLayer(group)
       group.addLayer(polygon)
-      expect(group.hasLayer(polygon)).to.be.true
+      assert.ok(group.hasLayer(polygon))
 
       group.removeLayers([polygon])
-      expect(group.hasLayer(polygon)).to.be.false
+      assert.ok(!(group.hasLayer(polygon)))
     })
   })
 })

@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { Circle, CircleMarker, LatLngBounds, Map, Marker } from 'leaflet'
@@ -37,7 +37,6 @@ describe('unspiderfy', function () {
     div.remove()
 
     clock.restore()
-
     div = map = group = clock = null
   })
 
@@ -62,8 +61,8 @@ describe('unspiderfy', function () {
 
     clock.tick(1000)
 
-    expect(map.hasLayer(marker)).to.be.false
-    expect(map.hasLayer(marker2)).to.be.false
+    assert.ok(!(map.hasLayer(marker)))
+    assert.ok(!(map.hasLayer(marker2)))
   })
 
   it('Unspiderfies 2 CircleMarkers', function () {
@@ -84,8 +83,8 @@ describe('unspiderfy', function () {
 
     clock.tick(1000)
 
-    expect(map.hasLayer(marker)).to.be.false
-    expect(map.hasLayer(marker2)).to.be.false
+    assert.ok(!(map.hasLayer(marker)))
+    assert.ok(!(map.hasLayer(marker2)))
   })
 
   it('Unspiderfies 2 Circles', function () {
@@ -106,8 +105,8 @@ describe('unspiderfy', function () {
 
     clock.tick(1000)
 
-    expect(map.hasLayer(marker)).to.be.false
-    expect(map.hasLayer(marker2)).to.be.false
+    assert.ok(!(map.hasLayer(marker)))
+    assert.ok(!(map.hasLayer(marker2)))
   })
 
   it('fires unspiderfied event on unspiderfy', function (t, done) {
@@ -125,10 +124,10 @@ describe('unspiderfy', function () {
 
     // Add event listener
     group.on('unspiderfied', function (event) {
-      expect(event.target).to.equal(group)
-      expect(event.cluster).to.be.an.instanceof(Marker)
-      expect(event.markers[1]).to.equal(marker)
-      expect(event.markers[0]).to.equal(marker2)
+      assert.strictEqual(event.target, group)
+      assert.ok(event.cluster instanceof Marker)
+      assert.strictEqual(event.markers[1], marker)
+      assert.strictEqual(event.markers[0], marker2)
 
       done()
     })

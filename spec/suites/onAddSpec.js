@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -48,7 +48,7 @@ describe('onAdd', function () {
       ex = e
     }
 
-    expect(ex).to.not.be.null
+    assert.notStrictEqual(ex, null)
   })
 
   it('successfully handles removing and re-adding a layer while not on the map', function () {
@@ -65,7 +65,7 @@ describe('onAdd', function () {
 
     map.addLayer(group)
 
-    expect(map.hasLayer(group)).to.be.true
-    expect(group.hasLayer(marker)).to.be.true
+    assert.ok(map.hasLayer(group))
+    assert.ok(group.hasLayer(marker))
   })
 })

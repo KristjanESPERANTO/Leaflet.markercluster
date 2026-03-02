@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
-import sinon from 'sinon'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -9,11 +8,9 @@ describe('non-integer min/max zoom', function () {
   /////////////////////////////
   // SETUP FOR EACH TEST
   /////////////////////////////
-  let map, div, clock
+  let map, div
 
   beforeEach(function () {
-    clock = sinon.useFakeTimers()
-
     div = document.createElement('div')
     div.style.width = '200px'
     div.style.height = '200px'
@@ -30,7 +27,6 @@ describe('non-integer min/max zoom', function () {
   afterEach(function () {
     map.remove()
     document.body.removeChild(div)
-    clock.restore()
   })
 
   /////////////////////////////
@@ -48,11 +44,11 @@ describe('non-integer min/max zoom', function () {
 
     group.addLayer(marker3)
 
-    expect(marker._icon).to.be.undefined
-    expect(marker2._icon).to.be.undefined
-    expect(marker3._icon).to.be.undefined
+    assert.strictEqual(marker._icon, undefined)
+    assert.strictEqual(marker2._icon, undefined)
+    assert.strictEqual(marker3._icon, undefined)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(1)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1)
 
     group.removeLayer(marker2)
   })

@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { LatLngBounds, Map, Marker } from 'leaflet'
@@ -33,9 +33,9 @@ describe('disableClusteringAtZoom option', function () {
     map.removeLayer(group)
     map.remove()
     div.remove()
-    clock.restore()
 
-    div, map, group, clock = null
+    clock.restore()
+    div = map = group = clock = null
   })
 
   /////////////////////////////
@@ -57,14 +57,14 @@ describe('disableClusteringAtZoom option', function () {
     // Give Leaflet 2 time to cluster
     clock.tick(100)
 
-    expect(group._maxZoom).to.equal(maxZoom - 1)
+    assert.strictEqual(group._maxZoom, maxZoom - 1)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(1) // 1 cluster.    map.setZoom(14);
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1) // 1 cluster.    map.setZoom(14);
     clock.tick(1000)
-    expect(map._panes.markerPane.childNodes.length).to.equal(1) // 1 cluster.
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1) // 1 cluster.
 
     map.setZoom(15)
     clock.tick(1000)
-    expect(map._panes.markerPane.childNodes.length).to.equal(2) // 2 markers.
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 2) // 2 markers.
   })
 })

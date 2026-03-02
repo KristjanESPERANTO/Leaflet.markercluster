@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { LatLngBounds, LayerGroup, Map, Marker } from 'leaflet'
@@ -36,8 +36,8 @@ describe('removeLayers', function () {
 
     map.remove()
     div.remove()
-    clock.restore()
 
+    clock.restore()
     div = map = group = clock = null
   })
 
@@ -59,11 +59,11 @@ describe('removeLayers', function () {
 
     group.removeLayers(markers)
 
-    expect(group.hasLayer(markers[0])).to.be.false
-    expect(group.hasLayer(markers[1])).to.be.false
-    expect(group.hasLayer(markers[2])).to.be.false
+    assert.ok(!(group.hasLayer(markers[0])))
+    assert.ok(!(group.hasLayer(markers[1])))
+    assert.ok(!(group.hasLayer(markers[2])))
 
-    expect(group.getLayers().length).to.equal(0)
+    assert.strictEqual(group.getLayers().length, 0)
   })
 
   it('removes all the layer given to it even though they move', function () {
@@ -82,12 +82,12 @@ describe('removeLayers', function () {
     markers.forEach(function (marker) {
       marker.setLatLng([1.5, 1.5])
       group.removeLayer(marker)
-      expect(group.getLayers().length).to.equal(len - 1)
+      assert.strictEqual(group.getLayers().length, len - 1)
       group.addLayer(marker)
-      expect(group.getLayers().length).to.equal(len)
+      assert.strictEqual(group.getLayers().length, len)
     })
 
-    expect(group.getLayers().length).to.equal(len)
+    assert.strictEqual(group.getLayers().length, len)
   })
 
   it('removes all the layer given to it even if the group is not on the map', function () {
@@ -105,11 +105,11 @@ describe('removeLayers', function () {
     group.removeLayers(markers)
     map.addLayer(group)
 
-    expect(group.hasLayer(markers[0])).to.be.false
-    expect(group.hasLayer(markers[1])).to.be.false
-    expect(group.hasLayer(markers[2])).to.be.false
+    assert.ok(!(group.hasLayer(markers[0])))
+    assert.ok(!(group.hasLayer(markers[1])))
+    assert.ok(!(group.hasLayer(markers[2])))
 
-    expect(group.getLayers().length).to.equal(0)
+    assert.strictEqual(group.getLayers().length, 0)
   })
 
   it('doesnt break if we are spiderfied', function () {
@@ -132,14 +132,14 @@ describe('removeLayers', function () {
 
     group.removeLayers(markers)
 
-    expect(group.hasLayer(markers[0])).to.be.false
-    expect(group.hasLayer(markers[1])).to.be.false
-    expect(group.hasLayer(markers[2])).to.be.false
+    assert.ok(!(group.hasLayer(markers[0])))
+    assert.ok(!(group.hasLayer(markers[1])))
+    assert.ok(!(group.hasLayer(markers[2])))
 
-    expect(group.getLayers().length).to.equal(0)
+    assert.strictEqual(group.getLayers().length, 0)
 
     group.on('spiderfied', function () {
-      expect(group._spiderfied).to.be.null
+      assert.strictEqual(group._spiderfied, null)
     })
   })
 
@@ -154,9 +154,9 @@ describe('removeLayers', function () {
 
     group.addLayers([marker1, marker2, marker3])
 
-    expect(group.hasLayer(marker1)).to.be.true
-    expect(group.hasLayer(marker2)).to.be.true
-    expect(group.hasLayer(marker3)).to.be.true
+    assert.ok(group.hasLayer(marker1))
+    assert.ok(group.hasLayer(marker2))
+    assert.ok(group.hasLayer(marker3))
 
     group.removeLayers([
       marker1,
@@ -167,11 +167,11 @@ describe('removeLayers', function () {
       ]),
     ])
 
-    expect(group.hasLayer(marker1)).to.be.false
-    expect(group.hasLayer(marker2)).to.be.false
-    expect(group.hasLayer(marker3)).to.be.false
+    assert.ok(!(group.hasLayer(marker1)))
+    assert.ok(!(group.hasLayer(marker2)))
+    assert.ok(!(group.hasLayer(marker3)))
 
-    expect(group.getLayers().length).to.equal(0)
+    assert.strictEqual(group.getLayers().length, 0)
   })
 
   it('chunked loading zoom out', function () {

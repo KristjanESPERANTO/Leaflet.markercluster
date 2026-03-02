@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -48,7 +48,7 @@ describe('clusterMarkerTitle', function () {
 
     // The top cluster should have an icon when there are multiple markers
     if (topCluster._icon) {
-      expect(topCluster._icon.title).to.equal('')
+      assert.strictEqual(topCluster._icon.title, '')
     }
   })
 
@@ -66,7 +66,7 @@ describe('clusterMarkerTitle', function () {
     const topCluster = group._topClusterLevel
 
     if (topCluster._icon) {
-      expect(topCluster._icon.title).to.equal('Click to expand cluster')
+      assert.strictEqual(topCluster._icon.title, 'Click to expand cluster')
     }
   })
 
@@ -91,7 +91,7 @@ describe('clusterMarkerTitle', function () {
     if (topCluster._icon) {
       const count = topCluster.getChildCount()
       const expectedTitle = 'Cluster with ' + count + (count === 1 ? ' marker' : ' markers')
-      expect(topCluster._icon.title).to.equal(expectedTitle)
+      assert.strictEqual(topCluster._icon.title, expectedTitle)
     }
   })
 
@@ -113,7 +113,7 @@ describe('clusterMarkerTitle', function () {
 
     if (topCluster._icon) {
       const initialCount = topCluster.getChildCount()
-      expect(topCluster._icon.title).to.equal('Count: ' + initialCount)
+      assert.strictEqual(topCluster._icon.title, 'Count: ' + initialCount)
     }
 
     // Add another marker
@@ -122,7 +122,7 @@ describe('clusterMarkerTitle', function () {
     // Title should update
     if (topCluster._icon) {
       const newCount = topCluster.getChildCount()
-      expect(topCluster._icon.title).to.equal('Count: ' + newCount)
+      assert.strictEqual(topCluster._icon.title, 'Count: ' + newCount)
     }
   })
 
@@ -140,7 +140,7 @@ describe('clusterMarkerTitle', function () {
 
     // In singleMarkerMode, even a single marker gets clustered
     if (topCluster._icon) {
-      expect(topCluster._icon.title).to.equal('Single marker cluster')
+      assert.strictEqual(topCluster._icon.title, 'Single marker cluster')
     }
   })
 })

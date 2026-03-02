@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 /* eslint-disable no-unused-vars */
@@ -77,18 +77,18 @@ describe('refreshClusters', function () {
       marker1cluster5 = getClusterAtZoom(marker1, 5)
 
     // First go to some zoom levels so that Leaflet initializes clusters icons.
-    expect(marker1cluster10._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster10._iconNeedsUpdate)
     map.setZoom(10, { animate: false })
-    expect(marker1cluster10._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker1cluster10._iconNeedsUpdate))
 
-    expect(marker1cluster2._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster2._iconNeedsUpdate)
     map.setZoom(2, { animate: false })
-    expect(marker1cluster2._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker1cluster2._iconNeedsUpdate))
 
     // Finish on an intermediate zoom level.
-    expect(marker1cluster5._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster5._iconNeedsUpdate)
     map.setZoom(5, { animate: false })
-    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker1cluster5._iconNeedsUpdate))
 
     // Run any animation.
     clock.tick(1000)
@@ -98,11 +98,11 @@ describe('refreshClusters', function () {
     group.refreshClusters(marker1)
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster10._iconNeedsUpdate).to.be.ok
-    expect(marker1cluster2._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster10._iconNeedsUpdate)
+    assert.ok(marker1cluster2._iconNeedsUpdate)
 
     // Also check that visible clusters are "un-flagged" since they should be re-drawn.
-    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker1cluster5._iconNeedsUpdate))
   })
 
   it('re-draws visible clusters', function () {
@@ -131,12 +131,12 @@ describe('refreshClusters', function () {
     const marker1cluster9 = getClusterAtZoom(marker1, 9)
 
     // First go to some zoom levels so that Leaflet initializes clusters icons.
-    expect(marker1cluster9._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster9._iconNeedsUpdate)
     map.setZoom(9, { animate: false })
-    expect(marker1cluster9._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker1cluster9._iconNeedsUpdate))
 
-    expect(marker1cluster9._icon.className).to.contain('original')
-    expect(marker1cluster9._icon.className).to.not.contain('changed')
+    assert.ok(marker1cluster9._icon.className.includes('original'))
+    assert.ok(!marker1cluster9._icon.className.includes('changed'))
 
     // Run any animation.
     clock.tick(1000)
@@ -148,8 +148,8 @@ describe('refreshClusters', function () {
     group.refreshClusters(marker1)
 
     // Now check that visible clusters icon is re-drawn.
-    expect(marker1cluster9._icon.className).to.contain('changed')
-    expect(marker1cluster9._icon.className).to.not.contain('original')
+    assert.ok(marker1cluster9._icon.className.includes('changed'))
+    assert.ok(!marker1cluster9._icon.className.includes('original'))
   })
 
   // Shared code for the 2 below tests
@@ -178,7 +178,7 @@ describe('refreshClusters', function () {
 
     setMapView()
 
-    expect(marker1._icon.className).to.contain('original')
+    assert.ok(marker1._icon.className.includes('original'))
 
     // Alter the marker.
     marker1.changed = true
@@ -186,8 +186,8 @@ describe('refreshClusters', function () {
     // Then request clusters refresh.
     group.refreshClusters(marker1)
 
-    expect(marker1._icon.className).to.contain('changed')
-    expect(marker1._icon.className).to.not.contain('original')
+    assert.ok(marker1._icon.className.includes('changed'))
+    assert.ok(!marker1._icon.className.includes('original'))
   })
 
   it('does not modify markers that do not belong to the current group (in singleMarkerMode)', function () {
@@ -208,8 +208,8 @@ describe('refreshClusters', function () {
 
     setMapView()
 
-    expect(marker1._icon.className).to.contain('original')
-    expect(marker2._icon.className).to.contain('original')
+    assert.ok(marker1._icon.className.includes('original'))
+    assert.ok(marker2._icon.className.includes('original'))
 
     // Alter the markers.
     marker1.changed = true
@@ -218,11 +218,11 @@ describe('refreshClusters', function () {
     // Then request clusters refresh.
     group.refreshClusters([marker1, marker2])
 
-    expect(marker1._icon.className).to.contain('changed')
-    expect(marker1._icon.className).to.not.contain('original')
+    assert.ok(marker1._icon.className.includes('changed'))
+    assert.ok(!marker1._icon.className.includes('original'))
 
-    expect(marker2._icon.className).to.contain('original')
-    expect(marker2._icon.className).to.not.contain('changed')
+    assert.ok(marker2._icon.className.includes('original'))
+    assert.ok(!marker2._icon.className.includes('changed'))
   })
 
   // Shared code for below tests.
@@ -268,31 +268,31 @@ describe('refreshClusters', function () {
     marker5cluster5 = getClusterAtZoom(marker5, 5)
 
     // Make sure we have 3 distinct clusters up to zoom level Z (let's choose Z = 3)
-    expect(marker1cluster3._childCount).to.equal(2)
-    expect(marker3cluster3._childCount).to.equal(2)
-    expect(marker5cluster3._childCount).to.equal(2)
+    assert.strictEqual(marker1cluster3._childCount, 2)
+    assert.strictEqual(marker3cluster3._childCount, 2)
+    assert.strictEqual(marker5cluster3._childCount, 2)
 
     // First go to some zoom levels so that Leaflet initializes clusters icons.
-    expect(marker1cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker1cluster8._iconNeedsUpdate))
+    assert.ok(!(marker3cluster8._iconNeedsUpdate))
+    assert.ok(!(marker5cluster8._iconNeedsUpdate))
 
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
-    expect(marker3cluster3._iconNeedsUpdate).to.be.ok
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster3._iconNeedsUpdate)
+    assert.ok(marker3cluster3._iconNeedsUpdate)
+    assert.ok(marker5cluster3._iconNeedsUpdate)
     map.setZoom(3, { animate: false })
-    expect(marker1cluster3._iconNeedsUpdate).to.not.be.ok
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
-    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker1cluster3._iconNeedsUpdate))
+    assert.ok(!(marker3cluster3._iconNeedsUpdate))
+    assert.ok(!(marker5cluster3._iconNeedsUpdate))
 
     // Finish on an intermediate zoom level.
-    expect(marker1cluster5._iconNeedsUpdate).to.be.ok
-    expect(marker3cluster5._iconNeedsUpdate).to.be.ok
-    expect(marker5cluster5._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster5._iconNeedsUpdate)
+    assert.ok(marker3cluster5._iconNeedsUpdate)
+    assert.ok(marker5cluster5._iconNeedsUpdate)
     map.setZoom(5, { animate: false })
-    expect(marker1cluster5._iconNeedsUpdate).to.not.be.ok
-    expect(marker3cluster5._iconNeedsUpdate).to.not.be.ok
-    expect(marker5cluster5._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker1cluster5._iconNeedsUpdate))
+    assert.ok(!(marker3cluster5._iconNeedsUpdate))
+    assert.ok(!(marker5cluster5._iconNeedsUpdate))
 
     // Run any animation.
     clock.tick(1000)
@@ -308,15 +308,15 @@ describe('refreshClusters', function () {
     group.refreshClusters(marker1)
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster8._iconNeedsUpdate)
+    assert.ok(marker1cluster3._iconNeedsUpdate)
 
     // Finally check that non-involved clusters are not "dirty".
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker3cluster8._iconNeedsUpdate))
+    assert.ok(!(marker3cluster3._iconNeedsUpdate))
 
-    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker5cluster8._iconNeedsUpdate))
+    assert.ok(!(marker5cluster3._iconNeedsUpdate))
   })
 
   it('processes itself when no argument is passed', function () {
@@ -327,14 +327,14 @@ describe('refreshClusters', function () {
     group.refreshClusters()
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster8._iconNeedsUpdate)
+    assert.ok(marker1cluster3._iconNeedsUpdate)
 
-    expect(marker3cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker3cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker3cluster8._iconNeedsUpdate)
+    assert.ok(marker3cluster3._iconNeedsUpdate)
 
-    expect(marker5cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker5cluster8._iconNeedsUpdate)
+    assert.ok(marker5cluster3._iconNeedsUpdate)
   })
 
   it('accepts an array of markers', function () {
@@ -346,15 +346,15 @@ describe('refreshClusters', function () {
     // Clusters of marker3 and 4 shall not be flagged.
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster8._iconNeedsUpdate)
+    assert.ok(marker1cluster3._iconNeedsUpdate)
 
-    expect(marker5cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker5cluster8._iconNeedsUpdate)
+    assert.ok(marker5cluster3._iconNeedsUpdate)
 
     // Clusters of marker3 and 4 shall not be flagged.
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker3cluster8._iconNeedsUpdate))
+    assert.ok(!(marker3cluster3._iconNeedsUpdate))
   })
 
   it('accepts a mapping of markers', function () {
@@ -368,15 +368,15 @@ describe('refreshClusters', function () {
     }) // Clusters of marker3 and 4 shall not be flagged.
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster8._iconNeedsUpdate)
+    assert.ok(marker1cluster3._iconNeedsUpdate)
 
-    expect(marker5cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker5cluster8._iconNeedsUpdate)
+    assert.ok(marker5cluster3._iconNeedsUpdate)
 
     // Clusters of marker3 and 4 shall not be flagged.
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker3cluster8._iconNeedsUpdate))
+    assert.ok(!(marker3cluster3._iconNeedsUpdate))
   })
 
   it('accepts an LayerGroup', function () {
@@ -389,15 +389,15 @@ describe('refreshClusters', function () {
     // Clusters of marker3 and 4 shall not be flagged.
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster8._iconNeedsUpdate)
+    assert.ok(marker1cluster3._iconNeedsUpdate)
 
-    expect(marker5cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker5cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker5cluster8._iconNeedsUpdate)
+    assert.ok(marker5cluster3._iconNeedsUpdate)
 
     // Clusters of marker3 and 4 shall not be flagged.
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker3cluster8._iconNeedsUpdate))
+    assert.ok(!(marker3cluster3._iconNeedsUpdate))
   })
 
   it('accepts an MarkerCluster', function () {
@@ -409,14 +409,14 @@ describe('refreshClusters', function () {
     // Clusters of marker3, 4, 5 and 6 shall not be flagged.
 
     // Now check that non-visible clusters are flagged as "dirty".
-    expect(marker1cluster8._iconNeedsUpdate).to.be.ok
-    expect(marker1cluster3._iconNeedsUpdate).to.be.ok
+    assert.ok(marker1cluster8._iconNeedsUpdate)
+    assert.ok(marker1cluster3._iconNeedsUpdate)
 
     // Clusters of marker3 and 4 shall not be flagged.
-    expect(marker3cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker3cluster3._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker3cluster8._iconNeedsUpdate))
+    assert.ok(!(marker3cluster3._iconNeedsUpdate))
 
-    expect(marker5cluster8._iconNeedsUpdate).to.not.be.ok
-    expect(marker5cluster3._iconNeedsUpdate).to.not.be.ok
+    assert.ok(!(marker5cluster8._iconNeedsUpdate))
+    assert.ok(!(marker5cluster3._iconNeedsUpdate))
   })
 })

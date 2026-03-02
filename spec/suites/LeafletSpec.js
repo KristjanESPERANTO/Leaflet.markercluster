@@ -1,10 +1,10 @@
 import { describe, it } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import Leaflet from 'leaflet'
 
 describe('L#noConflict', function () {
   it('restores the previous L value and returns Leaflet namespace', function () {
-    expect(Leaflet.version).to.be.ok
+    assert.ok(Leaflet.version)
   })
 })

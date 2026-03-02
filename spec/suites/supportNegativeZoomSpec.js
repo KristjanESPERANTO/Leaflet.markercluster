@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLng, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -44,8 +44,8 @@ describe('things behave correctly with negative minZoom', function () {
     group.addLayer(marker)
     map.addLayer(group)
 
-    expect(marker._icon).to.not.be.undefined
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.notStrictEqual(marker._icon, undefined)
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
   })
 
   it('shows a single marker added to the group after the group is added to the map', function () {
@@ -56,8 +56,8 @@ describe('things behave correctly with negative minZoom', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon).to.not.be.undefined
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.notStrictEqual(marker._icon, undefined)
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
   })
 
   it('creates a cluster when 2 overlapping markers are added before the group is added to the map', function () {
@@ -69,10 +69,10 @@ describe('things behave correctly with negative minZoom', function () {
     group.addLayer(marker2)
     map.addLayer(group)
 
-    expect(marker._icon).to.be.undefined
-    expect(marker2._icon).to.be.undefined
+    assert.strictEqual(marker._icon, undefined)
+    assert.strictEqual(marker2._icon, undefined)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(1)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1)
   })
   it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
     group = new MarkerClusterGroup()
@@ -83,9 +83,9 @@ describe('things behave correctly with negative minZoom', function () {
     group.addLayer(marker)
     group.addLayer(marker2)
 
-    expect(marker._icon).to.be.null // Null as was added and then removed
-    expect(marker2._icon).to.be.undefined
+    assert.strictEqual(marker._icon, null) // Null as was added and then removed
+    assert.strictEqual(marker2._icon, undefined)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(1)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1)
   })
 })

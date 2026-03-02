@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
-import sinon from 'sinon'
+import assert from 'node:assert'
 
 import { DivIcon, LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -9,11 +8,9 @@ describe('support child markers changing icon', function () {
   /////////////////////////////
   // SETUP FOR EACH TEST
   /////////////////////////////
-  let map, div, clock
+  let map, div
 
   beforeEach(function () {
-    clock = sinon.useFakeTimers()
-
     div = document.createElement('div')
     div.style.width = '200px'
     div.style.height = '200px'
@@ -30,9 +27,8 @@ describe('support child markers changing icon', function () {
   afterEach(function () {
     map.remove()
     document.body.removeChild(div)
-    clock.restore()
 
-    map = div = clock = null
+    map = div = null
   })
 
   /////////////////////////////
@@ -46,17 +42,17 @@ describe('support child markers changing icon', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
-    expect(marker._icon.innerHTML).to.contain('Inner1Text')
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
+    assert.ok(marker._icon.innerHTML.includes('Inner1Text'))
 
     group.addLayer(marker2)
 
-    expect(marker._icon).to.be.null // Have been removed from the map
+    assert.strictEqual(marker._icon, null) // Have been removed from the map
 
     marker.setIcon(new DivIcon({ html: 'Inner2Text' })) // Change the icon
 
     group.removeLayer(marker2) // Remove the other marker, so we'll become unclustered
 
-    expect(marker._icon.innerHTML).to.contain('Inner2Text')
+    assert.ok(marker._icon.innerHTML.includes('Inner2Text'))
   })
 })

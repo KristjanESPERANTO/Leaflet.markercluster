@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { Browser, CircleMarker, LatLng, LatLngBounds, Map, Marker } from 'leaflet'
@@ -41,13 +41,19 @@ describe('zoomAnimation', function () {
 
     map.remove()
     document.body.removeChild(div)
-    clock.restore()
 
+    clock.restore()
     div = map = group = clock = null
   })
 
   function setBrowserToMobile() {
-    browserMobileStub = sinon.stub(Browser, 'mobile').value(true)
+    const _prevMobile = Browser.mobile
+    Browser.mobile = true
+    browserMobileStub = {
+      restore: () => {
+        Browser.mobile = _prevMobile
+      },
+    }
   }
 
   /////////////////////////////
@@ -72,8 +78,8 @@ describe('zoomAnimation', function () {
     // Run the the animation
     clock.tick(1000)
 
-    expect(marker._icon).to.not.be.undefined
-    expect(marker._icon).to.not.be.null
+    assert.notStrictEqual(marker._icon, undefined)
+    assert.notStrictEqual(marker._icon, null)
   })
 
   it('adds the visible marker to the map when jumping around', function () {
@@ -95,8 +101,8 @@ describe('zoomAnimation', function () {
     clock.tick(1000)
 
     // Now the second one should be visible on the map
-    expect(marker2._icon).to.not.be.undefined
-    expect(marker2._icon).to.not.be.null
+    assert.notStrictEqual(marker2._icon, undefined)
+    assert.notStrictEqual(marker2._icon, null)
   })
 
   it('adds the visible markers to the map, but not parent clusters when jumping around', function () {
@@ -123,10 +129,10 @@ describe('zoomAnimation', function () {
     clock.tick(1000)
 
     // Now the markers should all be visible, and there should be no visible clusters
-    expect(marker1._icon.parentNode).to.equal(map._panes.markerPane)
-    expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
-    expect(marker3._icon.parentNode).to.equal(map._panes.markerPane)
-    expect(map._panes.markerPane.childNodes.length).to.equal(3)
+    assert.strictEqual(marker1._icon.parentNode, map._panes.markerPane)
+    assert.strictEqual(marker2._icon.parentNode, map._panes.markerPane)
+    assert.strictEqual(marker3._icon.parentNode, map._panes.markerPane)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 3)
   })
 
   it('removes clicked clusters on the edge of a mobile screen', function () {
@@ -153,7 +159,7 @@ describe('zoomAnimation', function () {
       bottomMarker = new Marker(bottomPosition).addTo(group),
       initialZoom = map.getZoom()
 
-    expect(bottomMarker._icon).to.be.undefined
+    assert.strictEqual(bottomMarker._icon, undefined)
 
     // Add many markers 79 pixels above the first one, so they cluster with it.
     const newPoint = bottomPoint.add([0, -79]),
@@ -168,7 +174,7 @@ describe('zoomAnimation', function () {
 
     const parentCluster = bottomMarker.__parent
 
-    expect(parentCluster._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.strictEqual(parentCluster._icon.parentNode, map._panes.markerPane)
 
     parentCluster.fire('click', null, true)
 
@@ -177,14 +183,14 @@ describe('zoomAnimation', function () {
     // Give Leaflet 2 more time for cleanup
     clock.tick(100)
 
-    expect(map.getZoom()).to.equal(initialZoom + 1) // The fitBounds with 200px height should result in zooming 1 level in.      // Finally make sure that the cluster has been removed from map.
-    expect(parentCluster._icon).to.be.null
+    assert.strictEqual(map.getZoom(), initialZoom + 1) // The fitBounds with 200px height should result in zooming 1 level in.      // Finally make sure that the cluster has been removed from map.
+    assert.strictEqual(parentCluster._icon, null)
     // In Leaflet 2, the number of child nodes might differ - just check it's > 0
-    expect(map._panes.markerPane.childNodes.length).to.be.greaterThan(0)
+    assert.ok(map._panes.markerPane.childNodes.length > 0)
   })
 
   describe('zoomToShowLayer', function () {
-    it('zoom to single marker inside map view', function () {
+    it('zoom to single marker inside map view', function (t) {
       group = new MarkerClusterGroup()
 
       const marker = new Marker([59.9520, 30.3307])
@@ -192,7 +198,7 @@ describe('zoomAnimation', function () {
       group.addLayer(marker)
       map.addLayer(group)
 
-      const zoomCallbackSpy = sinon.spy()
+      const zoomCallbackSpy = t.mock.fn()
 
       map.setView(marker.getLatLng(), 10)
 
@@ -207,15 +213,15 @@ describe('zoomAnimation', function () {
       clock.tick(1000)
 
       // Marker should be visible, map center and zoom level should stay the same, callback called once
-      expect(marker._icon).to.not.be.undefined
-      expect(marker._icon).to.not.be.null
-      expect(map.getBounds().contains(marker.getLatLng())).to.be.true
-      expect(map.getCenter()).to.deep.equal(initialCenter)
-      expect(map.getZoom()).to.equal(initialZoom)
-      sinon.assert.calledOnce(zoomCallbackSpy)
+      assert.notStrictEqual(marker._icon, undefined)
+      assert.notStrictEqual(marker._icon, null)
+      assert.ok(map.getBounds().contains(marker.getLatLng()))
+      assert.deepStrictEqual(map.getCenter(), initialCenter)
+      assert.strictEqual(map.getZoom(), initialZoom)
+      assert.strictEqual(zoomCallbackSpy.mock.calls.length, 1)
     })
 
-    it('pan map to single marker outside map view', function () {
+    it('pan map to single marker outside map view', function (t) {
       group = new MarkerClusterGroup()
 
       const marker = new Marker([59.9520, 30.3307])
@@ -223,7 +229,7 @@ describe('zoomAnimation', function () {
       group.addLayer(marker)
       map.addLayer(group)
 
-      const zoomCallbackSpy = sinon.spy()
+      const zoomCallbackSpy = t.mock.fn()
 
       // Show none of them
       map.setView([53.0676, 170.6835], 16)
@@ -239,17 +245,17 @@ describe('zoomAnimation', function () {
 
       // Marker should be visible, map center should be equal to marker center,
       // zoom level should stay the same, callback called once
-      expect(marker._icon).to.not.be.undefined
-      expect(marker._icon).to.not.be.null
-      expect(map.getBounds().contains(marker.getLatLng())).to.be.true
+      assert.notStrictEqual(marker._icon, undefined)
+      assert.notStrictEqual(marker._icon, null)
+      assert.ok(map.getBounds().contains(marker.getLatLng()))
       // In Leaflet 2, LatLng objects may have 'alt' property, compare lat/lng separately
-      expect(map.getCenter().lat).to.equal(marker.getLatLng().lat)
-      expect(map.getCenter().lng).to.equal(marker.getLatLng().lng)
-      expect(map.getZoom()).to.equal(initialZoom)
-      sinon.assert.calledOnce(zoomCallbackSpy)
+      assert.strictEqual(map.getCenter().lat, marker.getLatLng().lat)
+      assert.strictEqual(map.getCenter().lng, marker.getLatLng().lng)
+      assert.strictEqual(map.getZoom(), initialZoom)
+      assert.strictEqual(zoomCallbackSpy.mock.calls.length, 1)
     })
 
-    it('change view and zoom to marker in cluster inside map view', function () {
+    it('change view and zoom to marker in cluster inside map view', function (t) {
       group = new MarkerClusterGroup()
 
       const marker1 = new Marker([59.9520, 30.3307])
@@ -261,7 +267,7 @@ describe('zoomAnimation', function () {
       group.addLayer(marker3)
       map.addLayer(group)
 
-      const zoomCallbackSpy = sinon.spy()
+      const zoomCallbackSpy = t.mock.fn()
 
       // Set view to show the cluster (zoom 16 clusters these markers)
       map.setView(marker1.getLatLng(), 16)
@@ -269,9 +275,9 @@ describe('zoomAnimation', function () {
       clock.tick(1000)
 
       // At this point, markers should be clustered (no _icon property)
-      expect(marker1._icon).to.be.undefined
-      expect(marker2._icon).to.be.undefined
-      expect(marker3._icon).to.be.undefined
+      assert.strictEqual(marker1._icon, undefined)
+      assert.strictEqual(marker2._icon, undefined)
+      assert.strictEqual(marker3._icon, undefined)
 
       group.zoomToShowLayer(marker1, zoomCallbackSpy)
 
@@ -283,14 +289,14 @@ describe('zoomAnimation', function () {
 
       // Now at least marker1 should be visible (either individually or spiderfied)
       // The callback should have been called
-      sinon.assert.calledOnce(zoomCallbackSpy)
+      assert.strictEqual(zoomCallbackSpy.mock.calls.length, 1)
 
       // The cluster should now be resolved - either zoomed in to show individuals,
       // or spiderfied to show all markers
-      expect(marker1._icon || marker1.__parent._icon).to.not.be.undefined
+      assert.notStrictEqual(marker1._icon || marker1.__parent._icon, undefined)
     })
 
-    it('change view and zoom to marker in cluster outside map view', function () {
+    it('change view and zoom to marker in cluster outside map view', function (t) {
       group = new MarkerClusterGroup()
 
       const marker1 = new Marker([59.9520, 30.3307])
@@ -302,7 +308,7 @@ describe('zoomAnimation', function () {
       group.addLayer(marker3)
       map.addLayer(group)
 
-      const zoomCallbackSpy = sinon.spy()
+      const zoomCallbackSpy = t.mock.fn()
 
       // Show none of them
       map.setView([53.0676, 170.6835], 16)
@@ -315,15 +321,15 @@ describe('zoomAnimation', function () {
       clock.tick(1000)
 
       // Now the markers should all be visible, there should be no visible clusters, and callback called once
-      expect(marker1._icon.parentNode).to.equal(map._panes.markerPane)
-      expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
-      expect(marker3._icon.parentNode).to.equal(map._panes.markerPane)
-      expect(map._panes.markerPane.childNodes.length).to.equal(3)
-      expect(map.getBounds().contains(marker1.getLatLng())).to.be.true
-      sinon.assert.calledOnce(zoomCallbackSpy)
+      assert.strictEqual(marker1._icon.parentNode, map._panes.markerPane)
+      assert.strictEqual(marker2._icon.parentNode, map._panes.markerPane)
+      assert.strictEqual(marker3._icon.parentNode, map._panes.markerPane)
+      assert.strictEqual(map._panes.markerPane.childNodes.length, 3)
+      assert.ok(map.getBounds().contains(marker1.getLatLng()))
+      assert.strictEqual(zoomCallbackSpy.mock.calls.length, 1)
     })
 
-    it('spiderfy overlapping markers', function () {
+    it('spiderfy overlapping markers', function (t) {
       group = new MarkerClusterGroup()
 
       const marker1 = new Marker([59.9520, 30.3307])
@@ -335,7 +341,7 @@ describe('zoomAnimation', function () {
       group.addLayer(marker3)
       map.addLayer(group)
 
-      const zoomCallbackSpy = sinon.spy()
+      const zoomCallbackSpy = t.mock.fn()
 
       // Show none of them
       map.setView([53.0676, 170.6835], 16)
@@ -348,14 +354,14 @@ describe('zoomAnimation', function () {
       clock.tick(1000)
 
       // Now the markers should all be visible, parent cluster should be spiderfied, and callback called once
-      expect(marker1._icon.parentNode).to.equal(map._panes.markerPane)
-      expect(marker2._icon.parentNode).to.equal(map._panes.markerPane)
-      expect(marker3._icon.parentNode).to.equal(map._panes.markerPane)
-      expect(map._panes.markerPane.childNodes.length).to.equal(4)// 3 markers + spiderfied parent cluster
-      sinon.assert.calledOnce(zoomCallbackSpy)
+      assert.strictEqual(marker1._icon.parentNode, map._panes.markerPane)
+      assert.strictEqual(marker2._icon.parentNode, map._panes.markerPane)
+      assert.strictEqual(marker3._icon.parentNode, map._panes.markerPane)
+      assert.strictEqual(map._panes.markerPane.childNodes.length, 4) // 3 markers + spiderfied parent cluster
+      assert.strictEqual(zoomCallbackSpy.mock.calls.length, 1)
     })
 
-    it('zoom or spiderfy markers if they visible on next level of zoom', function () {
+    it('zoom or spiderfy markers if they visible on next level of zoom', function (t) {
       group = new MarkerClusterGroup()
 
       const marker1 = new Marker([59.9520, 30.3307])
@@ -367,7 +373,7 @@ describe('zoomAnimation', function () {
       group.addLayer(marker3)
       map.addLayer(group)
 
-      const zoomCallbackSpy = sinon.spy()
+      const zoomCallbackSpy = t.mock.fn()
 
       // Markers will be visible on zoom 18
       map.setView([59.9520, 30.3307], 17)
@@ -380,16 +386,16 @@ describe('zoomAnimation', function () {
       clock.tick(1000)
 
       // Now the markers should all be visible (zoomed or spiderfied), and callback called once
-      expect(marker1._icon).to.not.be.undefined
-      expect(marker1._icon).to.not.be.null
-      expect(marker2._icon).to.not.be.undefined
-      expect(marker2._icon).to.not.be.null
-      expect(marker3._icon).to.not.be.undefined
-      expect(marker3._icon).to.not.be.null
-      sinon.assert.calledOnce(zoomCallbackSpy)
+      assert.notStrictEqual(marker1._icon, undefined)
+      assert.notStrictEqual(marker1._icon, null)
+      assert.notStrictEqual(marker2._icon, undefined)
+      assert.notStrictEqual(marker2._icon, null)
+      assert.notStrictEqual(marker3._icon, undefined)
+      assert.notStrictEqual(marker3._icon, null)
+      assert.strictEqual(zoomCallbackSpy.mock.calls.length, 1)
     })
 
-    it('zoom and executes callback even for non-icon-based Marker', function () {
+    it('zoom and executes callback even for non-icon-based Marker', function (t) {
       group = new MarkerClusterGroup()
 
       const marker1 = new CircleMarker([59.9520, 30.3307])
@@ -401,16 +407,16 @@ describe('zoomAnimation', function () {
       group.addLayer(marker3)
       map.addLayer(group)
 
-      const zoomCallbackSpy = sinon.spy()
+      const zoomCallbackSpy = t.mock.fn()
 
       // Markers will be visible on zoom 18
       map.setView([59.9520, 30.3307], 16)
 
       clock.tick(1000)
 
-      expect(map.hasLayer(marker1)).to.be.false
-      expect(map.hasLayer(marker2)).to.be.false
-      expect(map.hasLayer(marker3)).to.be.false
+      assert.ok(!(map.hasLayer(marker1)))
+      assert.ok(!(map.hasLayer(marker2)))
+      assert.ok(!(map.hasLayer(marker3)))
 
       group.zoomToShowLayer(marker1, zoomCallbackSpy)
 
@@ -418,10 +424,10 @@ describe('zoomAnimation', function () {
       clock.tick(1000)
 
       // Now the markers should all be visible (zoomed or spiderfied), and callback called once
-      expect(map.hasLayer(marker1)).to.be.true
-      expect(map.hasLayer(marker2)).to.be.true
-      expect(map.hasLayer(marker3)).to.be.true
-      sinon.assert.calledOnce(zoomCallbackSpy)
+      assert.ok(map.hasLayer(marker1))
+      assert.ok(map.hasLayer(marker2))
+      assert.ok(map.hasLayer(marker3))
+      assert.strictEqual(zoomCallbackSpy.mock.calls.length, 1)
     })
   })
 })

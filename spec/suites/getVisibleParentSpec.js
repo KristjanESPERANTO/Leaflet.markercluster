@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerCluster, MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -45,7 +45,7 @@ describe('getVisibleParent', function () {
 
     const vp = group.getVisibleParent(marker)
 
-    expect(vp).to.equal(marker)
+    assert.strictEqual(vp, marker)
   })
 
   it('gets the visible cluster if it is clustered', function () {
@@ -58,9 +58,9 @@ describe('getVisibleParent', function () {
 
     const vp = group.getVisibleParent(marker)
 
-    expect(vp).to.be.an.instanceof(MarkerCluster)
-    expect(vp._icon).to.not.be.null
-    expect(vp._icon).to.not.be.undefined
+    assert.ok(vp instanceof MarkerCluster)
+    assert.notStrictEqual(vp._icon, null)
+    assert.notStrictEqual(vp._icon, undefined)
   })
 
   it('returns null if the marker and parents are all not visible', function () {
@@ -73,6 +73,6 @@ describe('getVisibleParent', function () {
 
     const vp = group.getVisibleParent(marker)
 
-    expect(vp).to.be.null
+    assert.strictEqual(vp, null)
   })
 })

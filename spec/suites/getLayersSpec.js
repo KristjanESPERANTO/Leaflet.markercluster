@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker, Polygon } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -42,9 +42,9 @@ describe('getLayers', function () {
 
     const layers = group.getLayers()
 
-    expect(layers.length).to.equal(2)
-    expect(layers).to.contain(marker)
-    expect(layers).to.contain(polygon)
+    assert.strictEqual(layers.length, 2)
+    assert.ok(layers.includes(marker))
+    assert.ok(layers.includes(polygon))
   })
 
   it('hits polygons and markers after adding to map', function () {
@@ -57,9 +57,9 @@ describe('getLayers', function () {
 
     const layers = group.getLayers()
 
-    expect(layers.length).to.equal(2)
-    expect(layers).to.contain(marker)
-    expect(layers).to.contain(polygon)
+    assert.strictEqual(layers.length, 2)
+    assert.ok(layers.includes(marker))
+    assert.ok(layers.includes(polygon))
   })
 
   it('skips markers and polygons removed while not on the map', function () {
@@ -76,6 +76,6 @@ describe('getLayers', function () {
 
     const layers = group.getLayers()
 
-    expect(layers.length).to.equal(0)
+    assert.strictEqual(layers.length, 0)
   })
 })

@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { Browser, CRS, LatLngBounds, Map, Marker, Projection } from 'leaflet'
@@ -54,8 +54,8 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     map.remove()
     div.remove()
-    clock.restore()
 
+    clock.restore()
     marker1 = marker2 = marker3 = marker4 = marker5 = markers = div = map = group = clock = null
   })
 
@@ -67,7 +67,13 @@ describe('Option removeOutsideVisibleBounds', function () {
   }
 
   function setBrowserToMobile() {
-    browserMobileStub = sinon.stub(Browser, 'mobile').value(true)
+    const _prevMobile = Browser.mobile
+    Browser.mobile = true
+    browserMobileStub = {
+      restore: () => {
+        Browser.mobile = _prevMobile
+      },
+    }
   }
 
   /////////////////////////////
@@ -78,9 +84,9 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     prepareGroup()
 
-    expect(marker1._icon).to.be.null
-    expect(map._panes.markerPane.childNodes.length).to.equal(3) // markers 2, 3 and 4.
-    expect(marker5._icon).to.be.null
+    assert.strictEqual(marker1._icon, null)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 3) // markers 2, 3 and 4.
+    assert.strictEqual(marker5._icon, null)
   })
 
   it('removes objects out of view port by default for mobile device', function () {
@@ -90,11 +96,11 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     prepareGroup()
 
-    expect(marker1._icon).to.be.null
-    expect(marker2._icon).to.be.null
-    expect(map._panes.markerPane.childNodes.length).to.equal(1) // marker 3 only.
-    expect(marker4._icon).to.be.null
-    expect(marker5._icon).to.be.null
+    assert.strictEqual(marker1._icon, null)
+    assert.strictEqual(marker2._icon, null)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1) // marker 3 only.
+    assert.strictEqual(marker4._icon, null)
+    assert.strictEqual(marker5._icon, null)
   })
 
   it('leaves all objects on map when set to false', function () {
@@ -104,7 +110,7 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     prepareGroup()
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(5) // All 5 markers.
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 5) // All 5 markers.
   })
 
   // Following tests need markers at very high latitude.
@@ -136,15 +142,15 @@ describe('Option removeOutsideVisibleBounds', function () {
   }
 
   function checkProjection() {
-    expect(map.options.crs).to.equal(CRS.EPSG3857)
-    expect(CRS.EPSG3857.projection).to.equal(Projection.SphericalMercator)
-    expect(Projection.SphericalMercator.MAX_LATITUDE).to.be.a('number')
+    assert.strictEqual(map.options.crs, CRS.EPSG3857)
+    assert.strictEqual(CRS.EPSG3857.projection, Projection.SphericalMercator)
+    assert.ok(typeof Projection.SphericalMercator.MAX_LATITUDE === 'number')
 
     const mapZoom = map.getZoom()
 
     for (let i = 0; i < markers.length; i++) {
       try {
-        expect(markers[i].__parent._zoom).to.be.below(mapZoom)
+        assert.ok(markers[i].__parent._zoom < mapZoom)
       }
       catch (e) {
         console.log('Failed marker: ' + (i + 1))
@@ -162,15 +168,15 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     checkProjection(latLngsMaxLatDefault)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(4) // Markers 1, 2, 3 and 4.
-    expect(marker5._icon).to.be.null
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 4) // Markers 1, 2, 3 and 4.
+    assert.strictEqual(marker5._icon, null)
   })
 
   it('includes objects below the Web Mercator projection minimum limit by default', function () {
     moveMarkersAndMapToMaxLat(latLngsMaxLatDefault, true)
 
     // Make sure we are really in Southern hemisphere.
-    expect(map.getBounds().getNorth()).to.be.below(-80)
+    assert.ok(map.getBounds().getNorth() < -80)
 
     group = new MarkerClusterGroup()
 
@@ -180,8 +186,8 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     clock.tick(1000)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(4) // Markers 1, 2, 3 and 4.
-    expect(marker5._icon).to.be.null
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 4) // Markers 1, 2, 3 and 4.
+    assert.strictEqual(marker5._icon, null)
   })
 
   // The actual map view should be '-1.0986328125,84.92929204957956,1.0986328125,85.11983467698401'
@@ -206,9 +212,9 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     checkProjection(latLngsMaxLatMobile)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(3) // Markers 1, 2 and 3.
-    expect(marker4._icon).to.be.null
-    expect(marker5._icon).to.be.null
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 3) // Markers 1, 2 and 3.
+    assert.strictEqual(marker4._icon, null)
+    assert.strictEqual(marker5._icon, null)
   })
 
   it('includes objects below the Web Mercator projection minimum limit for mobile device', function () {
@@ -217,7 +223,7 @@ describe('Option removeOutsideVisibleBounds', function () {
     moveMarkersAndMapToMaxLat(latLngsMaxLatMobile, true)
 
     // Make sure we are really in Southern hemisphere.
-    expect(map.getBounds().getNorth()).to.be.below(-80)
+    assert.ok(map.getBounds().getNorth() < -80)
 
     group = new MarkerClusterGroup({
       maxClusterRadius: 10,
@@ -227,8 +233,8 @@ describe('Option removeOutsideVisibleBounds', function () {
 
     checkProjection(latLngsMaxLatMobile)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(3) // Markers 1, 2 and 3.
-    expect(marker4._icon).to.be.null
-    expect(marker5._icon).to.be.null
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 3) // Markers 1, 2 and 3.
+    assert.strictEqual(marker4._icon, null)
+    assert.strictEqual(marker5._icon, null)
   })
 })

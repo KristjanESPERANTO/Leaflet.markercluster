@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { Circle, LatLngBounds, Map } from 'leaflet'
@@ -54,8 +54,8 @@ describe('support for Circle elements', function () {
 
     // Leaflet 1.0.0 now uses an intermediate Renderer.
     // marker > _path > _rootGroup (g) > _container (svg) > pane (div)
-    expect(marker._path.parentNode).to.not.be.undefined
-    expect(marker._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    assert.notStrictEqual(marker._path.parentNode, undefined)
+    assert.strictEqual(marker._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
 
     clock.tick(1000)
   })
@@ -68,8 +68,8 @@ describe('support for Circle elements', function () {
     group.addLayer(marker)
     map.addLayer(group)
 
-    expect(marker._path.parentNode).to.not.be.undefined
-    expect(marker._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    assert.notStrictEqual(marker._path.parentNode, undefined)
+    assert.strictEqual(marker._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
 
     clock.tick(1000)
   })
@@ -84,8 +84,8 @@ describe('support for Circle elements', function () {
     group.addLayer(marker)
     group.addLayer(marker2)
 
-    expect(marker._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
-    expect(marker2._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    assert.strictEqual(marker._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
+    assert.strictEqual(marker2._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
 
     clock.tick(1000)
   })
@@ -99,10 +99,10 @@ describe('support for Circle elements', function () {
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    expect(marker._path).to.be.undefined
-    expect(marker2._path).to.be.undefined
+    assert.strictEqual(marker._path, undefined)
+    assert.strictEqual(marker2._path, undefined)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(1)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1)
 
     clock.tick(1000)
   })
@@ -117,10 +117,10 @@ describe('support for Circle elements', function () {
     group.addLayer(marker)
     group.addLayer(marker2)
 
-    expect(marker._path.parentNode).to.be.null // Removed then re-added, so null
-    expect(marker2._path).to.be.undefined
+    assert.strictEqual(marker._path.parentNode, null) // Removed then re-added, so null
+    assert.strictEqual(marker2._path, undefined)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(1)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1)
 
     clock.tick(1000)
   })
@@ -133,12 +133,12 @@ describe('support for Circle elements', function () {
     group.addLayer(marker)
     map.addLayer(group)
 
-    expect(marker._path.parentNode).to.not.be.undefined
-    expect(marker._path.parentNode.parentNode.parentNode).to.equal(map.getPane('overlayPane'))
+    assert.notStrictEqual(marker._path.parentNode, undefined)
+    assert.strictEqual(marker._path.parentNode.parentNode.parentNode, map.getPane('overlayPane'))
 
     group.removeLayer(marker)
 
-    expect(marker._path.parentNode).to.be.null
+    assert.strictEqual(marker._path.parentNode, null)
 
     clock.tick(1000)
   })

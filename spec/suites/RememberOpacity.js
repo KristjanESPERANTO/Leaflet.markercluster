@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { LatLng, LatLngBounds, Map, Marker } from 'leaflet'
@@ -65,8 +65,8 @@ describe('Remember opacity', function () {
     map.addLayer(group)
 
     const visibleClusters = group._featureGroup.getLayers()
-    expect(visibleClusters.length).to.equal(1)
-    expect(visibleClusters[0].options.opacity).to.equal(1)
+    assert.strictEqual(visibleClusters.length, 1)
+    assert.strictEqual(visibleClusters[0].options.opacity, 1)
   })
 
   it('unclusters an opaque marker into semitransparent ones', function () {
@@ -83,9 +83,9 @@ describe('Remember opacity', function () {
     clock.tick(1000)
 
     visibleClusters = group._featureGroup.getLayers()
-    expect(visibleClusters.length).to.equal(9)
+    assert.strictEqual(visibleClusters.length, 9)
     for (let i = 0; i < 9; i++) {
-      expect(visibleClusters[i].options.opacity).to.be.within(0.2, 0.9)
+      assert.ok(visibleClusters[i].options.opacity >= 0.2 && visibleClusters[i].options.opacity <= 0.9)
     }
 
     // It shall also work after zooming in/out a second time.
@@ -96,9 +96,9 @@ describe('Remember opacity', function () {
     clock.tick(1000)
 
     visibleClusters = group._featureGroup.getLayers()
-    expect(visibleClusters.length).to.equal(9)
+    assert.strictEqual(visibleClusters.length, 9)
     for (let i = 0; i < 9; i++) {
-      expect(visibleClusters[i].options.opacity).to.be.within(0.2, 0.9)
+      assert.ok(visibleClusters[i].options.opacity >= 0.2 && visibleClusters[i].options.opacity <= 0.9)
     }
   })
 
@@ -117,17 +117,17 @@ describe('Remember opacity', function () {
       clock.tick(1000)
 
       visibleClusters = group._featureGroup.getLayers()
-      expect(visibleClusters.length).to.equal(9)
+      assert.strictEqual(visibleClusters.length, 9)
       for (let i = 0; i < 9; i++) {
-        expect(visibleClusters[i].options.opacity).to.be.within(0.2, 0.9)
+        assert.ok(visibleClusters[i].options.opacity >= 0.2 && visibleClusters[i].options.opacity <= 0.9)
       }
 
       map.setView(new LatLng(0, 0), 1)
       clock.tick(1000)
 
       visibleClusters = group._featureGroup.getLayers()
-      expect(visibleClusters.length).to.equal(1)
-      expect(visibleClusters[0].options.opacity).to.equal(1)
+      assert.strictEqual(visibleClusters.length, 1)
+      assert.strictEqual(visibleClusters[0].options.opacity, 1)
     }
   })
 
@@ -156,8 +156,8 @@ describe('Remember opacity', function () {
       map.setView(new LatLng(markerDefs[i].latLng), 18)
       clock.tick(1000)
       visibleClusters = group._featureGroup.getLayers()
-      expect(visibleClusters.length).to.equal(1)
-      expect(visibleClusters[0].options.opacity).to.equal(markerDefs[i].opts.opacity)
+      assert.strictEqual(visibleClusters.length, 1)
+      assert.strictEqual(visibleClusters[0].options.opacity, markerDefs[i].opts.opacity)
     }
   })
 })

@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 import sinon from 'sinon'
 
 import { LatLngBounds, Map, Marker } from 'leaflet'
@@ -38,7 +38,7 @@ describe('moving markers', function () {
     div.remove()
     clock.restore()
 
-    div = map = group = clock
+    div = map = group = clock = null
   })
 
   /////////////////////////////
@@ -55,7 +55,7 @@ describe('moving markers', function () {
     marker.setLatLng([1.5, 1.5])
     map.addLayer(group)
 
-    expect(group.getLayers().length).to.equal(1)
+    assert.strictEqual(group.getLayers().length, 1)
   })
 
   it('moves multiple markers that were moved while off the map', function () {
@@ -76,6 +76,6 @@ describe('moving markers', function () {
     }
     map.addLayer(group)
 
-    expect(group.getLayers().length).to.equal(10)
+    assert.strictEqual(group.getLayers().length, 10)
   })
 })

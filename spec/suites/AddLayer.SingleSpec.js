@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, LayerGroup, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -48,8 +48,8 @@ describe('addLayer adding a single marker', function () {
     group.addLayer(marker)
     map.addLayer(group)
 
-    expect(marker._icon).to.not.be.undefined
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.notStrictEqual(marker._icon, undefined)
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
   })
 
   it('appears when added to the group after the group is added to the map', function () {
@@ -60,8 +60,8 @@ describe('addLayer adding a single marker', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon).to.not.be.undefined
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.notStrictEqual(marker._icon, undefined)
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
   })
 
   it('appears (using animations) when added after the group is added to the map', function () {
@@ -72,8 +72,8 @@ describe('addLayer adding a single marker', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon).to.not.be.undefined
-    expect(marker._icon.parentNode).to.equal(map._panes.markerPane)
+    assert.notStrictEqual(marker._icon, undefined)
+    assert.strictEqual(marker._icon.parentNode, map._panes.markerPane)
   })
 
   it('does not appear when too far away when added before the group is added to the map', function () {
@@ -84,7 +84,7 @@ describe('addLayer adding a single marker', function () {
     group.addLayer(marker)
     map.addLayer(group)
 
-    expect(marker._icon).to.be.undefined
+    assert.strictEqual(marker._icon, undefined)
   })
 
   it('does not appear when too far away when added after the group is added to the map', function () {
@@ -95,7 +95,7 @@ describe('addLayer adding a single marker', function () {
     map.addLayer(group)
     group.addLayer(marker)
 
-    expect(marker._icon).to.be.undefined
+    assert.strictEqual(marker._icon, undefined)
   })
 
   it('passes control to addLayers when marker is a Layer Group', function () {
@@ -108,11 +108,11 @@ describe('addLayer adding a single marker', function () {
     map.addLayer(group)
     group.addLayer(layerGroup)
 
-    expect(group._topClusterLevel.getChildCount()).to.equal(2)
+    assert.strictEqual(group._topClusterLevel.getChildCount(), 2)
 
-    expect(marker1._icon).to.be.undefined
-    expect(marker2._icon).to.be.undefined
+    assert.strictEqual(marker1._icon, undefined)
+    assert.strictEqual(marker2._icon, undefined)
 
-    expect(map._panes.markerPane.childNodes.length).to.equal(1)
+    assert.strictEqual(map._panes.markerPane.childNodes.length, 1)
   })
 })

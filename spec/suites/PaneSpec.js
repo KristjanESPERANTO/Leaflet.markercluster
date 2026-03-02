@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -52,7 +52,7 @@ describe('Map pane selection', function () {
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    expect(map._panes.testPane.childNodes.length).to.equal(1)
+    assert.strictEqual(map._panes.testPane.childNodes.length, 1)
   })
 
   it('defaults to default marker pane', function () {
@@ -64,6 +64,6 @@ describe('Map pane selection', function () {
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    expect(map._panes[Marker.prototype.options.pane].childNodes.length).to.equal(1)
+    assert.strictEqual(map._panes[Marker.prototype.options.pane].childNodes.length, 1)
   })
 })

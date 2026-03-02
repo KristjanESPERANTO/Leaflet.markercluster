@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -53,10 +53,10 @@ describe('onRemove', function () {
     }
 
     group._showCoverage({ sourceTarget: group._topClusterLevel })
-    expect(group._shownPolygon).to.not.be.null
+    assert.notStrictEqual(group._shownPolygon, null)
 
     map.removeLayer(group)
 
-    expect(group._shownPolygon).to.be.null
+    assert.strictEqual(group._shownPolygon, null)
   })
 })

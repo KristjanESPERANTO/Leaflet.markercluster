@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
-import { expect } from 'chai'
-import sinon from 'sinon'
+import assert from 'node:assert'
 
 import { LatLngBounds, Map, Marker, Polygon } from 'leaflet'
 import { MarkerCluster, MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
@@ -41,8 +40,8 @@ describe('events', function () {
   /////////////////////////////
   // TESTS
   /////////////////////////////
-  it('is fired for a single child marker', function () {
-    const callback = sinon.spy()
+  it('is fired for a single child marker', function (t) {
+    const callback = t.mock.fn()
 
     group = new MarkerClusterGroup()
 
@@ -55,11 +54,11 @@ describe('events', function () {
     // In Leaflet 1.0.0, event propagation must be explicitly set by 3rd argument.
     marker.fire('click', null, true)
 
-    expect(callback.called).to.be.true
+    assert.ok(callback.mock.calls.length > 0)
   })
 
-  it('is fired for a child polygon', function () {
-    const callback = sinon.spy()
+  it('is fired for a child polygon', function (t) {
+    const callback = t.mock.fn()
 
     group = new MarkerClusterGroup()
 
@@ -71,11 +70,11 @@ describe('events', function () {
 
     polygon.fire('click', null, true)
 
-    expect(callback.called).to.be.true
+    assert.ok(callback.mock.calls.length > 0)
   })
 
-  it('is fired for a cluster click', function () {
-    const callback = sinon.spy()
+  it('is fired for a cluster click', function (t) {
+    const callback = t.mock.fn()
 
     group = new MarkerClusterGroup()
 
@@ -87,16 +86,16 @@ describe('events', function () {
     map.addLayer(group)
 
     const cluster = group.getVisibleParent(marker)
-    expect(cluster instanceof MarkerCluster).to.be.true
+    assert.ok(cluster instanceof MarkerCluster)
 
     cluster.fire('click', null, true)
 
-    expect(callback.called).to.be.true
+    assert.ok(callback.mock.calls.length > 0)
   })
 
   describe('after being added, removed, re-added from the map', function () {
-    it('still fires events for nonpoint data', function () {
-      const callback = sinon.spy()
+    it('still fires events for nonpoint data', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
 
@@ -110,11 +109,11 @@ describe('events', function () {
 
       polygon.fire('click', null, true)
 
-      expect(callback.called).to.be.true
+      assert.ok(callback.mock.calls.length > 0)
     })
 
-    it('still fires events for point data', function () {
-      const callback = sinon.spy()
+    it('still fires events for point data', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
 
@@ -128,11 +127,11 @@ describe('events', function () {
 
       marker.fire('click', null, true)
 
-      expect(callback.called).to.be.true
+      assert.ok(callback.mock.calls.length > 0)
     })
 
-    it('still fires cluster events', function () {
-      const callback = sinon.spy()
+    it('still fires cluster events', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
 
@@ -147,15 +146,15 @@ describe('events', function () {
       map.addLayer(group)
 
       const cluster = group.getVisibleParent(marker)
-      expect(cluster instanceof MarkerCluster).to.be.true
+      assert.ok(cluster instanceof MarkerCluster)
 
       cluster.fire('click', null, true)
 
-      expect(callback.called).to.be.true
+      assert.ok(callback.mock.calls.length > 0)
     })
 
-    it('does not break map events', function () {
-      const callback = sinon.spy()
+    it('does not break map events', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
 
@@ -167,12 +166,12 @@ describe('events', function () {
 
       map.fire('zoomend')
 
-      expect(callback.called).to.be.true
+      assert.ok(callback.mock.calls.length > 0)
     })
 
     // layeradd
-    it('fires layeradd when markers are added while not on the map', function () {
-      const callback = sinon.spy()
+    it('fires layeradd when markers are added while not on the map', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
       group.on('layeradd', callback)
@@ -180,11 +179,11 @@ describe('events', function () {
       const marker = new Marker([1.5, 1.5])
       group.addLayer(marker)
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layeradd when vectors are added while not on the map', function () {
-      const callback = sinon.spy()
+    it('fires layeradd when vectors are added while not on the map', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
       group.on('layeradd', callback)
@@ -192,11 +191,11 @@ describe('events', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayer(polygon)
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layeradd when markers are added while on the map', function () {
-      const callback = sinon.spy()
+    it('fires layeradd when markers are added while on the map', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
       group.on('layeradd', callback)
@@ -205,11 +204,11 @@ describe('events', function () {
       const marker = new Marker([1.5, 1.5])
       group.addLayer(marker)
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layeradd when vectors are added while on the map', function () {
-      const callback = sinon.spy()
+    it('fires layeradd when vectors are added while on the map', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
       group.on('layeradd', callback)
@@ -218,11 +217,11 @@ describe('events', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayer(polygon)
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layersadd (batch event) when markers are added using addLayers while on the map with chunked loading', function () {
-      const callback = sinon.spy()
+    it('fires layersadd (batch event) when markers are added using addLayers while on the map with chunked loading', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layersadd', callback)
@@ -231,12 +230,12 @@ describe('events', function () {
       const marker = new Marker([1.5, 1.5])
       group.addLayers([marker])
 
-      expect(callback.callCount).to.equal(1)
-      expect(callback.firstCall.args[0].layers.length).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
+      assert.strictEqual(callback.mock.calls[0].arguments[0].layers.length, 1)
     })
 
-    it('fires layersadd (batch event) when vectors are added using addLayers while on the map with chunked loading', function () {
-      const callback = sinon.spy()
+    it('fires layersadd (batch event) when vectors are added using addLayers while on the map with chunked loading', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layersadd', callback)
@@ -245,13 +244,13 @@ describe('events', function () {
       const polygon = new Polygon([[1.5, 1.5], [2.0, 1.5], [2.0, 2.0], [1.5, 2.0]])
       group.addLayers([polygon])
 
-      expect(callback.callCount).to.equal(1)
-      expect(callback.firstCall.args[0].layers.length).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
+      assert.strictEqual(callback.mock.calls[0].arguments[0].layers.length, 1)
     })
 
     // layerremove
-    it('fires layerremove when a marker is removed while not on the map', function () {
-      const callback = sinon.spy()
+    it('fires layerremove when a marker is removed while not on the map', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
       group.on('layerremove', callback)
@@ -260,11 +259,11 @@ describe('events', function () {
       group.addLayer(marker)
       group.removeLayer(marker)
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layerremove when a vector is removed while not on the map', function () {
-      const callback = sinon.spy()
+    it('fires layerremove when a vector is removed while not on the map', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
       group.on('layerremove', callback)
@@ -273,11 +272,11 @@ describe('events', function () {
       group.addLayer(polygon)
       group.removeLayer(polygon)
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layerremove when a marker is removed while on the map', function () {
-      const callback = sinon.spy()
+    it('fires layerremove when a marker is removed while on the map', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
       group.on('layerremove', callback)
@@ -287,11 +286,11 @@ describe('events', function () {
       group.addLayer(marker)
       group.removeLayer(marker)
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layerremove when a vector is removed while on the map', function () {
-      const callback = sinon.spy()
+    it('fires layerremove when a vector is removed while on the map', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup()
       group.on('layerremove', callback)
@@ -301,11 +300,11 @@ describe('events', function () {
       group.addLayer(polygon)
       group.removeLayer(polygon)
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layerremove when a marker is removed using removeLayers while on the map with chunked loading', function () {
-      const callback = sinon.spy()
+    it('fires layerremove when a marker is removed using removeLayers while on the map with chunked loading', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layerremove', callback)
@@ -315,11 +314,11 @@ describe('events', function () {
       group.addLayers([marker])
       group.removeLayers([marker])
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layerremove when a vector is removed using removeLayers while on the map with chunked loading', function () {
-      const callback = sinon.spy()
+    it('fires layerremove when a vector is removed using removeLayers while on the map with chunked loading', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layerremove', callback)
@@ -329,11 +328,11 @@ describe('events', function () {
       group.addLayers([polygon])
       group.removeLayers([polygon])
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layerremove when a marker is removed using removeLayers while not on the map with chunked loading', function () {
-      const callback = sinon.spy()
+    it('fires layerremove when a marker is removed using removeLayers while not on the map with chunked loading', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layerremove', callback)
@@ -342,11 +341,11 @@ describe('events', function () {
       group.addLayers([marker])
       group.removeLayers([marker])
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
 
-    it('fires layerremove when a vector is removed using removeLayers while not on the map with chunked loading', function () {
-      const callback = sinon.spy()
+    it('fires layerremove when a vector is removed using removeLayers while not on the map with chunked loading', function (t) {
+      const callback = t.mock.fn()
 
       group = new MarkerClusterGroup({ chunkedLoading: true })
       group.on('layerremove', callback)
@@ -355,14 +354,14 @@ describe('events', function () {
       group.addLayers([polygon])
       group.removeLayers([polygon])
 
-      expect(callback.callCount).to.equal(1)
+      assert.strictEqual(callback.mock.calls.length, 1)
     })
   })
 
   /*
   //No normal events can be fired by a clustered marker, so probably don't need this.
-  it('is fired for a clustered child marker', function() {
-    let callback = sinon.spy();
+  it('is fired for a clustered child marker', function(t) {
+    let callback = t.mock.fn();
 
     group = new MarkerClusterGroup();
 
@@ -375,7 +374,7 @@ describe('events', function () {
 
     marker.fire('click');
 
-    expect(callback.called).to.be.true;
+    assert.ok(callback.mock.calls.length > 0);
   });
   */
 })
