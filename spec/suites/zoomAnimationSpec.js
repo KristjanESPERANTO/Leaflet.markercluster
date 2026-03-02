@@ -129,7 +129,7 @@ describe('zoomAnimation', function () {
     expect(map._panes.markerPane.childNodes.length).to.equal(3)
   })
 
-  it.skip('removes clicked clusters on the edge of a mobile screen', function () {
+  it('removes clicked clusters on the edge of a mobile screen', function () {
     setBrowserToMobile()
 
     // Corresponds to zoom level 8 for the above div dimensions.
@@ -249,11 +249,7 @@ describe('zoomAnimation', function () {
       sinon.assert.calledOnce(zoomCallbackSpy)
     })
 
-    // SKIPPED: This test is flaky with sinon.useFakeTimers()
-    // The issue is that zoomToShowLayer relies on 'moveend' and 'animationend' events
-    // which don't fire reliably with fake timers when the marker is already in view but clustered.
-    // The functionality itself works correctly in real usage.
-    it.skip('change view and zoom to marker in cluster inside map view', function () {
+    it('change view and zoom to marker in cluster inside map view', function () {
       group = new MarkerClusterGroup()
 
       const marker1 = new Marker([59.9520, 30.3307])
@@ -359,7 +355,7 @@ describe('zoomAnimation', function () {
       sinon.assert.calledOnce(zoomCallbackSpy)
     })
 
-    it.skip('zoom or spiderfy markers if they visible on next level of zoom', function () {
+    it('zoom or spiderfy markers if they visible on next level of zoom', function () {
       group = new MarkerClusterGroup()
 
       const marker1 = new Marker([59.9520, 30.3307])
@@ -393,7 +389,7 @@ describe('zoomAnimation', function () {
       sinon.assert.calledOnce(zoomCallbackSpy)
     })
 
-    it.skip('zoom and executes callback even for non-icon-based Marker', function () {
+    it('zoom and executes callback even for non-icon-based Marker', function () {
       group = new MarkerClusterGroup()
 
       const marker1 = new CircleMarker([59.9520, 30.3307])
