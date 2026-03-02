@@ -1,9 +1,32 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [3.0.1](https://github.com/KristjanESPERANTO/Leaflet.markercluster/compare/v3.0.0...v3.0.1) (2026-03-02)
+
+
+### Fixed
+
+* correct broken aria-label on cluster icon ([4ccdbab](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/4ccdbab59e521faec37f30e8c5c11b28c228660d))
+
+
+### Documentation
+
+* improve landing page ([0fdcf2b](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/0fdcf2b2325896dbc82a5a565666ee0cf8923b46))
+
+
+### Chores
+
+* add changelog config for commit-and-tag-version ([74412ab](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/74412abe445bda9f00a23750ff3567497725ccdf))
+* update devDependencies ([9cca85b](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/9cca85ba5d0203c159ea474ec91d553cabc5ad34))
+* update publishConfig tag to latest ([4053cce](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/4053cce02ea63ddeebb345785fba1a3b07bff0c3))
+
+
+### Tests
+
+* replace chai with node:assert, sinon spies with t.mock.fn() ([a78c0e7](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/a78c0e7f78f2ee6bad3faf8ad0fe933f2ca9571d))
+* replace mocha/playwright with node:test and happy-dom ([632fdd0](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/632fdd04d7876d43fb414533f4837930ee269ab8))
+* unskip all previously skipped tests ([3b5c43d](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/3b5c43d061041a7ca53c9e270feb4696f5c5a3d6))
 
 ## 3.0.0 - 2025-12-10
 
