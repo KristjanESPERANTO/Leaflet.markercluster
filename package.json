@@ -5,7 +5,7 @@
   "homepage": "https://kristjanesperanto.github.io/Leaflet.markercluster/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KristjanESPERANTO/Leaflet.markercluster"
+    "url": "git+https://github.com/KristjanESPERANTO/Leaflet.markercluster.git"
   },
   "bugs": {
     "url": "https://github.com/KristjanESPERANTO/Leaflet.markercluster/issues"
