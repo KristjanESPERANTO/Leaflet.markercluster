@@ -878,7 +878,7 @@ export const MarkerClusterGroup = FeatureGroup.extend({
       c += 'large'
     }
 
-    return new DivIcon({ html: '<div><span>' + childCount + ' <span aria-label="markers"></span>' + '</span></div>', className: 'marker-cluster' + c, iconSize: new Point(40, 40) })
+    return new DivIcon({ html: '<div><span aria-label="Cluster, ' + childCount + ' markers">' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new Point(40, 40) })
   },
 
   _bindEvents: function () {
