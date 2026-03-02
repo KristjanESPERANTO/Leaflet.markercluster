@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.0.2](https://github.com/KristjanESPERANTO/Leaflet.markercluster/compare/v3.0.1...v3.0.2) (2026-03-02)
+
+
+### Chores
+
+* update repository URL format in package.json ([6a16a4a](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/6a16a4a78472ea2363fe62e1b40575acf37e23f6))
+
+
+### Code Refactoring
+
+* use Map for DistanceGrid spatial index ([e0314a2](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/e0314a24d4711533c4f66e00c9722f5025126140))
+
+
+### Continuous Integration
+
+* add permissions section for content access ([610b247](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/610b24772c02634dc554edf1b6cbec24a136fa5b))
+* fix lint failure on clean checkout and remove Playwright step ([67b0f9c](https://github.com/KristjanESPERANTO/Leaflet.markercluster/commit/67b0f9ca4c0fd6311a161551b9e48a4c1e0a30eb))
+
 ## [3.0.1](https://github.com/KristjanESPERANTO/Leaflet.markercluster/compare/v3.0.0...v3.0.1) (2026-03-02)
 
 
