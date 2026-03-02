@@ -1,5 +1,9 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+import sinon from 'sinon'
+
 import { Browser, CRS, LatLngBounds, Map, Marker, Projection } from 'leaflet'
-import { MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('Option removeOutsideVisibleBounds', function () {
   /////////////////////////////

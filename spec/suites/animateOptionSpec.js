@@ -1,5 +1,8 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+
 import { LatLngBounds, Map } from 'leaflet'
-import { MarkerCluster, MarkerClusterGroup, MarkerClusterNonAnimated } from 'leaflet.markercluster'
+import { MarkerCluster, MarkerClusterGroup, MarkerClusterNonAnimated } from '../../dist/leaflet.markercluster.js'
 
 describe('animate option', function () {
   /////////////////////////////

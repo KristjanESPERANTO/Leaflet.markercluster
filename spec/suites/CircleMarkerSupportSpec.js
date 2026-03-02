@@ -1,5 +1,9 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+import sinon from 'sinon'
+
 import { CircleMarker, LatLngBounds, Map } from 'leaflet'
-import { MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('support for CircleMarker elements', function () {
   /////////////////////////////

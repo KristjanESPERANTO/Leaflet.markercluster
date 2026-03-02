@@ -1,4 +1,7 @@
-import { DistanceGrid } from 'leaflet.markercluster'
+import { describe, it } from 'node:test'
+import { expect } from 'chai'
+
+import { DistanceGrid } from '../../dist/leaflet.markercluster.js'
 
 describe('distance grid', function () {
   it('addObject', function () {
@@ -9,7 +12,7 @@ describe('distance grid', function () {
     expect(grid.removeObject(obj, { x: 0, y: 0 })).to.deep.equal(true)
   })
 
-  it('eachObject', function (done) {
+  it('eachObject', function (t, done) {
     const grid = new DistanceGrid(100),
       obj = {}
 

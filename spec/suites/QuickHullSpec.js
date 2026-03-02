@@ -1,4 +1,7 @@
-import { QuickHull } from 'leaflet.markercluster'
+import { describe, it } from 'node:test'
+import { expect } from 'chai'
+
+import { QuickHull } from '../../dist/leaflet.markercluster.js'
 
 describe('quickhull', function () {
   describe('getDistant', function () {

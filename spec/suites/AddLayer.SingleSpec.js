@@ -1,5 +1,8 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+
 import { LatLngBounds, LayerGroup, Map, Marker } from 'leaflet'
-import { MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('addLayer adding a single marker', function () {
   /////////////////////////////

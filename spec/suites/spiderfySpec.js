@@ -1,5 +1,9 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+import sinon from 'sinon'
+
 import { Circle, CircleMarker, LatLngBounds, Map, Marker } from 'leaflet'
-import { MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('spiderfy', function () {
   /////////////////////////////
@@ -205,7 +209,7 @@ describe('spiderfy', function () {
     expect(map._panes.mapPane.className).to.not.contain('leaflet-cluster-anim')
   })
 
-  it('fires unspiderfied event on unspiderfy', function (done) {
+  it('fires unspiderfied event on unspiderfy', function (t, done) {
     group = new MarkerClusterGroup()
 
     const marker = new Marker([1.5, 1.5])
@@ -294,7 +298,7 @@ describe('spiderfy', function () {
   })
 
   describe('spiderfied event listener', function () {
-    it('Spiderfies 2 Markers', function (done) {
+    it('Spiderfies 2 Markers', function (t, done) {
       group = new MarkerClusterGroup()
       const marker = new Marker([1.5, 1.5])
       const marker2 = new Marker([1.5, 1.5])
@@ -318,7 +322,7 @@ describe('spiderfy', function () {
       clock.tick(200)
     })
 
-    it('Spiderfies 2 Circles', function (done) {
+    it('Spiderfies 2 Circles', function (t, done) {
       group = new MarkerClusterGroup()
       const marker = new Circle([1.5, 1.5], 10)
       const marker2 = new Circle([1.5, 1.5], 10)

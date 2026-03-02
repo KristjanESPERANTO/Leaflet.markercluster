@@ -1,3 +1,6 @@
+import { describe, it } from 'node:test'
+import { expect } from 'chai'
+
 import Leaflet from 'leaflet'
 
 describe('L#noConflict', function () {

@@ -1,6 +1,10 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+import sinon from 'sinon'
+
 /* eslint-disable no-unused-vars */
 import { DivIcon, LatLngBounds, LayerGroup, Map, Marker } from 'leaflet'
-import { MarkerCluster, MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerCluster, MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('refreshClusters', function () {
   /////////////////////////////

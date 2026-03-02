@@ -1,5 +1,9 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+import sinon from 'sinon'
+
 import { Circle, CircleMarker, LatLngBounds, Map, Marker } from 'leaflet'
-import { MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('unspiderfy', function () {
   /////////////////////////////
@@ -106,7 +110,7 @@ describe('unspiderfy', function () {
     expect(map.hasLayer(marker2)).to.be.false
   })
 
-  it('fires unspiderfied event on unspiderfy', function (done) {
+  it('fires unspiderfied event on unspiderfy', function (t, done) {
     group = new MarkerClusterGroup()
 
     const marker = new Marker([1.5, 1.5])

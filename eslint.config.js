@@ -40,24 +40,20 @@ export default defineConfig([
     },
   }),
   {
+    files: ['spec/setup.js'],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+  },
+  {
     files: ['spec/**/*.js'],
     languageOptions: {
       globals: {
         ...globals.browser,
-        // Playwright test globals
-        describe: 'readonly',
-        it: 'readonly',
-        expect: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
-        xit: 'readonly',
-        // Sinon
-        sinon: 'readonly',
       },
     },
     rules: {
       'import-x/no-named-as-default-member': 'off',
-      'import-x/no-unresolved': ['error', { ignore: ['^leaflet.markercluster$'] }],
     },
   },
   { files: ['**/*.md'], plugins: { markdown }, language: 'markdown/gfm', extends: ['markdown/recommended'] },

@@ -1,5 +1,9 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+import sinon from 'sinon'
+
 import { LatLngBounds, Map, Marker, Polygon } from 'leaflet'
-import { MarkerCluster, MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerCluster, MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('events', function () {
   /////////////////////////////

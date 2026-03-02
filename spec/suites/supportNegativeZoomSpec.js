@@ -1,5 +1,8 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+
 import { LatLng, Map, Marker } from 'leaflet'
-import { MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('things behave correctly with negative minZoom', function () {
   /////////////////////////////

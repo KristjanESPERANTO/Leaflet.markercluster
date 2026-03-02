@@ -1,5 +1,8 @@
+import { describe, it, beforeEach, afterEach } from 'node:test'
+import { expect } from 'chai'
+
 import { LatLngBounds, Map, Polygon } from 'leaflet'
-import { MarkerClusterGroup } from 'leaflet.markercluster'
+import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('adding non point data works', function () {
   /////////////////////////////
