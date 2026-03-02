@@ -12,8 +12,8 @@ import { Util } from 'leaflet'
 export const DistanceGrid = function (cellSize) {
   this._cellSize = cellSize
   this._sqCellSize = cellSize * cellSize
-  this._grid = {}
-  this._objectPoint = {}
+  this._grid = new Map()
+  this._objectPoint = new Map()
 }
 
 DistanceGrid.prototype = {
@@ -26,12 +26,21 @@ DistanceGrid.prototype = {
   addObject: function (obj, point) {
     const x = this._getCoord(point.x),
       y = this._getCoord(point.y),
-      grid = this._grid,
-      row = grid[y] = grid[y] || {},
-      cell = row[x] = row[x] || [],
-      stamp = Util.stamp(obj)
+      grid = this._grid
 
-    this._objectPoint[stamp] = point
+    let row = grid.get(y)
+    if (!row) {
+      row = new Map()
+      grid.set(y, row)
+    }
+
+    let cell = row.get(x)
+    if (!cell) {
+      cell = []
+      row.set(x, cell)
+    }
+
+    this._objectPoint.set(Util.stamp(obj), point)
 
     cell.push(obj)
   },
@@ -56,12 +65,12 @@ DistanceGrid.prototype = {
   removeObject: function (obj, point) {
     const x = this._getCoord(point.x)
     const y = this._getCoord(point.y)
-    // Optional chaining: safely access nested grid structure, returns undefined if row doesn't exist
-    const cell = this._grid[y]?.[x]
+    const row = this._grid.get(y)
+    const cell = row?.get(x)
 
     if (!cell) return false
 
-    delete this._objectPoint[Util.stamp(obj)]
+    this._objectPoint.delete(Util.stamp(obj))
 
     // Find the object's position in the cell array
     const idx = cell.indexOf(obj)
@@ -78,7 +87,10 @@ DistanceGrid.prototype = {
 
     // Clean up: Remove empty cell from grid to save memory
     if (cell.length === 0) {
-      delete this._grid[y][x]
+      row.delete(x)
+      if (row.size === 0) {
+        this._grid.delete(y)
+      }
     }
 
     return true
@@ -90,17 +102,10 @@ DistanceGrid.prototype = {
    * @param {object} context - Context for the callback function
    */
   eachObject: function (fn, context) {
-    let i, j, k, len, row, cell, removed
-    const grid = this._grid
-
-    for (i in grid) {
-      row = grid[i]
-
-      for (j in row) {
-        cell = row[j]
-
-        for (k = 0, len = cell.length; k < len; k++) {
-          removed = fn.call(context, cell[k])
+    for (const row of this._grid.values()) {
+      for (const cell of row.values()) {
+        for (let k = 0, len = cell.length; k < len; k++) {
+          const removed = fn.call(context, cell[k])
           if (removed) {
             k--
             len--
@@ -118,20 +123,19 @@ DistanceGrid.prototype = {
   getNearObject: function (point) {
     const x = this._getCoord(point.x),
       y = this._getCoord(point.y)
-    let i, j, k, row, cell, len, obj, dist
     const objectPoint = this._objectPoint
     let closestDistSq = this._sqCellSize,
       closest = null
 
-    for (i = y - 1; i <= y + 1; i++) {
-      row = this._grid[i]
+    for (let i = y - 1; i <= y + 1; i++) {
+      const row = this._grid.get(i)
       if (row) {
-        for (j = x - 1; j <= x + 1; j++) {
-          cell = row[j]
+        for (let j = x - 1; j <= x + 1; j++) {
+          const cell = row.get(j)
           if (cell) {
-            for (k = 0, len = cell.length; k < len; k++) {
-              obj = cell[k]
-              dist = this._sqDist(objectPoint[Util.stamp(obj)], point)
+            for (let k = 0, len = cell.length; k < len; k++) {
+              const obj = cell[k]
+              const dist = this._sqDist(objectPoint.get(Util.stamp(obj)), point)
               if (dist < closestDistSq
                 || (dist <= closestDistSq && closest === null)) {
                 closestDistSq = dist
