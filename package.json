@@ -73,9 +73,9 @@
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint --fix && prettier --write .",
     "prepare": "simple-git-hooks",
-    "release": "commit-and-tag-version",
-    "release:alpha": "commit-and-tag-version --prerelease alpha",
-    "release:dry": "commit-and-tag-version --dry-run"
+    "release": "commit-and-tag-version --config ./changelog.config.json",
+    "release:alpha": "commit-and-tag-version --prerelease alpha --config ./changelog.config.json",
+    "release:dry": "commit-and-tag-version --dry-run --config ./changelog.config.json"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
