@@ -76,11 +76,12 @@ DistanceGrid.prototype = {
 
     // Optimization: Swap with last element and pop (O(1) instead of splice's O(n))
     // Array order doesn't matter for spatial lookups, so we can avoid shifting elements
-    if (idx < cell.length - 1) {
+    const lastIdx = cell.length - 1
+    if (idx < lastIdx) {
       // Replace target with last element
-      cell[idx] = cell[cell.length - 1]
+      cell[idx] = cell[lastIdx]
     }
-    // Remove last element (always O(1))
+    // Remove the last object (always O(1))
     cell.pop()
 
     // Clean up: Remove empty cell from grid to save memory
