@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Leaflet.markercluster benchmark</title>
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
+    <style>
+      body {
+        margin: 0;
+        font: 16px/1.4 sans-serif;
+      }
+
+      #map {
+        height: 60vh;
+      }
+
+      #results {
+        margin: 1rem;
+        white-space: pre-wrap;
+      }
+
+      #instructions {
+        margin: 1rem;
+        padding: 1rem;
+        border: 1px solid #bbb;
+        background: #f5f5f5;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "../node_modules/leaflet/dist/leaflet.js",
+          "leaflet.markercluster": "../dist/leaflet.markercluster.js"
+        }
+      }
+    </script>
+    <script src="../example/realworld.50000.1.js"></script>
+    <script src="../example/realworld.50000.2.js"></script>
+  </head>
+  <body>
+    <section id="instructions" aria-labelledby="instructions-title">
+      <h1 id="instructions-title">Leaflet.markercluster performance benchmark</h1>
+      <p>This page measures marker creation and clustering separately with 100,000 markers. The final run remains visible on the map so you can inspect the resulting clusters.</p>
+      <p>
+        Build the project first, serve the repository through a local web server, and open this file in a browser. Use the same browser, build, dataset, zoom level, and number of
+        runs for before-and-after comparisons. Tile loading is not included in the clustering measurement.
+      </p>
+    </section>
+    <div id="map"></div>
+    <pre id="results">Running benchmark...</pre>
+
+    <script type="module">
+      import { LatLng, Map as LeafletMap, Marker, TileLayer } from "leaflet";
+      import { DistanceGrid, MarkerClusterGroup } from "leaflet.markercluster";
+
+      const RUNS = 5;
+      const REPEATS = 2;
+      const parameters = new URLSearchParams(location.search);
+      const profiling = parameters.get("profile") === "1";
+      const requestedMaxClusterZoom = parameters.get("maxClusterZoom");
+      const maxClusterZoom = requestedMaxClusterZoom === null ? 18 : Number(requestedMaxClusterZoom);
+      const datasets = [addressPoints, addressPoints2];
+      const results = document.getElementById("results");
+      const map = new LeafletMap("map", {
+        center: [-37.79, 175.27],
+        zoom: 2,
+        maxZoom: 18
+      });
+      new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 18
+      }).addTo(map);
+      const group = new MarkerClusterGroup({
+        animate: false,
+        chunkedLoading: false,
+        removeOutsideVisibleBounds: false,
+        disableClusteringAtZoom: maxClusterZoom + 1
+      });
+
+      map.addLayer(group);
+
+      const gridZooms = new Map();
+      const profileByZoom = new Map();
+      for (const [zoom, grid] of Object.entries(group._gridClusters)) {
+        gridZooms.set(grid, Number(zoom));
+      }
+      for (const [zoom, grid] of Object.entries(group._gridUnclustered)) {
+        gridZooms.set(grid, Number(zoom));
+      }
+
+      function getZoomProfile(grid) {
+        let zoom = gridZooms.get(grid);
+        if (zoom === undefined) {
+          for (const [candidateZoom, candidateGrid] of Object.entries(group._gridClusters)) {
+            if (candidateGrid === grid) {
+              zoom = Number(candidateZoom);
+              break;
+            }
+          }
+        }
+        if (zoom === undefined) {
+          for (const [candidateZoom, candidateGrid] of Object.entries(group._gridUnclustered)) {
+            if (candidateGrid === grid) {
+              zoom = Number(candidateZoom);
+              break;
+            }
+          }
+        }
+        gridZooms.set(grid, zoom);
+        let profile = profileByZoom.get(zoom);
+        if (!profile) {
+          profile = { addObject: 0, addObjectMs: 0, getNearObject: 0, getNearObjectMs: 0 };
+          profileByZoom.set(zoom, profile);
+        }
+        return profile;
+      }
+
+      const originalAddObject = DistanceGrid.prototype.addObject;
+      const originalGetNearObject = DistanceGrid.prototype.getNearObject;
+      if (profiling) {
+        DistanceGrid.prototype.addObject = function (obj, point) {
+          const profile = getZoomProfile(this);
+          const start = performance.now();
+          const result = originalAddObject.call(this, obj, point);
+          profile.addObject++;
+          profile.addObjectMs += performance.now() - start;
+          return result;
+        };
+
+        DistanceGrid.prototype.getNearObject = function (point) {
+          const profile = getZoomProfile(this);
+          const start = performance.now();
+          const result = originalGetNearObject.call(this, point);
+          profile.getNearObject++;
+          profile.getNearObjectMs += performance.now() - start;
+          return result;
+        };
+      }
+
+      function createMarkers() {
+        const markers = [];
+        for (let repeat = 0; repeat < REPEATS; repeat++) {
+          for (const dataset of datasets) {
+            for (const [lat, lng, title] of dataset) {
+              markers.push(new Marker(new LatLng(lat, lng), { title }));
+            }
+          }
+        }
+        return markers;
+      }
+
+      function addMarkers(markers) {
+        return new Promise((resolve) => {
+          group.once("layersadd", resolve);
+          group.addLayers(markers);
+        });
+      }
+
+      function median(values) {
+        const sorted = [...values].sort((a, b) => a - b);
+        return sorted[Math.floor(sorted.length / 2)];
+      }
+
+      function resetProfile() {
+        for (const profile of profileByZoom.values()) {
+          profile.addObject = 0;
+          profile.addObjectMs = 0;
+          profile.getNearObject = 0;
+          profile.getNearObjectMs = 0;
+        }
+      }
+
+      function readProfile() {
+        return Object.fromEntries([...profileByZoom.entries()].sort(([zoomA], [zoomB]) => zoomB - zoomA).map(([zoom, profile]) => [zoom, { ...profile }]));
+      }
+
+      function mergeProfiles(profiles) {
+        const merged = {};
+        for (const profile of profiles) {
+          for (const [zoom, counts] of Object.entries(profile)) {
+            if (!merged[zoom]) {
+              merged[zoom] = { addObject: 0, addObjectMs: 0, getNearObject: 0, getNearObjectMs: 0 };
+            }
+            merged[zoom].addObject += counts.addObject;
+            merged[zoom].addObjectMs += counts.addObjectMs;
+            merged[zoom].getNearObject += counts.getNearObject;
+            merged[zoom].getNearObjectMs += counts.getNearObjectMs;
+          }
+        }
+        for (const counts of Object.values(merged)) {
+          counts.addObject = Math.round(counts.addObject / profiles.length);
+          counts.addObjectMs = Number((counts.addObjectMs / profiles.length).toFixed(1));
+          counts.getNearObject = Math.round(counts.getNearObject / profiles.length);
+          counts.getNearObjectMs = Number((counts.getNearObjectMs / profiles.length).toFixed(1));
+        }
+        return merged;
+      }
+
+      async function run() {
+        const markerCount = datasets.reduce((total, dataset) => total + dataset.length, 0) * REPEATS;
+        const creationTimes = [];
+        const clusteringTimes = [];
+        const profileRuns = [];
+
+        await addMarkers(createMarkers());
+        group.clearLayers();
+
+        for (let run = 0; run < RUNS; run++) {
+          if (profiling) {
+            resetProfile();
+          }
+          const creationStart = performance.now();
+          const markers = createMarkers();
+          const clusteringStart = performance.now();
+          await addMarkers(markers);
+          const end = performance.now();
+          creationTimes.push(clusteringStart - creationStart);
+          clusteringTimes.push(end - clusteringStart);
+          if (profiling) {
+            profileRuns.push(readProfile());
+          }
+          if (run < RUNS - 1) {
+            group.clearLayers();
+          }
+        }
+
+        const output = {
+          markerCount,
+          runs: RUNS,
+          maxClusterZoom,
+          creationMs: creationTimes.map((time) => Number(time.toFixed(1))),
+          clusteringMs: clusteringTimes.map((time) => Number(time.toFixed(1))),
+          creationMedianMs: Number(median(creationTimes).toFixed(1)),
+          clusteringMedianMs: Number(median(clusteringTimes).toFixed(1)),
+          markersPerSecond: Math.round(markerCount / (median(clusteringTimes) / 1000))
+        };
+        if (profiling) {
+          output.averageZoomProfile = mergeProfiles(profileRuns);
+        }
+        results.textContent = JSON.stringify(output, null, 2);
+      }
+
+      run();
+    </script>
+  </body>
+</html>

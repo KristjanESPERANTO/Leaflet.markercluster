@@ -4,8 +4,9 @@
 2. [Contributing Code](#contributing-code)
 3. [Development Setup](#development-setup)
 4. [NPM Scripts](#npm-scripts)
-5. [Testing](#testing)
-6. [Releasing](#releasing)
+5. [Performance Benchmark](#performance-benchmark)
+6. [Testing](#testing)
+7. [Releasing](#releasing)
 
 ## Reporting Bugs
 
@@ -77,6 +78,25 @@ This will also set up Git hooks for automatic linting on commit.
 | `npm run release`       | Create a new release (bump version, update changelog, create tag) |
 | `npm run release:alpha` | Create a new alpha release                                        |
 | `npm run release:dry`   | Preview what a release would do (dry run)                         |
+
+## Performance Benchmark
+
+The browser benchmark in [`benchmark/marker-clustering.html`](benchmark/marker-clustering.html)
+measures marker creation and clustering separately with 100,000 markers.
+
+Build the project, serve the repository through a local web server, and open the benchmark in a browser:
+
+```bash
+npm run build
+python3 -m http.server 8000
+```
+
+Open <http://localhost:8000/benchmark/marker-clustering.html>.
+
+For meaningful before-and-after comparisons, use the same browser, build, dataset, zoom level, and number of runs.
+Tile loading is excluded from the clustering measurement.
+
+For diagnostic per-zoom call counts and timings, append `?profile=1` to the URL. Profiling wraps the grid methods and adds measurement overhead, so use the default URL for performance comparisons and the profiling URL only to inspect workload distribution.
 
 ### Build Output
 
