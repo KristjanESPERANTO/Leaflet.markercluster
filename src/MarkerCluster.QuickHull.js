@@ -115,7 +115,7 @@ export const QuickHull = {
       maxLng = false, minLng = false,
       maxLatPt = null, minLatPt = null,
       maxLngPt = null, minLngPt = null,
-      maxPt = null, minPt = null,
+      maxPt, minPt,
       i
 
     for (i = latLngs.length - 1; i >= 0; i--) {
