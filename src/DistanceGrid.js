@@ -1,5 +1,3 @@
-import { Util } from 'leaflet'
-
 /**
  * @typedef {import('leaflet').Point} Point
  */
@@ -40,7 +38,7 @@ DistanceGrid.prototype = {
       row.set(x, cell)
     }
 
-    this._objectPoint.set(Util.stamp(obj), point)
+    this._objectPoint.set(obj, point)
 
     cell.push(obj)
   },
@@ -70,7 +68,7 @@ DistanceGrid.prototype = {
 
     if (!cell) return false
 
-    this._objectPoint.delete(Util.stamp(obj))
+    this._objectPoint.delete(obj)
 
     // Find the object's position in the cell array
     const idx = cell.indexOf(obj)
@@ -135,7 +133,7 @@ DistanceGrid.prototype = {
           if (cell) {
             for (let k = 0, len = cell.length; k < len; k++) {
               const obj = cell[k]
-              const dist = this._sqDist(objectPoint.get(Util.stamp(obj)), point)
+              const dist = this._sqDist(objectPoint.get(obj), point)
               if (dist < closestDistSq
                 || (dist <= closestDistSq && closest === null)) {
                 closestDistSq = dist
