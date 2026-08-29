@@ -85,5 +85,9 @@
       "eslint --fix",
       "prettier --write --ignore-unknown"
     ]
+  },
+  "allowScripts": {
+    "simple-git-hooks@2.14.0": true,
+    "unrs-resolver@1.12.2": true
   }
 }
