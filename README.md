@@ -14,7 +14,7 @@ _Requires Leaflet ≥ 2.0.0._
 
 For a Leaflet 1.x compatible version, use the [upstream project](https://github.com/Leaflet/Leaflet.markercluster/).
 
-> **📌 This is a fork**  
+> **📌 This is a fork**
 > This project is a fork of [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) by Dave Leaver.
 > It has been modernized for Leaflet 2.x with ES6 modules, TypeScript declarations, and CSS Custom Properties for theming.
 
@@ -418,6 +418,8 @@ markers.on("clusterclick", function (a) {
 ## Handling LOTS of markers
 
 The Clusterer can handle 10,000 or even 50,000 markers (in chrome). IE9 has some issues with 50,000.
+
+For very large datasets, `disableClusteringAtZoom` can reduce initial clustering work by stopping the cluster hierarchy earlier. However, this also causes more individual markers to be displayed at high zoom levels, which can increase rendering work and create overlapping markers. There is no generally optimal setting; benchmark the complete interaction with your data before changing this option.
 
 - [realworld 10,000 example](https://kristjanesperanto.github.io/Leaflet.markercluster/example/marker-clustering-realworld.10000.html)
 - [realworld 50,000 example](https://kristjanesperanto.github.io/Leaflet.markercluster/example/marker-clustering-realworld.50000.html)
