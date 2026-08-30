@@ -1052,7 +1052,7 @@ export const MarkerClusterGroup = FeatureGroup.extend({
 
     // Find the lowest zoom level to slot this one in
     for (; zoom >= minZoom; zoom--) {
-      markerPoint = this._map.project(layer.getLatLng(), zoom) // calculate pixel position
+      markerPoint = this._map.options.crs.latLngToPoint(layer.getLatLng(), zoom) // calculate pixel position
 
       // Try find a cluster close by
       let closest = gridClusters[zoom].getNearObject(markerPoint)
@@ -1074,7 +1074,7 @@ export const MarkerClusterGroup = FeatureGroup.extend({
 
         const ClusterClass = this.options.animate ? MarkerCluster : MarkerCluster.NonAnimated
         const newCluster = new ClusterClass(this, zoom, closest, layer)
-        gridClusters[zoom].addObject(newCluster, this._map.project(newCluster._cLatLng, zoom))
+        gridClusters[zoom].addObject(newCluster, this._map.options.crs.latLngToPoint(newCluster._cLatLng, zoom))
         closest.__parent = newCluster
         layer.__parent = newCluster
 
@@ -1083,7 +1083,7 @@ export const MarkerClusterGroup = FeatureGroup.extend({
         for (z = zoom - 1; z > parent._zoom; z--) {
           const ClusterClass = this.options.animate ? MarkerCluster : MarkerCluster.NonAnimated
           lastParent = new ClusterClass(this, z, lastParent)
-          gridClusters[z].addObject(lastParent, this._map.project(closest.getLatLng(), z))
+          gridClusters[z].addObject(lastParent, this._map.options.crs.latLngToPoint(closest.getLatLng(), z))
         }
         parent._addChild(lastParent)
 
