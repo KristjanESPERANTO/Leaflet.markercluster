@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.0.3](///compare/v3.0.2...v3.0.3) (2026-08-30)
+
+### Performance Improvements
+
+* **distance-grid:** use object keys directly f73468e
+
+### Documentation
+
+* add guidance for large datasets 4cc69f7
+
+### Chores
+
+* add allowScripts config 72f2739
+* update devDependencies 0162b8b
+
+### Code Refactoring
+
+* **distance-grid:** clarify swap-and-pop removal ac0c69d
+* remove useless QuickHull assignments e035d83
+
+### Tests
+
+* **benchmark:** add browser performance benchmark c3f5d2e
 ## [3.0.2](https://github.com/KristjanESPERANTO/Leaflet.markercluster/compare/v3.0.1...v3.0.2) (2026-03-02)
 
 
