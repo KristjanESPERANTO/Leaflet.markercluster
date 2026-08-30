@@ -137,6 +137,9 @@ npm run release
 # Push the release
 git push --follow-tags origin main
 
+# Log in to npm
+npm login
+
 # Publish to npm
 npm publish
 ```
