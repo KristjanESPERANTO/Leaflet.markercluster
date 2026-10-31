@@ -24,60 +24,10 @@ import { MarkerCluster } from './MarkerCluster.js'
 import { refreshMethods, setClusterClasses } from './MarkerClusterGroup.Refresh.js'
 import { animationMethods } from './MarkerClusterGroup.Animation.js'
 
-export const MarkerClusterGroup = FeatureGroup.extend({
-  ...refreshMethods,
-  ...animationMethods,
+export class MarkerClusterGroup extends FeatureGroup {
+  constructor(options) {
+    super([], options)
 
-  options: {
-    maxClusterRadius: 80, // A cluster will cover at most this many pixels from its center
-    iconCreateFunction: null,
-    clusterPane: Marker.prototype.options.pane,
-
-    spiderfyOnEveryZoom: false,
-    spiderfyOnMaxZoom: true,
-    showCoverageOnHover: true,
-    zoomToBoundsOnClick: true,
-    singleMarkerMode: false,
-
-    disableClusteringAtZoom: null,
-
-    // Accessibility: Title for cluster markers (can be a string or function)
-    // Function signature: function(cluster) { return 'title text'; }
-    clusterMarkerTitle: null,
-
-    // Setting this to false prevents the removal of any clusters outside of the viewpoint, which
-    // is the default behaviour for performance reasons.
-    removeOutsideVisibleBounds: true,
-
-    // Set to false to disable all animations (zoom and spiderfy).
-    // If false, option animateAddingMarkers below has no effect.
-    animate: true,
-
-    // Whether to animate adding markers after adding the MarkerClusterGroup to the map
-    // If you are adding individual markers set to true, if adding bulk markers leave false for massive performance gains.
-    animateAddingMarkers: false,
-
-    // Make it possible to provide custom function to calculate spiderfy shape positions
-    spiderfyShapePositions: null,
-
-    // Increase to increase the distance away that spiderfied markers appear from the center
-    spiderfyDistanceMultiplier: 1,
-
-    // Make it possible to specify a polyline options on a spider leg
-    spiderLegPolylineOptions: { weight: 1.5, color: '#222', opacity: 0.5 },
-
-    // When bulk adding layers, adds markers in chunks. Means addLayers may not add all the layers in the call, others will be loaded during setTimeouts
-    chunkedLoading: true,
-    chunkInterval: 80, // process markers for a maximum of ~ n milliseconds (then trigger the chunkProgress callback)
-    chunkDelay: 20, // at the end of each interval, give n milliseconds back to system/browser
-    chunkProgress: null, // progress callback: function(processed, total, elapsed) (e.g. for a progress indicator)
-
-    // Options to pass to the Polygon constructor
-    polygonOptions: {},
-  },
-
-  initialize: function (options) {
-    Util.setOptions(this, options)
     if (!this.options.iconCreateFunction) {
       this.options.iconCreateFunction = this._defaultIconCreateFunction
     }
@@ -109,7 +59,60 @@ export const MarkerClusterGroup = FeatureGroup.extend({
     // Register event listeners for spiderfier lifecycle
     this.on('add', this._spiderfierSetup, this)
     this.on('remove', this._spiderfierCleanup, this)
-  },
+  }
+}
+
+MarkerClusterGroup.mergeOptions({
+  maxClusterRadius: 80, // A cluster will cover at most this many pixels from its center
+  iconCreateFunction: null,
+  clusterPane: Marker.defaultOptions.pane,
+
+  spiderfyOnEveryZoom: false,
+  spiderfyOnMaxZoom: true,
+  showCoverageOnHover: true,
+  zoomToBoundsOnClick: true,
+  singleMarkerMode: false,
+
+  disableClusteringAtZoom: null,
+
+  // Accessibility: Title for cluster markers (can be a string or function)
+  // Function signature: function(cluster) { return 'title text'; }
+  clusterMarkerTitle: null,
+
+  // Setting this to false prevents the removal of any clusters outside of the viewpoint, which
+  // is the default behaviour for performance reasons.
+  removeOutsideVisibleBounds: true,
+
+  // Set to false to disable all animations (zoom and spiderfy).
+  // If false, option animateAddingMarkers below has no effect.
+  animate: true,
+
+  // Whether to animate adding markers after adding the MarkerClusterGroup to the map
+  // If you are adding individual markers set to true, if adding bulk markers leave false for massive performance gains.
+  animateAddingMarkers: false,
+
+  // Make it possible to provide custom function to calculate spiderfy shape positions
+  spiderfyShapePositions: null,
+
+  // Increase to increase the distance away that spiderfied markers appear from the center
+  spiderfyDistanceMultiplier: 1,
+
+  // Make it possible to specify a polyline options on a spider leg
+  spiderLegPolylineOptions: { weight: 1.5, color: '#222', opacity: 0.5 },
+
+  // When bulk adding layers, adds markers in chunks. Means addLayers may not add all the layers in the call, others will be loaded during setTimeouts
+  chunkedLoading: true,
+  chunkInterval: 80, // process markers for a maximum of ~ n milliseconds (then trigger the chunkProgress callback)
+  chunkDelay: 20, // at the end of each interval, give n milliseconds back to system/browser
+  chunkProgress: null, // progress callback: function(processed, total, elapsed) (e.g. for a progress indicator)
+
+  // Options to pass to the Polygon constructor
+  polygonOptions: {},
+})
+
+MarkerClusterGroup.include({
+  ...refreshMethods,
+  ...animationMethods,
 
   addLayer: function (layer) {
     if (layer instanceof LayerGroup) {
