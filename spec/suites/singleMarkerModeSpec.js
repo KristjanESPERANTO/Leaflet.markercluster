@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert'
 
-import { Icon, LatLngBounds, Map, Marker } from 'leaflet'
+import { DefaultIcon, LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('singleMarkerMode option', function () {
@@ -24,8 +24,8 @@ describe('singleMarkerMode option', function () {
       [2, 2],
     ]))
 
-    defaultIcon = new Icon.Default()
-    clusterIcon = new Icon.Default()
+    defaultIcon = new DefaultIcon()
+    clusterIcon = new DefaultIcon()
     marker = new Marker([1.5, 1.5])
     marker.setIcon(defaultIcon)
   })
