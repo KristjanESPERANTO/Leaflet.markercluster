@@ -1,7 +1,8 @@
 // This code is 100% based on https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet
 // Huge thanks to jawj for implementing it first to make my job easy :-)
 
-import { Browser, Path, Point, Polyline } from 'leaflet'
+import { Path, Point, Polyline } from 'leaflet'
+import { Browser } from './Browser.js'
 import { MarkerCluster } from './MarkerCluster.js'
 import { MarkerClusterGroup } from './MarkerClusterGroup.js'
 
