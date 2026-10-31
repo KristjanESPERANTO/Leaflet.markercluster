@@ -413,7 +413,7 @@ const MarkerClusterGroupSpiderfierMethods = {
     this._map.on('zoomend', this._noanimationUnspiderfy, this)
 
     if (!Browser.touch) {
-      // Map.getRenderer() needs a Path since Leaflet#10438; a MarkerClusterGroup is not one
+      // Use a placeholder Path to initialize the renderer with the group's pane and renderer options.
       this._map.getRenderer(new Polyline([], {
         pane: this.options.pane,
         renderer: this.options.renderer,
