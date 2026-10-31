@@ -140,7 +140,9 @@ const MarkerClusterSpiderfierMethods = {
 }
 
 // Non Animated versions of everything
-export const MarkerClusterNonAnimated = MarkerCluster.extend({
+export class MarkerClusterNonAnimated extends MarkerCluster {}
+
+MarkerClusterNonAnimated.include({
   _animationSpiderfy: function (childMarkers, positions) {
     const group = this._group,
       map = group._map,
