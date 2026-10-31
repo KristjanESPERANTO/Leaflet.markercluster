@@ -1,14 +1,11 @@
 import { Icon, LatLng, LatLngBounds, Marker } from 'leaflet'
 import { quickHullMethods } from './MarkerCluster.QuickHull.js'
 
-export const MarkerCluster = Marker.extend({
-  ...quickHullMethods,
-
-  options: Icon.prototype.options,
-
-  initialize: function (group, zoom, a, b) {
-    Marker.prototype.initialize.call(this, a ? (a._cLatLng || a.getLatLng()) : new LatLng(0, 0),
-      { icon: this, pane: group.options.clusterPane })
+export class MarkerCluster extends Marker {
+  constructor(group, zoom, a, b) {
+    super(a ? (a._cLatLng || a.getLatLng()) : new LatLng(0, 0), { pane: group.options.clusterPane })
+    // The cluster marker is its own icon
+    this.options.icon = this
 
     this._group = group
     this._zoom = zoom
@@ -27,7 +24,13 @@ export const MarkerCluster = Marker.extend({
     if (b) {
       this._addChild(b)
     }
-  },
+  }
+}
+
+MarkerCluster.mergeOptions(Icon.defaultOptions)
+
+MarkerCluster.include({
+  ...quickHullMethods,
 
   // Recursively retrieve all child markers of this cluster
   getAllChildMarkers: function (storageArray, ignoreDraggedMarker) {

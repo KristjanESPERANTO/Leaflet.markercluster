@@ -1,7 +1,8 @@
 // This code is 100% based on https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet
 // Huge thanks to jawj for implementing it first to make my job easy :-)
 
-import { Browser, Path, Point, Polyline } from 'leaflet'
+import { Path, Point, Polyline } from 'leaflet'
+import { Browser } from './Browser.js'
 import { MarkerCluster } from './MarkerCluster.js'
 import { MarkerClusterGroup } from './MarkerClusterGroup.js'
 
@@ -139,7 +140,9 @@ const MarkerClusterSpiderfierMethods = {
 }
 
 // Non Animated versions of everything
-export const MarkerClusterNonAnimated = MarkerCluster.extend({
+export class MarkerClusterNonAnimated extends MarkerCluster {}
+
+MarkerClusterNonAnimated.include({
   _animationSpiderfy: function (childMarkers, positions) {
     const group = this._group,
       map = group._map,
@@ -413,7 +416,8 @@ const MarkerClusterGroupSpiderfierMethods = {
     this._map.on('zoomend', this._noanimationUnspiderfy, this)
 
     if (!Browser.touch) {
-      this._map.getRenderer(this)
+      // Map.getRenderer() needs a Path since Leaflet#10438; a MarkerClusterGroup is not one
+      this._map.getRenderer(new Polyline([]))
       // Needs to happen in the pageload, not after, or animations don't work in webkit
       //  http://stackoverflow.com/questions/8455200/svg-animate-with-dynamically-added-elements
       // Disable on touch browsers as the animation messes up on a touch zoom and isn't very noticable

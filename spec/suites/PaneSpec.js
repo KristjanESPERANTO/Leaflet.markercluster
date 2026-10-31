@@ -64,6 +64,6 @@ describe('Map pane selection', function () {
     group.addLayers([marker, marker2])
     map.addLayer(group)
 
-    assert.strictEqual(map._panes[Marker.prototype.options.pane].childNodes.length, 1)
+    assert.strictEqual(map._panes[Marker.defaultOptions.pane].childNodes.length, 1)
   })
 })
