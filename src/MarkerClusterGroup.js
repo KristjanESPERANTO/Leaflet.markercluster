@@ -3,7 +3,6 @@
  */
 
 import {
-  Browser,
   DivIcon,
   FeatureGroup,
   LatLng,
@@ -19,6 +18,7 @@ import {
  * @typedef {import('leaflet').Icon} Icon
  */
 
+import { Browser } from './Browser.js'
 import { DistanceGrid } from './DistanceGrid.js'
 import { MarkerCluster } from './MarkerCluster.js'
 import { refreshMethods, setClusterClasses } from './MarkerClusterGroup.Refresh.js'

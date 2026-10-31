@@ -2,7 +2,7 @@ import { describe, it, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert'
 import sinon from 'sinon'
 
-import { Browser, CircleMarker, LatLng, LatLngBounds, Map, Marker } from 'leaflet'
+import { CircleMarker, LatLng, LatLngBounds, Map, Marker } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('zoomAnimation', function () {
@@ -47,11 +47,11 @@ describe('zoomAnimation', function () {
   })
 
   function setBrowserToMobile() {
-    const _prevMobile = Browser.mobile
-    Browser.mobile = true
+    const _prevUserAgent = navigator.userAgent
+    navigator.userAgent = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/120.0.0.0 Mobile Safari/537.36'
     browserMobileStub = {
       restore: () => {
-        Browser.mobile = _prevMobile
+        navigator.userAgent = _prevUserAgent
       },
     }
   }
