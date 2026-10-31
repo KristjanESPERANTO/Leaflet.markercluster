@@ -413,7 +413,11 @@ const MarkerClusterGroupSpiderfierMethods = {
     this._map.on('zoomend', this._noanimationUnspiderfy, this)
 
     if (!Browser.touch) {
-      this._map.getRenderer(this)
+      // Use a placeholder Path to initialize the renderer with the group's pane and renderer options.
+      this._map.getRenderer(new Polyline([], {
+        pane: this.options.pane,
+        renderer: this.options.renderer,
+      }))
       // Needs to happen in the pageload, not after, or animations don't work in webkit
       //  http://stackoverflow.com/questions/8455200/svg-animate-with-dynamically-added-elements
       // Disable on touch browsers as the animation messes up on a touch zoom and isn't very noticable
