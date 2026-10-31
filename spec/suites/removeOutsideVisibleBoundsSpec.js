@@ -2,7 +2,7 @@ import { describe, it, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert'
 import sinon from 'sinon'
 
-import { CRS, LatLngBounds, Map, Marker, Projection } from 'leaflet'
+import { EPSG3857, LatLngBounds, Map, Marker, SphericalMercatorProjection } from 'leaflet'
 import { MarkerClusterGroup } from '../../dist/leaflet.markercluster.js'
 
 describe('Option removeOutsideVisibleBounds', function () {
@@ -142,9 +142,9 @@ describe('Option removeOutsideVisibleBounds', function () {
   }
 
   function checkProjection() {
-    assert.strictEqual(map.options.crs, CRS.EPSG3857)
-    assert.strictEqual(CRS.EPSG3857.projection, Projection.SphericalMercator)
-    assert.ok(typeof Projection.SphericalMercator.MAX_LATITUDE === 'number')
+    assert.strictEqual(map.options.crs, EPSG3857)
+    assert.strictEqual(EPSG3857.projection, SphericalMercatorProjection)
+    assert.ok(typeof SphericalMercatorProjection.MAX_LATITUDE === 'number')
 
     const mapZoom = map.getZoom()
 

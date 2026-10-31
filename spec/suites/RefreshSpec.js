@@ -201,7 +201,7 @@ describe('refreshClusters', function () {
     const marker2 = new Marker([1.5, 1.5])
     marker2.setIcon(iconCreateFunction({
       getAllChildMarkers: function () {
-        return marker2
+        return [marker2]
       },
     }))
     marker2.addTo(map)

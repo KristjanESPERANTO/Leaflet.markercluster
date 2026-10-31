@@ -10,6 +10,8 @@ global.document = window.document
 global.HTMLElement = window.HTMLElement
 global.Element = window.Element
 global.Node = window.Node
+global.HTMLImageElement = window.HTMLImageElement
+global.HTMLDivElement = window.HTMLDivElement
 global.NodeList = window.NodeList
 // NOTE: do NOT override global.Event / global.CustomEvent / global.MouseEvent –
 // those are Node.js built-ins that Chai internals rely on.
