@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.0.4](///compare/v3.0.3...v3.0.4) (2026-11-12)
+
+### Fixed
+
+* convert Class.extend() classes to ES classes 00562ad, references #7
+* pass a Path to Map.getRenderer() in spiderfier setup a5deab9, references Leaflet#10438 #7
+* replace Leaflet's removed Browser namespace with a local one 029a3bf, references Leaflet#10447 #7
+* **types:** use named imports and top-level exports for Leaflet 2 ed29666, references #7
+
+### Documentation
+
+* add missing JSDoc 0db683e
+* add npm login step to contributing guide 97079ca
+* recommend upstream and phase out fork befb8a4
+
+### Chores
+
+* update devDependencies 945e89b
+* update Leaflet v2.0.0-beta.4 8fa3f59
+
+### Tests
+
+* adapt Circle specs to Leaflet beta.4 1b0c768
+* stabilize zoom tests in happy-dom 5b8612c
+* use Leaflet main's export names in specs e14ed70, references #7
+
 ## [3.0.3](///compare/v3.0.2...v3.0.3) (2026-08-30)
 
 ### Performance Improvements
