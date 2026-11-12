@@ -52,7 +52,7 @@
 
     <script type="module">
       import { LatLng, Map as LeafletMap, Marker, TileLayer } from "leaflet";
-      import { DistanceGrid, MarkerClusterGroup } from "leaflet.markercluster";
+      import { DistanceGrid, MarkerCluster, MarkerClusterGroup } from "leaflet.markercluster";
 
       const RUNS = 5;
       const REPEATS = 2;
@@ -82,6 +82,7 @@
 
       const gridZooms = new Map();
       const profileByZoom = new Map();
+      const phaseProfile = { project: 0, projectMs: 0, addChild: 0, addChildMs: 0 };
       for (const [zoom, grid] of Object.entries(group._gridClusters)) {
         gridZooms.set(grid, Number(zoom));
       }
@@ -118,7 +119,28 @@
 
       const originalAddObject = DistanceGrid.prototype.addObject;
       const originalGetNearObject = DistanceGrid.prototype.getNearObject;
+      const originalAddChild = MarkerCluster.prototype._addChild;
       if (profiling) {
+        const originalProject = map.project;
+        map.project = function (latlng, zoom, tileZoom) {
+          const start = performance.now();
+          const result = originalProject.call(this, latlng, zoom, tileZoom);
+          phaseProfile.project++;
+          phaseProfile.projectMs += performance.now() - start;
+          return result;
+        };
+
+        MarkerCluster.prototype._addChild = function (child, isNotificationFromChild) {
+          if (isNotificationFromChild) {
+            return originalAddChild.call(this, child, true);
+          }
+          const start = performance.now();
+          const result = originalAddChild.call(this, child, isNotificationFromChild);
+          phaseProfile.addChild++;
+          phaseProfile.addChildMs += performance.now() - start;
+          return result;
+        };
+
         DistanceGrid.prototype.addObject = function (obj, point) {
           const profile = getZoomProfile(this);
           const start = performance.now();
@@ -162,7 +184,15 @@
         return sorted[Math.floor(sorted.length / 2)];
       }
 
+      function average(values) {
+        return values.reduce((total, value) => total + value, 0) / values.length;
+      }
+
       function resetProfile() {
+        phaseProfile.project = 0;
+        phaseProfile.projectMs = 0;
+        phaseProfile.addChild = 0;
+        phaseProfile.addChildMs = 0;
         for (const profile of profileByZoom.values()) {
           profile.addObject = 0;
           profile.addObjectMs = 0;
@@ -173,6 +203,10 @@
 
       function readProfile() {
         return Object.fromEntries([...profileByZoom.entries()].sort(([zoomA], [zoomB]) => zoomB - zoomA).map(([zoom, profile]) => [zoom, { ...profile }]));
+      }
+
+      function readPhaseProfile() {
+        return { ...phaseProfile };
       }
 
       function mergeProfiles(profiles) {
@@ -197,11 +231,27 @@
         return merged;
       }
 
+      function mergePhaseProfiles(profiles) {
+        const merged = { project: 0, projectMs: 0, addChild: 0, addChildMs: 0 };
+        for (const profile of profiles) {
+          merged.project += profile.project;
+          merged.projectMs += profile.projectMs;
+          merged.addChild += profile.addChild;
+          merged.addChildMs += profile.addChildMs;
+        }
+        merged.project = Math.round(merged.project / profiles.length);
+        merged.projectMs = Number((merged.projectMs / profiles.length).toFixed(1));
+        merged.addChild = Math.round(merged.addChild / profiles.length);
+        merged.addChildMs = Number((merged.addChildMs / profiles.length).toFixed(1));
+        return merged;
+      }
+
       async function run() {
         const markerCount = datasets.reduce((total, dataset) => total + dataset.length, 0) * REPEATS;
         const creationTimes = [];
         const clusteringTimes = [];
         const profileRuns = [];
+        const phaseProfileRuns = [];
 
         await addMarkers(createMarkers());
         group.clearLayers();
@@ -219,6 +269,7 @@
           clusteringTimes.push(end - clusteringStart);
           if (profiling) {
             profileRuns.push(readProfile());
+            phaseProfileRuns.push(readPhaseProfile());
           }
           if (run < RUNS - 1) {
             group.clearLayers();
@@ -233,10 +284,12 @@
           clusteringMs: clusteringTimes.map((time) => Number(time.toFixed(1))),
           creationMedianMs: Number(median(creationTimes).toFixed(1)),
           clusteringMedianMs: Number(median(clusteringTimes).toFixed(1)),
+          clusteringAverageMs: Number(average(clusteringTimes).toFixed(1)),
           markersPerSecond: Math.round(markerCount / (median(clusteringTimes) / 1000))
         };
         if (profiling) {
           output.averageZoomProfile = mergeProfiles(profileRuns);
+          output.averagePhaseProfile = mergePhaseProfiles(phaseProfileRuns);
         }
         results.textContent = JSON.stringify(output, null, 2);
       }
