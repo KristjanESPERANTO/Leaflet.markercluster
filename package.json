@@ -46,7 +46,7 @@
     "markers"
   ],
   "peerDependencies": {
-    "leaflet": ">=2.0.0-alpha.1"
+    "leaflet": ">=2.0.0-beta.4"
   },
   "devDependencies": {
     "@eslint/css": "^1.4.0",
@@ -59,7 +59,7 @@
     "eslint-plugin-jsdoc": "^64.2.1",
     "globals": "^17.11.0",
     "happy-dom": "^20.12.0",
-    "leaflet": "^2.0.0-alpha.1",
+    "leaflet": "^2.0.0-beta.4",
     "lint-staged": "^17.4.1",
     "prettier": "^3.9.6",
     "rollup": "4.63.1",
