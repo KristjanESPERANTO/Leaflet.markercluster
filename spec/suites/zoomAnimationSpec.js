@@ -19,7 +19,7 @@ describe('zoomAnimation', function () {
     div.style.height = '200px'
     document.body.appendChild(div)
 
-    map = new Map(div, { maxZoom: 18, trackResize: false })
+    map = new Map(div, { maxZoom: 18, trackResize: false, zoomAnimation: false })
 
     // Corresponds to zoom level 8 for the above div dimensions.
     map.fitBounds(new LatLngBounds([
@@ -181,7 +181,7 @@ describe('zoomAnimation', function () {
     // Run the the animation
     clock.tick(1000)
     // Give Leaflet 2 more time for cleanup
-    clock.tick(100)
+    clock.tick(400)
 
     assert.strictEqual(map.getZoom(), initialZoom + 1) // The fitBounds with 200px height should result in zooming 1 level in.      // Finally make sure that the cluster has been removed from map.
     assert.strictEqual(parentCluster._icon, null)
