@@ -47,7 +47,7 @@ describe('support for Circle elements', function () {
   it('appears when added to the group before the group is added to the map', function () {
     group = new MarkerClusterGroup()
 
-    const marker = new Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], { radius: 200 })
 
     group.addLayer(marker)
     map.addLayer(group)
@@ -63,7 +63,7 @@ describe('support for Circle elements', function () {
   it('appears when added to the group after the group is added to the map', function () {
     group = new MarkerClusterGroup()
 
-    const marker = new Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], { radius: 200 })
 
     group.addLayer(marker)
     map.addLayer(group)
@@ -77,8 +77,8 @@ describe('support for Circle elements', function () {
   it('appears animated when added to the group after the group is added to the map', function () {
     group = new MarkerClusterGroup({ animateAddingMarkers: true })
 
-    const marker = new Circle([1.5, 1.5], 200)
-    const marker2 = new Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], { radius: 200 })
+    const marker2 = new Circle([1.5, 1.5], { radius: 200 })
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -93,8 +93,8 @@ describe('support for Circle elements', function () {
   it('creates a cluster when 2 overlapping markers are added before the group is added to the map', function () {
     group = new MarkerClusterGroup()
 
-    const marker = new Circle([1.5, 1.5], 200)
-    const marker2 = new Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], { radius: 200 })
+    const marker2 = new Circle([1.5, 1.5], { radius: 200 })
 
     group.addLayers([marker, marker2])
     map.addLayer(group)
@@ -110,8 +110,8 @@ describe('support for Circle elements', function () {
   it('creates a cluster when 2 overlapping markers are added after the group is added to the map', function () {
     group = new MarkerClusterGroup()
 
-    const marker = new Circle([1.5, 1.5], 200)
-    const marker2 = new Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], { radius: 200 })
+    const marker2 = new Circle([1.5, 1.5], { radius: 200 })
 
     map.addLayer(group)
     group.addLayer(marker)
@@ -128,7 +128,7 @@ describe('support for Circle elements', function () {
   it('disappears when removed from the group', function () {
     group = new MarkerClusterGroup()
 
-    const marker = new Circle([1.5, 1.5], 200)
+    const marker = new Circle([1.5, 1.5], { radius: 200 })
 
     group.addLayer(marker)
     map.addLayer(group)

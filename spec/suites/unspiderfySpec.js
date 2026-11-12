@@ -90,8 +90,8 @@ describe('unspiderfy', function () {
   it('Unspiderfies 2 Circles', function () {
     group = new MarkerClusterGroup()
 
-    const marker = new Circle([1.5, 1.5], 10)
-    const marker2 = new Circle([1.5, 1.5], 10)
+    const marker = new Circle([1.5, 1.5], { radius: 10 })
+    const marker2 = new Circle([1.5, 1.5], { radius: 10 })
 
     group.addLayer(marker)
     group.addLayer(marker2)
