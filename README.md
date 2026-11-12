@@ -12,11 +12,9 @@ _Requires Leaflet ≥ 2.0.0._
 
 ![cluster map example](example/map.png)
 
-For a Leaflet 1.x compatible version, use the [upstream project](https://github.com/Leaflet/Leaflet.markercluster/).
+> **Project status:** For new projects and ongoing maintenance, we recommend the [upstream Leaflet.markercluster project](https://github.com/Leaflet/Leaflet.markercluster/). Development continues there, and this fork will be discontinued in the medium term.
 
-> **📌 This is a fork**
-> This project is a fork of [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) by Dave Leaver.
-> It has been modernized for Leaflet 2.x with ES6 modules, TypeScript declarations, and CSS Custom Properties for theming.
+This project is a fork of [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) by Dave Leaver, modernized for Leaflet 2.x with ES6 modules, TypeScript declarations, and CSS Custom Properties for theming.
 
 ## Table of Contents
 
