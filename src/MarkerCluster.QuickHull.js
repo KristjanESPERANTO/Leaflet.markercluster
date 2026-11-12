@@ -30,11 +30,11 @@ Retrieved from: http://en.literateprograms.org/Quickhull_(Javascript)?oldid=1843
 
 export const QuickHull = {
 
-  /*
-   * @param {Object} cpt a point to be measured from the baseline
-   * @param {Array} bl the baseline, as represented by a two-element
-   *   array of latlng objects.
-   * @returns {Number} an approximate distance measure
+  /**
+   * Returns the signed distance of a point from a baseline.
+   * @param {LatLng} cpt The point to measure.
+   * @param {LatLng[]} bl The two points defining the baseline.
+   * @returns {number} An approximate distance measure.
    */
   getDistant: function (cpt, bl) {
     const vY = bl[1].lat - bl[0].lat,
@@ -42,12 +42,12 @@ export const QuickHull = {
     return (vX * (cpt.lat - bl[0].lat) + vY * (cpt.lng - bl[0].lng))
   },
 
-  /*
-   * @param {Array} baseLine a two-element array of latlng objects
-   *   representing the baseline to project from
-   * @param {Array} latLngs an array of latlng objects
-   * @returns {Object} the maximum point and all new points to stay
-   *   in consideration for the hull.
+  /**
+   * Finds the most distant point and the points outside the baseline.
+   * @param {LatLng[]} baseLine The two points defining the baseline.
+   * @param {LatLng[]} latLngs The points to examine.
+   * @returns {{maxPoint: LatLng|null, newPoints: LatLng[]}} The most distant
+   * point and the points to consider for the hull.
    */
   findMostDistantPointFromBaseLine: function (baseLine, latLngs) {
     let maxD = 0,
@@ -75,12 +75,11 @@ export const QuickHull = {
     return { maxPoint: maxPt, newPoints: newPoints }
   },
 
-  /*
-   * Given a baseline, compute the convex hull of latLngs as an array
-   * of latLngs.
-   *
-   * @param {Array} latLngs
-   * @returns {Array}
+  /**
+   * Computes the convex hull of points relative to a baseline.
+   * @param {LatLng[]} baseLine The two points defining the baseline.
+   * @param {LatLng[]} latLngs The points to include in the hull.
+   * @returns {LatLng[]} The points forming the convex hull.
    */
   buildConvexHull: function (baseLine, latLngs) {
     let convexHullBaseLines = []
@@ -102,12 +101,10 @@ export const QuickHull = {
     }
   },
 
-  /*
-   * Given an array of latlngs, compute a convex hull as an array
-   * of latlngs
-   *
-   * @param {Array} latLngs
-   * @returns {Array}
+  /**
+   * Computes the convex hull of an array of points.
+   * @param {LatLng[]} latLngs The points to include in the hull.
+   * @returns {LatLng[]} The points forming the convex hull.
    */
   getConvexHull: function (latLngs) {
     // find first baseline

@@ -8,9 +8,19 @@ import { MarkerCluster } from './MarkerCluster.js'
 export const animationMethods = {
   _noAnimation: {
     // Non Animated versions of everything
+    /**
+     * Performs no animation setup.
+     * @private
+     */
     _animationStart: function () {
       // Do nothing...
     },
+    /**
+     * Updates clusters immediately when zooming in.
+     * @private
+     * @param {number} previousZoomLevel The starting zoom level.
+     * @param {number} newZoomLevel The target zoom level.
+     */
     _animationZoomIn: function (previousZoomLevel, newZoomLevel) {
       this._topClusterLevel._recursivelyRemoveChildrenFromMap(this._currentShownBounds, Math.floor(this._map.getMinZoom()), previousZoomLevel)
       this._topClusterLevel._recursivelyAddChildrenToMap(null, newZoomLevel, this._getExpandedVisibleBounds())
@@ -18,6 +28,12 @@ export const animationMethods = {
       // We didn't actually animate, but we use this event to mean "clustering animations have finished"
       this.fire('animationend')
     },
+    /**
+     * Updates clusters immediately when zooming out.
+     * @private
+     * @param {number} previousZoomLevel The starting zoom level.
+     * @param {number} newZoomLevel The target zoom level.
+     */
     _animationZoomOut: function (previousZoomLevel, newZoomLevel) {
       this._topClusterLevel._recursivelyRemoveChildrenFromMap(this._currentShownBounds, Math.floor(this._map.getMinZoom()), previousZoomLevel)
       this._topClusterLevel._recursivelyAddChildrenToMap(null, newZoomLevel, this._getExpandedVisibleBounds())
@@ -25,6 +41,12 @@ export const animationMethods = {
       // We didn't actually animate, but we use this event to mean "clustering animations have finished"
       this.fire('animationend')
     },
+    /**
+     * Adds a layer without animating it.
+     * @private
+     * @param {import('leaflet').Layer} layer The layer being added.
+     * @param {MarkerCluster} newCluster The resulting cluster.
+     */
     _animationAddLayer: function (layer, newCluster) {
       this._animationAddLayerNonAnimated(layer, newCluster)
     },
@@ -32,11 +54,21 @@ export const animationMethods = {
 
   _withAnimation: {
     // Animated versions here
+    /**
+     * Starts a cluster animation.
+     * @private
+     */
     _animationStart: function () {
       this._map._mapPane.className += ' leaflet-cluster-anim'
       this._inZoomAnimation++
     },
 
+    /**
+     * Animates cluster expansion.
+     * @private
+     * @param {number} previousZoomLevel The starting zoom level.
+     * @param {number} newZoomLevel The target zoom level.
+     */
     _animationZoomIn: function (previousZoomLevel, newZoomLevel) {
       const bounds = this._getExpandedVisibleBounds(),
         fg = this._featureGroup,
@@ -107,6 +139,12 @@ export const animationMethods = {
       })
     },
 
+    /**
+     * Animates cluster merging.
+     * @private
+     * @param {number} previousZoomLevel The starting zoom level.
+     * @param {number} newZoomLevel The target zoom level.
+     */
     _animationZoomOut: function (previousZoomLevel, newZoomLevel) {
       this._animationZoomOutSingle(this._topClusterLevel, previousZoomLevel - 1, newZoomLevel)
 
@@ -116,6 +154,12 @@ export const animationMethods = {
       this._topClusterLevel._recursivelyRemoveChildrenFromMap(this._currentShownBounds, Math.floor(this._map.getMinZoom()), previousZoomLevel, this._getExpandedVisibleBounds())
     },
 
+    /**
+     * Animates adding a layer to an existing cluster.
+     * @private
+     * @param {import('leaflet').Layer} layer The layer being added.
+     * @param {MarkerCluster} newCluster The resulting cluster.
+     */
     _animationAddLayer: function (layer, newCluster) {
       const me = this,
         fg = this._featureGroup
@@ -148,6 +192,13 @@ export const animationMethods = {
   },
 
   // Private methods for animated versions.
+  /**
+   * Animates a single cluster merging into its parent.
+   * @private
+   * @param {MarkerCluster} cluster The cluster being merged.
+   * @param {number} previousZoomLevel The starting zoom level.
+   * @param {number} newZoomLevel The target zoom level.
+   */
   _animationZoomOutSingle: function (cluster, previousZoomLevel, newZoomLevel) {
     const bounds = this._getExpandedVisibleBounds(),
       minZoom = Math.floor(this._map.getMinZoom())
@@ -185,6 +236,10 @@ export const animationMethods = {
     })
   },
 
+  /**
+   * Finishes the current cluster animation.
+   * @private
+   */
   _animationEnd: function () {
     if (this._map) {
       this._map._mapPane.className = this._map._mapPane.className.replace(' leaflet-cluster-anim', '')
@@ -195,6 +250,10 @@ export const animationMethods = {
 
   // Force a browser layout of stuff in the map
   // Should apply the current opacity and location to all elements so we can update them again for an animation
+  /**
+   * Forces the browser to apply pending layout changes.
+   * @private
+   */
   _forceLayout: function () {
     // In my testing this works, infact offsetWidth of any element seems to work.
     // Could loop all this._layers and do this for each _icon if it stops working
